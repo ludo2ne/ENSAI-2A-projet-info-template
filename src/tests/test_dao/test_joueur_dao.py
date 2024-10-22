@@ -6,9 +6,9 @@ from unittest.mock import patch
 from utils.reset_database import ResetDatabase
 from utils.securite import hash_password
 
-from dao.joueur_dao import JoueurDao
+from dao.utilisateur_dao import UtilisateurDao
 
-from business_object.joueur import Joueur
+from business_object.utilisateur import Utilisateur
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -20,154 +20,154 @@ def setup_test_environment():
 
 
 def test_trouver_par_id_existant():
-    """Recherche par id d'un joueur existant"""
+    """Recherche par id d'un utilisateur existant"""
 
     # GIVEN
-    id_joueur = 998
+    id_utilisateur = 998
 
     # WHEN
-    joueur = JoueurDao().trouver_par_id(id_joueur)
+    utilisateur = UtilisateurDao().trouver_par_id(id_utilisateur)
 
     # THEN
-    assert joueur is not None
+    assert utilisateur is not None
 
 
 def test_trouver_par_id_non_existant():
-    """Recherche par id d'un joueur n'existant pas"""
+    """Recherche par id d'un utilisateur n'existant pas"""
 
     # GIVEN
-    id_joueur = 9999999999999
+    id_utilisateur = 9999999999999
 
     # WHEN
-    joueur = JoueurDao().trouver_par_id(id_joueur)
+    utilisateur = UtilisateurDao().trouver_par_id(id_utilisateur)
 
     # THEN
-    assert joueur is None
+    assert utilisateur is None
 
 
 def test_lister_tous():
-    """Vérifie que la méthode renvoie une liste de Joueur
+    """Vérifie que la méthode renvoie une liste de Utilisateur
     de taille supérieure ou égale à 2
     """
 
     # GIVEN
 
     # WHEN
-    joueurs = JoueurDao().lister_tous()
+    utilisateurs = UtilisateurDao().lister_tous()
 
     # THEN
-    assert isinstance(joueurs, list)
-    for j in joueurs:
-        assert isinstance(j, Joueur)
-    assert len(joueurs) >= 2
+    assert isinstance(utilisateurs, list)
+    for j in utilisateurs:
+        assert isinstance(j, Utilisateur)
+    assert len(utilisateurs) >= 2
 
 
 def test_creer_ok():
-    """Création de Joueur réussie"""
+    """Création de Utilisateur réussie"""
 
     # GIVEN
-    joueur = Joueur(pseudo="gg", age=44, mail="test@test.io")
+    utilisateur = Utilisateur(pseudo="gg", age=44, mail="test@test.io")
 
     # WHEN
-    creation_ok = JoueurDao().creer(joueur)
+    creation_ok = UtilisateurDao().creer(utilisateur)
 
     # THEN
     assert creation_ok
-    assert joueur.id_joueur
+    assert utilisateur.id_utilisateur
 
 
 def test_creer_ko():
-    """Création de Joueur échouée (age et mail incorrects)"""
+    """Création de Utilisateur échouée (age et mail incorrects)"""
 
     # GIVEN
-    joueur = Joueur(pseudo="gg", age="chaine de caractere", mail=12)
+    utilisateur = Utilisateur(pseudo="gg", age="chaine de caractere", mail=12)
 
     # WHEN
-    creation_ok = JoueurDao().creer(joueur)
+    creation_ok = UtilisateurDao().creer(utilisateur)
 
     # THEN
     assert not creation_ok
 
 
 def test_modifier_ok():
-    """Modification de Joueur réussie"""
+    """Modification de Utilisateur réussie"""
 
     # GIVEN
     new_mail = "maurice@mail.com"
-    joueur = Joueur(id_joueur=997, pseudo="maurice", age=20, mail=new_mail)
+    utilisateur = Utilisateur(id_utilisateur=997, pseudo="maurice", age=20, mail=new_mail)
 
     # WHEN
-    modification_ok = JoueurDao().modifier(joueur)
+    modification_ok = UtilisateurDao().modifier(utilisateur)
 
     # THEN
     assert modification_ok
 
 
 def test_modifier_ko():
-    """Modification de Joueur échouée (id inconnu)"""
+    """Modification de Utilisateur échouée (id inconnu)"""
 
     # GIVEN
-    joueur = Joueur(id_joueur=8888, pseudo="id inconnu", age=1, mail="no@mail.com")
+    utilisateur = Utilisateur(id_utilisateur=8888, pseudo="id inconnu", age=1, mail="no@mail.com")
 
     # WHEN
-    modification_ok = JoueurDao().modifier(joueur)
+    modification_ok = UtilisateurDao().modifier(utilisateur)
 
     # THEN
     assert not modification_ok
 
 
 def test_supprimer_ok():
-    """Suppression de Joueur réussie"""
+    """Suppression de Utilisateur réussie"""
 
     # GIVEN
-    joueur = Joueur(id_joueur=995, pseudo="miguel", age=1, mail="miguel@projet.fr")
+    utilisateur = Utilisateur(id_utilisateur=995, pseudo="miguel", age=1, mail="miguel@projet.fr")
 
     # WHEN
-    suppression_ok = JoueurDao().supprimer(joueur)
+    suppression_ok = UtilisateurDao().supprimer(utilisateur)
 
     # THEN
     assert suppression_ok
 
 
 def test_supprimer_ko():
-    """Suppression de Joueur échouée (id inconnu)"""
+    """Suppression de Utilisateur échouée (id inconnu)"""
 
     # GIVEN
-    joueur = Joueur(id_joueur=8888, pseudo="id inconnu", age=1, mail="no@z.fr")
+    utilisateur = Utilisateur(id_utilisateur=8888, pseudo="id inconnu", age=1, mail="no@z.fr")
 
     # WHEN
-    suppression_ok = JoueurDao().supprimer(joueur)
+    suppression_ok = UtilisateurDao().supprimer(utilisateur)
 
     # THEN
     assert not suppression_ok
 
 
 def test_se_connecter_ok():
-    """Connexion de Joueur réussie"""
+    """Connexion de Utilisateur réussie"""
 
     # GIVEN
     pseudo = "batricia"
     mdp = "9876"
 
     # WHEN
-    joueur = JoueurDao().se_connecter(pseudo, hash_password(mdp, pseudo))
+    utilisateur = UtilisateurDao().se_connecter(pseudo, hash_password(mdp, pseudo))
 
     # THEN
-    assert isinstance(joueur, Joueur)
+    assert isinstance(utilisateur, utilisateur)
 
 
 def test_se_connecter_ko():
-    """Connexion de Joueur échouée (pseudo ou mdp incorrect)"""
+    """Connexion de Utilisateur échouée (pseudo ou mdp incorrect)"""
 
     # GIVEN
     pseudo = "toto"
     mdp = "poiuytreza"
 
     # WHEN
-    joueur = JoueurDao().se_connecter(pseudo, hash_password(mdp, pseudo))
+    utilisateur = UtilisateurDao().se_connecter(pseudo, hash_password(mdp, pseudo))
 
     # THEN
-    assert not joueur
+    assert not utilisateur
 
 
 if __name__ == "__main__":

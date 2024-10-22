@@ -25,6 +25,9 @@ class AccueilVue(VueAbstraite):
             choices=[
                 "Se connecter",
                 "Créer un compte",
+                "Consulter les statistiques de match",
+                "Consulter les statistiques de joueur/équipe",
+                "Consulter le calendrier"
                 "Ré-initialiser la base de données",
                 "Infos de session",
                 "Quitter",
@@ -43,7 +46,22 @@ class AccueilVue(VueAbstraite):
             case "Créer un compte":
                 from view.accueil.inscription_vue import InscriptionVue
 
-                return InscriptionVue("Création de compte joueur")
+                return InscriptionVue("Création de compte utilisateur")
+
+            case "Consulter les statistiques de match":
+                from view.accueil.inscription_vue import InscriptionVue
+
+                return InscriptionVue("Création de compte utilisateur")
+
+            case "Consulter les statistiques de joueur/équipe":
+                from view.accueil.inscription_vue import InscriptionVue
+
+                return InscriptionVue("Création de compte utilisateur")
+
+            case "Consulter le calendrier":
+                from view.accueil.inscription_vue import InscriptionVue
+
+                return InscriptionVue("Création de compte utilisateur")
 
             case "Infos de session":
                 return AccueilVue(Session().afficher())

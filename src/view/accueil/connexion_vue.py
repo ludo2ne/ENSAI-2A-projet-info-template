@@ -3,7 +3,7 @@ from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
 from view.session import Session
 
-from service.joueur_service import JoueurService
+from service.utilisateur_service import UtilisateurService
 
 
 class ConnexionVue(VueAbstraite):
@@ -14,15 +14,15 @@ class ConnexionVue(VueAbstraite):
         pseudo = inquirer.text(message="Entrez votre pseudo : ").execute()
         mdp = inquirer.secret(message="Entrez votre mot de passe :").execute()
 
-        # Appel du service pour trouver le joueur
-        joueur = JoueurService().se_connecter(pseudo, mdp)
+        # Appel du service pour trouver le utilisateur
+        utilisateur = UtilisateurService().se_connecter(pseudo, mdp)
 
-        # Si le joueur a été trouvé à partir des ses identifiants de connexion
-        if joueur:
-            message = f"Vous êtes connecté sous le pseudo {joueur.pseudo}"
-            Session().connexion(joueur)
+        # Si le utilisateur a été trouvé à partir des ses identifiants de connexion
+        if utilisateur:
+            message = f"Vous êtes connecté sous le pseudo {utilisateur.pseudo}"
+            Session().connexion(utilisateur)
 
-            from view.menu_joueur_vue import MenuJoueurVue
+            from view.menu_utilisateur_vue import MenuJoueurVue
 
             return MenuJoueurVue(message)
 

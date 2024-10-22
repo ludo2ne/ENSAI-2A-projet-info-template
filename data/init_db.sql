@@ -1,9 +1,9 @@
 -----------------------------------------------------
--- Joueur
+-- Utilisateur
 -----------------------------------------------------
-DROP TABLE IF EXISTS joueur CASCADE ;
-CREATE TABLE joueur(
-    id_joueur    SERIAL PRIMARY KEY,
+DROP TABLE IF EXISTS utilisateur CASCADE ;
+CREATE TABLE utilisateur(
+    id_utilisateur    SERIAL PRIMARY KEY,
     pseudo       VARCHAR(30) UNIQUE,
     mdp          VARCHAR(256),
     age          INTEGER,

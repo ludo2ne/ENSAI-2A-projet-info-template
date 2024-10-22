@@ -3,11 +3,11 @@ from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
 from view.session import Session
 
-from service.joueur_service import JoueurService
+from service.utilisateur_service import UtilisateurService
 
 
 class MenuJoueurVue(VueAbstraite):
-    """Vue du menu du joueur
+    """Vue du menu du utilisateur
 
     Attributes
     ----------
@@ -29,13 +29,15 @@ class MenuJoueurVue(VueAbstraite):
             Retourne la vue choisie par l'utilisateur dans le terminal
         """
 
-        print("\n" + "-" * 50 + "\nMenu Joueur\n" + "-" * 50 + "\n")
+        print("\n" + "-" * 50 + "\nMenu Utilisateur\n" + "-" * 50 + "\n")
 
         choix = inquirer.select(
             message="Faites votre choix : ",
             choices=[
                 "Afficher les joueurs de la base de données",
-                "Afficher des pokemons (par appel à un Webservice)",
+                "Parier",
+                "Participer à un tournoi",
+                "Envoyer invitation à un tournoi",
                 "Infos de session",
                 "Se déconnecter",
             ],
@@ -48,14 +50,24 @@ class MenuJoueurVue(VueAbstraite):
 
                 return AccueilVue()
 
+            case "Participer à un tournoi":
+                from view.accueil.accueil_vue import AccueilVue
+
+                return AccueilVue()
+
+            case "Parier":
+                from view.accueil.accueil_vue import AccueilVue
+
+                return AccueilVue()
+
+            case "Envoyer invitation à un tournoi":
+                from view.accueil.accueil_vue import AccueilVue
+
+                return AccueilVue()
+
             case "Infos de session":
                 return MenuJoueurVue(Session().afficher())
 
             case "Afficher les joueurs de la base de données":
-                joueurs_str = JoueurService().afficher_tous()
-                return MenuJoueurVue(joueurs_str)
-
-            case "Afficher des pokemons (par appel à un Webservice)":
-                from view.pokemon_vue import PokemonVue
-
-                return PokemonVue()
+                utilisateur_str = UtilisateurService().afficher_tous()
+                return MenuJoueurVue(utilisateur_str)
