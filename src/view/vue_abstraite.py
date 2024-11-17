@@ -26,3 +26,7 @@ class VueAbstraite(ABC):
     def choisir_menu(self):
         """Choix du menu suivant de l'utilisateur"""
         pass
+
+    def message_info(self):
+        """Affiche un message d'information quand l'utilisateur arrive sur la vue"""
+        pass

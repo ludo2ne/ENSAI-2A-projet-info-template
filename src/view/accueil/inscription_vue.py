@@ -1,73 +1,72 @@
 import regex
-
-from InquirerPy import inquirer
-from InquirerPy.validator import PasswordValidator, EmptyInputValidator
-
-from prompt_toolkit.validation import ValidationError, Validator
-
-
+from InquirerPy import prompt
+from prompt_toolkit.validation import ValidationError
 from view.vue_abstraite import VueAbstraite
-from service.joueur_service import JoueurService
+from service.utilisateur_service import UtilisateurService
+from business_object.Utilisateur import Utilisateur
 
 
 class InscriptionVue(VueAbstraite):
+    def __init__(self, message=""):
+        self.message = message
+        self.__questions = [
+            {
+                "type": "input",
+                "name": "pseudo",
+                "message": "Choisissez un pseudo: ",
+            },
+            {
+                "type": "password",  # permet de cacher le mdp
+                "name": "mot_de_passe",
+                "message": "Choisissez un mot de passe: ",
+            },
+            {
+                "type": "password",
+                "name": "confirmation_mot_de_passe",
+                "message": "Confirmez votre mot de passe: ",
+            },
+            {"type": "input", "name": "email", "message": "Entrez votre email"},
+        ]
+
+    def message_info(self):
+        print("Bonjour,choisissez votre pseudo et votre mot de passe s'il vous plait")
+
     def choisir_menu(self):
-        # Demande à l'utilisateur de saisir pseudo, mot de passe...
-        pseudo = inquirer.text(message="Entrez votre pseudo : ").execute()
+        reponse = prompt(self.__questions)
 
-        if JoueurService().pseudo_deja_utilise(pseudo):
-            from view.accueil.accueil_vue import AccueilVue
+        if reponse["mot_de_passe"] != reponse["confirmation_mot_de_passe"]:
+            print("Les mots de passe ne correspondent pas. Veuillez réessayer.")
+            return self  # ramène au mot de passe
+        self.validate(reponse["email"])
+        pseudo = reponse["pseudo"]
+        mot_de_passe = reponse["mot_de_passe"]
+        email = reponse["email"]
+        compte = UtilisateurService()
 
-            return AccueilVue(f"Le pseudo {pseudo} est déjà utilisé.")
-
-        mdp = inquirer.secret(
-            message="Entrez votre mot de passe : ",
-            validate=PasswordValidator(
-                length=8,
-                cap=True,
-                number=True,
-                message="Au moins 8 caractères, incluant une majuscule et un chiffre",
-            ),
-        ).execute()
-
-        age = inquirer.number(
-            message="Entrez votre age : ",
-            min_allowed=0,
-            max_allowed=120,
-            validate=EmptyInputValidator(),
-        ).execute()
-
-        mail = inquirer.text(message="Entrez votre mail : ", validate=MailValidator()).execute()
-
-        fan_pokemon = inquirer.confirm(
-            message="Etes-vous fan de pokemons : ",
-            confirm_letter="o",
-            reject_letter="n",
-        ).execute()
-
-        # Appel du service pour créer le joueur
-        joueur = JoueurService().creer(pseudo, mdp, age, mail, fan_pokemon)
-
-        # Si le joueur a été créé
-        if joueur:
-            message = (
-                f"Votre compte {joueur.pseudo} a été créé. Vous pouvez maintenant vous connecter."
-            )
+        result = compte.creer_utilisateur(
+            pseudo,
+            mot_de_passe,
+            email,
+        )
+        if isinstance(result, Utilisateur):
+            print("Compte créé avec succès ! ")
         else:
-            message = "Erreur de connexion (pseudo ou mot de passe invalide)"
+            print("Il y a eu une erreur avec la création du compte")
 
-        from view.accueil.accueil_vue import AccueilVue
+        """
+        except Exception as e:
+            print(f"Erreur lors de la création du compte : {e}")
+            return self
+        """
 
-        return AccueilVue(message)
+        from view.accueil.connexion_vue import ConnexionVue
 
-
-class MailValidator(Validator):
-    """la classe MailValidator verifie si la chaine de caractères
-    que l'on entre correspond au format de l'email"""
+        return ConnexionVue()
 
     def validate(self, document) -> None:
-        ok = regex.match(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$", document.text)
+        ok = regex.match(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$", document)
         if not ok:
             raise ValidationError(
-                message="Please enter a valid mail", cursor_position=len(document.text)
+                message="Please enter a valid mail", cursor_position=len(document)
             )
+            return self

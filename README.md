@@ -44,7 +44,7 @@ Ce dépôt contient un fichier `.vscode/settings.xml` qui définit des paramètr
   - `editor.formatOnSave` : à chaque sauvegarde de fichier, le code est automatiquement mis en forme
 - **Flake8** est un Linter
   - il vérifie que le code est propre et affiche un message si ce n'est pas le cas
-- **Path** : indique les dossiers dans lesquels sont les modules python 
+- **Path** : indique les dossiers dans lesquels sont les modules python
   - `"PYTHONPATH": "${workspaceFolder}/src"` : src est le dossier racine des imports
 
 
@@ -86,7 +86,7 @@ Vous allez maintenant définir des variables d'environnement pour déclarer la b
 
 À la racine du projet le fichier :
 
-- [ ] Créez un fichier nommé `.env` 
+- [ ] Créez un fichier nommé `.env`
 - [ ] Collez-y et complétez les éléments ci-dessous
 
 ```default
@@ -104,7 +104,7 @@ POSTGRES_SCHEMA=projet
 
 ## :arrow_forward: Lancer les tests unitaires
 
-- [ ] Dans Git Bash : `pytest -v` 
+- [ ] Dans Git Bash : `pytest -v`
   - ou `python -m pytest -v` si *pytest* n'a pas été ajouté au *PATH*
 
 ### TU DAO
@@ -306,3 +306,9 @@ Vous pouvez maintenant lancer l'application, le webservice ou les tests unitaire
 - `python src/__main__.py` (puis commencez par ré-initialiser la bdd)
 - `python src/app.py` (à tester)
 - `pytest -v`
+
+MONSTRE
+
+python -m venv .venv
+source .venv/Scripts/activate
+pip freeze > <nom du fichier>

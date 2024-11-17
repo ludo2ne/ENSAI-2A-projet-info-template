@@ -1,8 +1,14 @@
-INSERT INTO joueur(pseudo, mdp, age, mail, fan_pokemon) VALUES
-('admin',      '0000',     0,       'admin@projet.fr',      null),
-('a',             'a',     20,      'a@ensai.fr',           true),
-('maurice',    '1234',     20,      'maurice@ensai.fr',     true),
-('batricia',   '9876',     25,      'bat@projet.fr',        false),
-('miguel',     'abcd',     23,      'miguel@projet.fr',     true),
-('gilbert',    'toto',     21,      'gilbert@projet.fr',    false),
-('junior',     'aaaa',     15,      'junior@projet.fr',     true);
+INSERT INTO utilisateur(id_utilisateur, pseudo, mdp, mail, tournois_crees, points, paris) VALUES
+(999, 'admin',      '0000',      'admin@projet.fr',      '{}',    100,    '{}'),
+(998, 'a',             'a',      'a@ensai.fr',           '{}',    1,    '{}'),
+(997, 'maurice',    '1234',      'maurice@ensai.fr',     '{}',    10,    '{}'),
+(996, 'batricia',   '9876',      'bat@projet.fr',        '{}',    14,    '{}'),
+(995, 'miguel',     'abcd',      'miguel@projet.fr',     '{}',    25,    '{}'),
+(994, 'gilbert',    'toto',      'gilbert@projet.fr',    '{}',    3,    '{}'),
+(993, 'junior',     'aaaa',      'junior@projet.fr',     '{}',    0,    '{}');
+
+
+INSERT INTO match(match_id, equipe1, equipe2, score1, score2, dates, region, ligue, perso) VALUES
+('admin1','0000','001',1, 2, 2024-10-08T22:00:00Z, 'FRance', 'ligue1', false),
+('admin2','0200','001',1, 2, 2024-10-08T22:00:00Z, 'FRance', 'ligue1', false),
+('admin3','0300','001',1, 2, 2024-12-08T22:00:00Z, 'FRance', 'ligue1', false);

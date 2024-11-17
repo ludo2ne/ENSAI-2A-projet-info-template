@@ -1,0 +1,108 @@
+--> créer les méthodes pour instancier les objets à partir de la dao dans les classes services, cad rassembler les différents bouts de l'objet définis par plusieurs dao
+--> Mettre des méthodes pour instancier le début des objets dans chaque classe de DAO
+--> Changer les méthodes DAO pour mettre à jour les requetes selon la nouvelle bdd ("RocketLag", tables de lien)
+
+DROP TABLE IF EXISTS "RocketLag".Equipe CASCADE;
+
+le code des tables si besoin
+-- Recrée la table Equipe avec les ajustements
+CREATE TABLE "RocketLag".Equipe (
+    id_equipe SERIAL PRIMARY KEY,  -- Utilisation d'une clé primaire simple sur id_equipe
+    equipe_nom VARCHAR(255) UNIQUE,  -- Ajout d'une contrainte UNIQUE sur equipe_nom si nécessaire
+    equipe_score INT,
+    shots INT,
+    goals INT,
+    saves INT,
+    assists INT,
+    score INT,
+    shooting_percentage FLOAT,
+    demo_infligees INT,
+    demo_recues INT,
+    goal_participation FLOAT,
+    time_defensive_third FLOAT,
+    time_neutral_third FLOAT,
+    time_offensive_third FLOAT
+);
+
+-- Correction de la création de la table matchs_equipe
+CREATE TABLE "RocketLag".matchs_equipe (
+    id_equipe INT REFERENCES "RocketLag".Equipe(id_equipe),
+    id_match VARCHAR REFERENCES "RocketLag".info_match(match_id)
+);
+
+-- Correction de la création de la table Joueur
+CREATE TABLE "RocketLag".Joueur (
+    id SERIAL PRIMARY KEY,
+    nom VARCHAR(255) NOT NULL,
+    nationalite VARCHAR(100) NOT NULL,
+    rating FLOAT,
+    match_id VARCHAR(100) NOT NULL,
+    equipe_nom VARCHAR(255) NOT NULL,
+    shots INT,
+    goals INT,
+    saves INT,
+    assists INT,
+    score INT,
+    shooting_percentage FLOAT,
+    time_offensive_third FLOAT,
+    time_defensive_third FLOAT,
+    time_neutral_third FLOAT,
+    demo_inflige INT,
+    demo_recu INT,
+    goal_participation FLOAT
+);
+
+-- Correction de la création de la table info_match
+CREATE TABLE "RocketLag".info_match (
+    match_id VARCHAR(255) PRIMARY KEY,
+    equipe1 VARCHAR(255),
+    equipe2 VARCHAR(255),
+    score1 INT,
+    score2 INT,
+    date DATE,  -- Utilisation d'un type DATE pour les dates
+    region VARCHAR(50),
+    ligue VARCHAR(255),
+    perso BOOL,
+);
+
+-- Correction de la création de la table utilisateur
+CREATE TABLE "RocketLag".utilisateur (
+    id_utilisateur SERIAL PRIMARY KEY,
+    pseudo VARCHAR(30) UNIQUE,
+    mdp VARCHAR(256),
+    mail VARCHAR(50),
+    points  INT,
+    paris INT[]
+);
+
+-- Correction de la création de la table tournoi
+CREATE TABLE "RocketLag".tournoi (
+    id_tournoi SERIAL PRIMARY KEY,
+    id_utilisateur INT REFERENCES "RocketLag".utilisateur(id_utilisateur),
+);
+
+-- Correction de la création de la table paris
+CREATE TABLE "RocketLag".paris (
+    id_pari SERIAL PRIMARY KEY,  -- Ajout d'une clé primaire pour paris
+    id_parieur INT REFERENCES "RocketLag".utilisateur(id_utilisateur),
+    id_match VARCHAR REFERENCES "RocketLag".info_match(match_id),
+    id_equipe INT REFERENCES "RocketLag".Equipe(id_equipe)
+);
+
+-- Correction de la création de la table tournois_utilisateur
+CREATE TABLE "RocketLag".tournois_utilisateur (
+
+    id_tournoi INT REFERENCES "RocketLag".tournoi(id_tournoi),
+    PRIMARY KEY (id_utilisateur, id_tournoi)  -- Ajout d'une clé primaire composée
+);
+
+-- Correction de la création de la table paris_utilisateur
+CREATE TABLE "RocketLag".paris_utilisateur (
+    id_utilisateur INT REFERENCES "RocketLag".utilisateur(id_utilisateur),
+    id_pari INT REFERENCES "RocketLag".paris(id_pari),
+    PRIMARY KEY (id_utilisateur, id_pari)  -- Ajout d'une clé primaire composée
+);
+
+
+ALTER TABLE "RocketLag".info_match
+ADD column event VARCHAR(255);

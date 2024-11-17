@@ -1,0 +1,13 @@
+Notes pour les diagrammes
+
+Classes à créer : a
+Classe utilisateur (joueur DAO)
+Classe match
+
+Explications :
+DAO -> communiquer directement avec la base de donnée : requêtes SQL dans un code python
+Service : utilise la classe DAO pour importer les données et les transformer
+Classe de base -> helper qui permet l’autocomplétion, classe qui instancie des objets
+Exemples:
+db_connection = connecte la code python avec la base de données
+Joueur_dao : utilise la connexion mise en place pour lancer des requêtes SQL dans la base de donnée
