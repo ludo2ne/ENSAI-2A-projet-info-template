@@ -1,6 +1,5 @@
 from InquirerPy import inquirer
 
-from utils.reset_database import ResetDatabase
 
 from view.vue_abstraite import VueAbstraite
 from view.session import Session

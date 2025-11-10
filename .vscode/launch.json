@@ -2,17 +2,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Lancer main.py (Front-end path)",
-            "type": "debugpy",
+            "name": "Front-end Streamlit",
+            "type": "node-terminal",
             "request": "launch",
-            "program": "${workspaceFolder}/src/frontend/main.py",
-            "console": "integratedTerminal",
+            "command": "streamlit run src/frontend/main_page.py",
+            "cwd": "${workspaceFolder}",
             "env": {
-                "PYTHONPATH": "${workspaceFolder}/src/frontend" 
+                "PYTHONPATH": "${workspaceFolder}/src/frontend"
             }
         },
         {
-            "name": "Lancer app.py (Back-end path)",
+            "name": "Back-end FastApi",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/src/backend/app.py",

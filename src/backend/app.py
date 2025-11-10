@@ -7,6 +7,7 @@ from controller import connexion_controller, joueur_controller
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from utils.log_init import initialiser_logs
+from utils.reset_database import ResetDatabase
 
 # Initialisation
 initialiser_logs("Webservice")
@@ -29,6 +30,17 @@ async def hello_name(name: str):
     """Afficher Hello"""
     logging.info("Afficher Hello")
     return {"message": f"Hello {name}"}
+
+
+@app.get("/reset_database", tags=["Divers"])
+async def reset_database():
+    """Réinitialiser la base de données"""
+    logging.info("Réinitialisation de la base de données")
+    succes = ResetDatabase().lancer()
+
+    return {
+        "message": f"Ré-initilisation de la base de données - {'SUCCES' if succes else 'ECHEC'}"
+    }
 
 
 # Run the FastAPI application

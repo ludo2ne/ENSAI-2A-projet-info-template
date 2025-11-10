@@ -1,18 +1,24 @@
+import time
+
 import streamlit as st
 
+joueur = st.session_state.get("joueur")
 
-def menu_page():
-    joueur = st.session_state.joueur
-    st.title(f"🎮 Menu principal — Bonjour {joueur['pseudo']} !")
+st.title("🎮 Menu principal")
 
-    st.write("Choisissez une action :")
+if joueur is None:
+    st.error("Accès non autorisé. Veuillez vous connecter.")
+    time.sleep(1)
+    st.switch_page("main_page.py")
 
-    if st.button("📋 Lister les joueurs"):
-        st.session_state.go_to("liste_joueurs")
+st.badge(f"Bonjour {joueur['pseudo']} !", color="orange")
 
-    if st.button("➕ Créer un joueur"):
-        st.session_state.go_to("creation_joueur")
+st.write("Choisissez une action :")
 
-    if st.button("🚪 Se déconnecter"):
-        st.session_state.joueur = None
-        st.session_state.go_to("connexion")
+if st.button("📋 Lister les joueurs"):
+    st.switch_page("pages/joueur_liste_page.py")
+if st.button("➕ Créer un joueur"):
+    st.switch_page("pages/joueur_creation_page.py")
+if st.button("🚪 Se déconnecter"):
+    st.session_state.joueur = None
+    st.switch_page("main_page.py")

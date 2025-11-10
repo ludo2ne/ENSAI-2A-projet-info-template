@@ -142,6 +142,13 @@ It is also possible to generate test coverage using [Coverage](https://coverage.
 
 
 
+## :arrow_forward: Launch application
+
+- Backend FastApi: `python src/backend/app.py`
+- Frontend Streamlit: `streamlit run src/frontend/main_page.py`
+
+---
+
 ## :arrow_forward: Launch the CLI application
 
 This application provides a very basic graphical interface for navigating between different menus.
