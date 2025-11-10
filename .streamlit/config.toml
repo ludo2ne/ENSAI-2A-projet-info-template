@@ -1,0 +1,9 @@
+[server]
+port = 9876
+
+[theme]
+primaryColor="#4b9cd3"
+backgroundColor="#abf1abff"
+secondaryBackgroundColor="#ffffff"
+textColor="#1a1a1a"
+font="Calibri"

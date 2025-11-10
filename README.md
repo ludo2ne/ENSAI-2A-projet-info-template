@@ -88,7 +88,7 @@ Normally, for the purposes of your project, you won't need to modify these files
   - list all packages
 
 ```bash
-pip install -r requirements.txt
+pip install -r src/frontend/requirements.txt -r src/backend/requirements.txt 
 pip list
 ```
 
