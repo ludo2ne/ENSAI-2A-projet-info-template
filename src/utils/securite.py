@@ -1,3 +1,5 @@
+# pas utiliser pour le projet mais on le garde si on veux hasher les mots de passe
+
 import hashlib
 
 

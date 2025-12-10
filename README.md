@@ -1,246 +1,304 @@
-# ENSAI-2A-projet-info-template
+# 🎲 ENSAI 2A — Projet: Serveur de Poker (Groupe 39)
 
-Template for the ENSAI 2nd year IT project.
+Ce projet a pour objectif de créer un **serveur de poker fonctionnel**, capable de gérer des tables et de faire jouer des parties de **Texas Hold’em**.  
+Les joueurs peuvent interagir avec le serveur via des requêtes **HTTP**, tandis que toutes les données importantes sont sauvegardées dans une base de données **PostgreSQL**.
 
-This very simple application includes a few elements that may help with the info 2A project:
+L’application a été conçue pour être **modulaire et professionnelle**, grâce à une **architecture en couches** qui sépare clairement la logique métier, l’accès aux données et les interfaces utilisateur.  
+Cette organisation facilite non seulement la maintenance et l’évolution du serveur, mais permet également d’intégrer facilement des fonctionnalités supplémentaires, comme un CLI interactif et  un webservice accessible à distance. Le projet propose :
 
-- Layer programming (DAO, service, view, business_object)
-- Connection to a database
-- Terminal interface (view layer) with [inquirerPy](https://inquirerpy.readthedocs.io/en/latest/)
-- Calling a Webservice
-- Creating a webservice
+- **Architecture en couches** : DAO, Service, Objet Métier, Vue
+- Connexion à une base de données **PostgreSQL**
+- Interface CLI avec InquirerPy
+- Création et consommation de webservice utilisant **FastAPI**
+- Journalisation (logging) avec décorateur et fichier de configuration
+- Tests unitaires et couverture de code
 
-
-## :arrow_forward: Software and tools
+## :arrow_forward: Logiciels et outils
 
 - [Visual Studio Code](https://code.visualstudio.com/)
 - [Python 3.13](https://www.python.org/)
 - [Git](https://git-scm.com/)
-- A [PostgreSQL](https://www.postgresql.org/) database
+- [PostgreSQL](https://www.postgresql.org/)
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [InquirerPy](https://inquirerpy.readthedocs.io/en/latest/)
+- [pytest](https://docs.pytest.org/)
+- [Coverage](https://coverage.readthedocs.io/)
 
+## :arrow_forward: Cloner le dépôt
 
-## :arrow_forward: Clone the repository
+- [ ] Ouvrir VSCode
+- [ ] Ouvrir **Git Bash**
+- [ ] Cloner le dépôt
+  - `git clone https://github.com/TheoDuc/ENSAI-2A-projet-info-Groupe_39`
 
-- [ ] Open VSCode
-- [ ] Open **Git Bash**
-- [ ] Clone the repo
-  - `git clone https://github.com/ludo2ne/ENSAI-2A-projet-info-template.git`
+### Ouvrir le dossier du projet
 
+- [ ] Lancer **Visual Studio Code**
+- [ ] Aller dans `Fichier > Ouvrir un dossier`
+- [ ] Sélectionner le dossier `ENSAI-2A-projet-info-Groupe_39`
+  - Ce dossier devrait être la **racine** de l'Explorateur VSCode.
+  - :warning: Si ce n'est pas le cas, l'application risque de ne pas démarrer. Dans ce cas, essayez de rouvrir le dossier.
 
-### Open Folder
+## Aperçu des fichiers du dépôt
 
-- [ ] Open **Visual Studio Code**
-- [ ] File > Open Folder
-- [ ] Select folder *ENSAI-2A-projet-info-template*
-  - *ENSAI-2A-projet-info-template* should be the root of your Explorer
-  - :warning: if not the application will not launch. Retry open folder
+| Fichier / Élément          | Description                                                                 |
+| -------------------------- | --------------------------------------------------------------------------- |
+| `README.md`                | Contient toutes les informations nécessaires pour comprendre, installer et utiliser le projet |
+| `LICENSE`                  | Définit les droits d'usage et les termes de licence pour ce dépôt           |
 
+### Fichiers de configuration
 
-## Repository Files Overview
+Ce projet inclut plusieurs fichiers de configuration utilisés pour configurer les outils, workflows et paramètres du projet.
 
+Dans la plupart des cas, **vous n'avez pas besoin de modifier ces fichiers**, sauf :
 
-| Item                       | Description                                                              |
-| -------------------------- | ------------------------------------------------------------------------ |
-| `README.md`                | Provides useful information to present, install, and use the application |
-| `LICENSE`                  | Specifies the usage rights and licensing terms for the repository        |
+- `.env` → pour configurer les variables d'environnement comme la connexion à la base de données et l'hôte du webservice
+- `requirements.txt` → pour gérer les dépendances Python
 
-### Configuration files
+| Fichier                   | Description                                                                 |
+| ---------------------------- | --------------------------------------------------------------------------- |
+| `.github/workflows/ci.yml`   | Workflow GitHub Actions pour les tâches automatisées comme les tests, le linting et le déploiement |
+| `.vscode/settings.json`      | Paramètres spécifiques au projet pour Visual Studio Code                    |
+| `.coveragerc`                | Configuration pour le rapport de couverture de tests                        |
+| `.gitignore`                 | Liste les fichiers et dossiers à exclure du contrôle de version             |
+| `logging_config.yml`         | Configuration pour la journalisation, incluant les niveaux de log et le formatage |
+| `requirements.txt`           | Liste des packages Python requis par le projet                              |
+| `.env`                       | Variables d'environnement pour la base de données, le webservice et autres paramètres |
 
-This repository contains a large number of configuration files for setting the parameters of the various tools used.
+> :information_source: Assurez-vous de créer et configurer le fichier `.env` comme décrit ci-dessous avant d'exécuter le projet.
 
-Normally, for the purposes of your project, you won't need to modify these files, except for `.env` and `requirements.txt`.
+### Dossiers du projet
 
+| Dossier | Description                                                                 |
+| ------------- | --------------------------------------------------------------------------- |
+| `data/`       | Scripts SQL pour initialiser et peupler la base de données                  |
+| `doc/`        | Diagrammes UML, documents de conception et documentation liée au projet    |
+| `logs/`       | Fichiers de log générés pendant l'exécution de l'application ou du webservice |
+| `src/`        | Code source Python organisé en architecture en couches (DAO, Service, BO, View) |
 
-| Item                       | Description                                                              |
-| -------------------------- | ------------------------------------------------------------------------ |
-| `.github/workflows/ci.yml` | Automated workflow that runs predefined tasks (like testing, linting, or deploying) |
-| `.vscode/settings.json`    | Contains VS Code settings specific to this project                       |
-| `.coveragerc`              | Setup for test coverage                                                  |
-| `.gitignore`               | Lists the files and folders that should not be tracked by Git            |
-| `logging_config.yml`       | Setup for logging                                                        |
-| `requirements.txt`         | Lists the required Python packages for the project                       |
+### Fichiers de paramètres
 
-You will also need a `.env` file. See below.
+Ce projet inclut plusieurs fichiers de configuration utilisés pour configurer les outils et les paramètres du projet.
 
+Dans la plupart des cas, **vous n'avez pas besoin de modifier ces fichiers**, sauf :
 
-### Folders
+- `.env` → pour configurer les variables d'environnement comme la connexion à la base de données et l'hôte du webservice
+- `requirements.txt` → pour gérer les dépendances Python
 
-| Item                       | Description                                                              |
-| -------------------------- | ------------------------------------------------------------------------ |
-| `data`                     | SQL script containing data sets                                          |
-| `doc`                      | UML diagrams, project status...                                          |
-| `logs`                     | Containing logs files (once you have launched the application)           |
-| `src`                      | Folder containing Python files organized using a layered architecture    |
+## :arrow_forward: Installer les packages requis
 
+Pour que le projet fonctionne correctement, vous devez installer toutes les dépendances Python nécessaires.
 
+### Étapes
 
-### Settings files
-
-This repository contains a large number of configuration files for setting the parameters of the various tools used.
-
-Normally, for the purposes of your project, you won't need to modify these files, except for `.env` and `requirements.txt`.
-
-
-## :arrow_forward: Install required packages
-
-- [ ] In Git Bash, run the following commands to:
-  - install all packages from file `requirements.txt`
-  - list all packages
+1. Ouvrez votre terminal (Git Bash, PowerShell, ou autre).
+2. Installez les packages listés dans `requirements.txt` :
 
 ```bash
 pip install -r requirements.txt
-pip list
 ```
+3. Vérifiez que les packages ont bien été installés
+```bash
+pip list
 
+```
+## :arrow_forward: Variables d'environnement
 
-## :arrow_forward: Environment variables
+Pour que votre application Python fonctionne correctement, vous devez définir certaines **variables d’environnement** afin de configurer la connexion à la base de données et au webservice.
 
-You are now going to define environment variables to declare the database and webservice to which you are going to connect your python application.
+### Étapes
 
-At the root of the project :
+1. À la racine du projet, créez un fichier nommé `.env`.
+2. Copiez-y les variables suivantes et complétez-les avec vos informations :
 
-- [ ] Create a file called `.env`
-- [ ] Paste in and complete the elements below
+```env
+# Adresse du webservice
+WEBSERVICE_HOST=https://user-cheikna-966547-user.user.lab.sspcloud.fr/docs#/
 
-```default
-WEBSERVICE_HOST=https://pokeapi.co/api/v2
-
+# Configuration de la base de données PostgreSQL
 POSTGRES_HOST=sgbd-eleves.domensai.ecole
 POSTGRES_PORT=5432
 POSTGRES_DATABASE=idxxxx
 POSTGRES_USER=idxxxx
 POSTGRES_PASSWORD=idxxxx
 POSTGRES_SCHEMA=projet
+HOST_WEBSERVICE=https://xxx.fr
+```
+## :arrow_forward: Tests unitaires
+
+Pour vérifier que toutes les fonctionnalités du projet fonctionnent correctement, vous pouvez exécuter les tests unitaires fournis.
+
+### Étapes
+
+1. Ouvrez votre terminal (Git Bash, PowerShell, ou autre).
+2. Lancez les tests avec `pytest` :
+
+Pour que Python saches que src contient les modules,Faire d'abord dans le terminal à la racine du projet:
+
+```bash
+export PYTHONPATH=$(pwd)/src
+```
+
+```bash
+# Commande standard
+pytest -v
+
+# Si pytest n'est pas dans votre PATH
+python -m pytest -v
+
 ```
 
 
-## :arrow_forward: Unit tests
+### Tests unitaires DAO
 
-- [ ] In Git Bash: `pytest -v` 
-  - or `python -m pytest -v` if *pytest* has not been added to *PATH*
+Pour garantir que les tests soient **répétables, sûrs et sans impact sur la base de données principale**, nous utilisons un **schéma dédié** pour les tests unitaires.
 
-
-### TU DAO
-
-To ensure tests are repeatable, safe, and **do not interfere with the real database**, we use a dedicated schema for unit testing.
-
-The DAO unit tests use data from the `data/pop_db_test.sql` file.
-
-This data is loaded into a separate schema (projet_test_dao) so as not to pollute the other data.
+- Les tests DAO utilisent des données d’exemple provenant de `data/pop_db_test.sql`.
+- Ces données sont chargées dans un schéma séparé nommé `projet_test_dao`, afin de **préserver la base de données principale**.
 
 
-### Test coverage
+### Couverture des tests
 
-It is also possible to generate test coverage using [Coverage](https://coverage.readthedocs.io/en/7.4.0/index.html)
+Vous pouvez générer un rapport de couverture de code avec **Coverage** pour vérifier quelles parties du code sont testées.
 
-:bulb: The `.coveragerc` file can be used to modify the settings
-
-- [ ] `coverage run -m pytest`
-- [ ] `coverage report -m`
-- [ ] `coverage html`
-  - Download and open coverage_report/index.html
+#### Étapes
 
 
+Pour que Python saches que src contient les modules,Faire d'abord dans le terminal à la racine du projet:
 
-## :arrow_forward: Launch the CLI application
+```bash
+export PYTHONPATH=$(pwd)/src
+```
+1. Exécutez les tests avec Coverage :
 
-This application provides a very basic graphical interface for navigating between different menus.
+```bash
+coverage run -m pytest
+```
+2. Affichez un rapport de couverture directement dans le terminal :
 
-- [ ] In Git Bash: `python src/main.py`
-- [ ] On first launch, choose **Reset database**
-  - this calls the `src/utils/reset_database.py` program
-  - which will itself execute the SQL scripts in the `data` folder
+```bash
+coverage report -m
+```
+3. Générez un rapport HTML détaillé :
 
+```bash
+coverage html
+```
+- [ ] Ouvrez le ficher `coverage_report/index.html` dans votre navigateur pour visualiser les résultats.
 
+## :arrow_forward: Lancer l’application CLI
 
-## :arrow_forward: Launch the webservice
+L’application en ligne de commande (CLI) offre une interface **interactive simple** pour naviguer dans les différents menus du serveur de poker.
 
-This application can also be used to create a webservice.
+### Étapes
 
-- [ ] `python src/app.py`
+1. Lancer d'abord sur un premier terminal
 
-Documentation :
+```bash
+python src/app.py
+```
+- Cela exécutera le script `src/utils/reset_database.py`.
+- Le script initialise la base de données en exécutant les fichiers SQL présents dans le dossier `data/`
 
-- /docs
-- /redoc
+2. Ensuite ouvrez un autre terminal et lancez l’application avec la commande suivante :
 
-### Endpoints
+```bash
+python src/main.py
+```
+Cela démarrera l’application CLI, vous permettant d’interagir avec le serveur de poker.
 
-Examples of endpoints (to be tested, for example, with *Insomnia* or a browser):
-
-
-- `GET http://localhost/joueur`
-- `GET http://localhost/joueur/3`
-- ```
-  POST http://localhost/joueur/
-  JSON body :
-    {
-      "pseudo": "patapouf",
-      "mdp": "9999",
-      "age": "95",
-      "mail": "patapouf@mail.fr",
-      "fan_pokemon": true
-    }
-  ```
-- ```
-  PUT http://localhost/joueur/3
-  JSON body :
-    {
-       "pseudo": "maurice_new",
-       "mdp": null,
-       "age": 20,
-       "mail": "maurice@ensai.fr",
-       "fan_pokemon": true
-    }
-  ```
-- `DELETE http://localhost/joueur/5`
+- [ ] Pour autant de joueurs que vous le souhaitez, ouvrez un nouveau terminal et lancez l’application avec la même commande.
+Ainsi, plusieurs joueurs peuvent se connecter en parallèle et jouer des parties
 
 
+## :arrow_forward: Lancer le Webservice
 
-## :arrow_forward: Logs
+Le webservice permet d’interagir avec le serveur de poker via des requêtes **HTTP**.  
+Vous pouvez tester les endpoints avec un client comme **Insomnia**, **Postman**, ou même directement depuis un navigateur pour certaines requêtes GET.
 
-It is initialised in the `src/utils/log_init.py` module:
+### Exemples d’Endpoints
 
-- This is called when the application or webservice is started.
-- It uses the `logging_config.yml` file for configuration.
-  - to change the log level :arrow_right: *level* tag
+Vous pouvez excecuter les requêtes suivantes sur insomnia ou postman une fois le webservice lancé :
 
-A decorator has been created in `src/utils/log_decorator.py`.
+- `POST http://localhost/table/`: créer une nouvelle table
+```
+{
+  "numero_table": 2,
+  "joueurs_max": 7,
+  "grosse_blind": 100,
+  "mode_jeu": 1,
+  "joueurs": []
+}
+```
+- `POST http://localhost/joueur/connexion/{pseudo}`: Pour connecter un joueur deja existant avec son pseudo
+```
+{
+  "_Joueur__id_joueur": 3,
+  "_Joueur__pseudo": "nil",
+  "_Joueur__credit": 2000,
+  "_Joueur__pays": "fr",
+  "_Joueur__numero_table": null,
+  "_Joueur__est_admin": false
+}
+```
+- `GET http://localhost/table/joueurs/{numero_table}`: Pour ajouter un joueur à une table
 
-When applied to a method, it will display in the logs :
+- `GET http://localhost/joueur/`: Pour récupérer la liste de tous les joueurs connectés
 
-- input parameters
-- the output
+- `GET http://localhost/action/suivre/{id_joueur}/{relance}`: Pour qu'un joueur suive une relance
 
-The logs can be viewed in the `logs` folder.
 
-Example of logs :
+
+
+
+> 💡 Astuce : FastAPI fournit une documentation interactive à l’adresse `/docs` lorsque le serveur est lancé.
+
+## :arrow_forward: Journalisation (Logs)
+
+La journalisation est initialisée dans le module `src/utils/log_init.py` :
+
+- Cette configuration est exécutée automatiquement au démarrage de l’application CLI ou du webservice.
+- Elle utilise le fichier `logging_config.yml` pour définir le format et le niveau des logs.
+
+Un **décorateur** est également disponible dans `src/utils/log_decorator.py` :
+
+- Lorsqu’il est appliqué à une fonction ou méthode, il enregistre automatiquement :
+  - Les paramètres d’entrée
+  - La valeur de retour
+
+Tous les logs sont sauvegardés dans le dossier `logs/` pour consultation et analyse.
+
+### Exemple de logs
+
 
 ```
-07/08/2024 09:07:07 - INFO     - ConnexionVue
-07/08/2024 09:07:08 - INFO     -     JoueurService.se_connecter('a', '*****') - DEBUT
-07/08/2024 09:07:08 - INFO     -         JoueurDao.se_connecter('a', '*****') - DEBUT
-07/08/2024 09:07:08 - INFO     -         JoueurDao.se_connecter('a', '*****') - FIN
-07/08/2024 09:07:08 - INFO     -            └─> Sortie : Joueur(a, 20 ans)
-07/08/2024 09:07:08 - INFO     -     JoueurService.se_connecter('a', '*****') - FIN
-07/08/2024 09:07:08 - INFO     -        └─> Sortie : Joueur(a, 20 ans)
-07/08/2024 09:07:08 - INFO     - MenuJoueurVue
+18/11/2025 19:11:34 - INFO     - AccueilVue
+18/11/2025 19:11:51 - INFO     - ConnexionVue
+18/11/2025 19:11:54 - INFO     - Connecte le joueur
+18/11/2025 19:11:54 - INFO     -     JoueurService.se_connecter('marine',) - DEBUT
+18/11/2025 19:11:54 - INFO     -         JoueurDao.se_connecter('marine',) - DEBUT
+18/11/2025 19:11:54 - INFO     -         JoueurDao.se_connecter('marine',) - FIN
+18/11/2025 19:11:54 - INFO     -            └─> Sortie : marine : 2000 crédits
+18/11/2025 19:11:54 - INFO     -     JoueurService.se_connecter('marine',) - FIN
+18/11/2025 19:11:54 - INFO     -        └─> Sortie : marine : 2000 crédits
+18/11/2025 19:11:54 - INFO     - MenuJoueurVue
+18/11/2025 19:12:02 - INFO     - Liste tous les joueurs
+18/11/2025 19:12:02 - INFO     - MenuJoueurVue
+18/11/2025 19:12:53 - INFO     - AccueilVue
+18/11/2025 19:13:20 - INFO     - AccueilVue
+18/11/2025 19:14:05 - INFO     - ConnexionVue
+18/11/2025 19:14:08 - INFO     - Connecte le joueur
+18/11/2025 19:14:08 - INFO     -     JoueurService.se_connecter('marine',) - DEBUT
+18/11/2025 19:14:08 - INFO     -         JoueurDao.se_connecter('marine',) - DEBUT
+18/11/2025 19:14:08 - INFO     -         JoueurDao.se_connecter('marine',) - FIN
+18/11/2025 19:14:08 - INFO     -            └─> Sortie : marine : 2000 crédits
+18/11/2025 19:14:08 - INFO     -     JoueurService.se_connecter('marine',) - FIN
+18/11/2025 19:14:08 - INFO     -        └─> Sortie : marine : 2000 crédits
+18/11/2025 19:14:08 - INFO     - MenuJoueurVue
+18/11/2025 19:14:12 - INFO     - MenuJoueurVue
+18/11/2025 19:14:26 - INFO     - MenuJoueurVue
+18/11/2025 19:14:53 - INFO     - Modifier un joueur
 ```
 
 
 
-## :arrow_forward: Continuous integration (CI)
-
-The repository contains a `.github/workflow/main.yml' file.
-
-When you *push* on GitHub, it triggers a pipeline that will perform the following steps:
-
-- Creating a container from an Ubuntu (Linux) image
-  - In other words, it creates a virtual machine with just a Linux kernel.
-- Install Python
-- Install the required packages
-- Run the unit tests (only the service tests, as it's more complicated to run the dao tests)
-- Analyse the code with *pylint*
-  - If the score is less than 7.5, the step will fail
-
-You can check how this pipeline is progressing on your repository's GitHub page, *Actions* tab.

@@ -1,9 +1,7 @@
 from InquirerPy import inquirer
 
 from utils.reset_database import ResetDatabase
-
 from view.vue_abstraite import VueAbstraite
-from view.session import Session
 
 
 class AccueilVue(VueAbstraite):
@@ -46,7 +44,9 @@ class AccueilVue(VueAbstraite):
                 return InscriptionVue("Création de compte joueur")
 
             case "Infos de session":
-                return AccueilVue(Session().afficher())
+                from view.accueil.InfosSessionVue import InfosSessionVue
+
+                return InfosSessionVue("Chargement...", temps_attente=0)
 
             case "Ré-initialiser la base de données":
                 succes = ResetDatabase().lancer()
@@ -54,3 +54,6 @@ class AccueilVue(VueAbstraite):
                     f"Ré-initilisation de la base de données - {'SUCCES' if succes else 'ECHEC'}"
                 )
                 return AccueilVue(message)
+
+
+

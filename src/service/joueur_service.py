@@ -1,95 +1,123 @@
-from tabulate import tabulate
-
-from utils.log_decorator import log
-from utils.securite import hash_password
+import logging
 
 from business_object.joueur import Joueur
 from dao.joueur_dao import JoueurDao
+from utils.log_decorator import log
+
+logger = logging.getLogger(__name__)
 
 
 class JoueurService:
-    """Classe contenant les méthodes de service des Joueurs"""
+    """
+    Service pour la gestion des joueurs :
+    - CRUD (création, lecture, modification, suppression)
+    - Rattachement à une table
+    - Gestion des crédits via les méthodes de Joueur
+    """
+
+    _instance = None
+    _joueurs_connectes: dict[int, Joueur] = {}
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+    def __init__(self):
+        self.dao = JoueurDao()
 
     @log
-    def creer(self, pseudo, mdp, age, mail, fan_pokemon) -> Joueur:
-        """Création d'un joueur à partir de ses attributs"""
+    def se_connecter(self, pseudo: str) -> Joueur:
+        """Simule la connexion d’un joueur via son pseudo."""
 
-        nouveau_joueur = Joueur(
-            pseudo=pseudo,
-            mdp=hash_password(mdp, pseudo),
-            age=age,
-            mail=mail,
-            fan_pokemon=fan_pokemon,
-        )
+        joueur = self.dao.se_connecter(pseudo)
 
-        return nouveau_joueur if JoueurDao().creer(nouveau_joueur) else None
+        if joueur is None:
+            raise ValueError(f"Le pseudo '{pseudo}' n'existe pas !")
+
+        if joueur.id_joueur in self._joueurs_connectes:
+            raise Exception(f"Le joueur {joueur.pseudo} est déjà connecté !")
+
+        self._joueurs_connectes[joueur.id_joueur] = joueur
+
+        return joueur
 
     @log
-    def lister_tous(self, inclure_mdp=False) -> list[Joueur]:
-        """Lister tous les joueurs
-        Si inclure_mdp=True, les mots de passe seront inclus
-        Par défaut, tous les mdp des joueurs sont à None
+    def deconnexion(self, id_joueur: int) -> None:
+        """Déconnecte un joueur de l'application"""
+        if id_joueur not in self._joueurs_connectes:
+            raise Exception(f"Le joueur avec l'identifiant {id_joueur} n'est pas connecté.")
+
+        del self._joueurs_connectes[id_joueur]
+
+    def joueurs_connectes(self):
+        """Renvoie les id des joueurs connectés"""
+        return [id for id in self._joueurs_connectes.keys()]
+
+    @log
+    def pseudo_deja_utilise(self, pseudo: str) -> bool:
         """
-        joueurs = JoueurDao().lister_tous()
-        if not inclure_mdp:
-            for j in joueurs:
-                j.mdp = None
-        return joueurs
+        Vérifie si un pseudo existe déjà dans la base
 
-    @log
-    def trouver_par_id(self, id_joueur) -> Joueur:
-        """Trouver un joueur à partir de son id"""
-        return JoueurDao().trouver_par_id(id_joueur)
+        Paramètres
+        ----------
+        pseudo : str
+            Pseudo à vérifier
 
-    @log
-    def modifier(self, joueur) -> Joueur:
-        """Modification d'un joueur"""
-
-        joueur.mdp = hash_password(joueur.mdp, joueur.pseudo)
-        return joueur if JoueurDao().modifier(joueur) else None
-
-    @log
-    def supprimer(self, joueur) -> bool:
-        """Supprimer le compte d'un joueur"""
-        return JoueurDao().supprimer(joueur)
-
-    @log
-    def afficher_tous(self) -> str:
-        """Afficher tous les joueurs
-        Sortie : Une chaine de caractères mise sous forme de tableau
+        Renvois
+        -------
+        bool
+            True si le pseudo existe, False sinon
         """
-        entetes = ["pseudo", "age", "mail", "est fan de Pokemon"]
-
-        joueurs = JoueurDao().lister_tous()
-
-        for j in joueurs:
-            if j.pseudo == "admin":
-                joueurs.remove(j)
-
-        joueurs_as_list = [j.as_list() for j in joueurs]
-
-        str_joueurs = "-" * 100
-        str_joueurs += "\nListe des joueurs \n"
-        str_joueurs += "-" * 100
-        str_joueurs += "\n"
-        str_joueurs += tabulate(
-            tabular_data=joueurs_as_list,
-            headers=entetes,
-            tablefmt="psql",
-            floatfmt=".2f",
-        )
-        str_joueurs += "\n"
-
-        return str_joueurs
+        return self.dao.se_connecter(pseudo) is not None
 
     @log
-    def se_connecter(self, pseudo, mdp) -> Joueur:
-        """Se connecter à partir de pseudo et mdp"""
-        return JoueurDao().se_connecter(pseudo, hash_password(mdp, pseudo))
+    def creer(self, pseudo: str, pays: str) -> Joueur | None:
+        """Crée un joueur avec 2000 crédits par défaut si le pseudo n’existe pas déjà"""
+        if self.pseudo_deja_utilise(pseudo):  # vérifie si le pseudo existe
+            logger.warning(f"Pseudo {pseudo} déjà utilisé")
+            return None
+
+        try:
+            created = self.dao.creer(pseudo, pays)
+            if created:
+                joueur = self.dao.se_connecter(pseudo)
+                logger.info(f"Joueur créé avec succès : {joueur}")
+                return joueur
+        except Exception as e:
+            logger.error(f"Erreur lors de la création du joueur {pseudo} : {e}")
+
+        return None
+
+    def trouver_par_id(self, id_joueur: int) -> Joueur | None:
+        """Récupère un joueur par ID"""
+        if id_joueur in self._joueurs_connectes.keys():
+            return self._joueurs_connectes[id_joueur]
+
+        raise ValueError(f"Le joueur avec l'identifiant {id_joueur} n'est pas connecté")
+
+    def trouver_par_pseudo(self, pseudo: str) -> Joueur | None:
+        """Récupère un joueur par pseudo"""
+        joueur = self.dao.trouver_par_pseudo(pseudo)
+        return joueur
+
+    def lister_tous(self) -> list[Joueur]:
+        """Liste tous les joueurs"""
+        return self.dao.lister_tous()
 
     @log
-    def pseudo_deja_utilise(self, pseudo) -> bool:
-        """Vérifie si le pseudo est déjà utilisé
-        Retourne True si le pseudo existe déjà en BDD"""
-        joueurs = JoueurDao().lister_tous()
-        return pseudo in [j.pseudo for j in joueurs]
+    def modifier(self, joueur: Joueur) -> Joueur | None:
+        """Met à jour les informations d’un joueur via DAO"""
+        return joueur if self.dao.modifier(joueur) else None
+
+    @log
+    def supprimer(self, joueur: Joueur) -> bool:
+        """Supprime un joueur via DAO"""
+        return self.dao.supprimer(joueur)
+
+    def maj_joueur(self, joueur: Joueur) -> None:
+        """Met à jour le joueur dans le service"""
+        if joueur.id_joueur not in self._joueurs_connectes:
+            raise Exception(f"Le joueur {joueur.pseudo} n'est pas connecté")
+
+        self._joueurs_connectes[joueur.id_joueur] = joueur

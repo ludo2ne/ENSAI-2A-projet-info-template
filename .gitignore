@@ -160,3 +160,4 @@ cython_debug/
 
 .env
 logs/*
+cax.py

@@ -1,8 +1,16 @@
-INSERT INTO joueur(id_joueur, pseudo, mdp, age, mail, fan_pokemon) VALUES
-(999, 'admin',      '0000',     0,       'admin@projet.fr',      null),
-(998, 'a',             'a',     20,      'a@ensai.fr',           true),
-(997, 'maurice',    '1234',     20,      'maurice@ensai.fr',     true),
-(996, 'batricia',   '9876',     25,      'bat@projet.fr',        false),
-(995, 'miguel',     'abcd',     23,      'miguel@projet.fr',     true),
-(994, 'gilbert',    'toto',     21,      'gilbert@projet.fr',    false),
-(993, 'junior',     'aaaa',     15,      'junior@projet.fr',     true);
+INSERT INTO manche(id_manche, carte1, carte2, carte3, carte4, carte5) VALUES
+(999, 'As de Pique', 'Roi de Pique', 'Roi de Carreau', '9 de Pique','10 de Pique'),
+(998, '10 de Pique', 'Roi de Pique', 'Roi de Carreau', '9 de Pique','7 de Pique'),
+(997, '3 de Pique', 'Dame de Pique', '8 de Carreau', '9 de Pique','10 de Pique');
+
+INSERT INTO joueur(id_joueur, pseudo, credit, pays) VALUES
+(999, 'admin',       0,       'fr'),
+(998, 'a',           20,      'us'),
+(997, 'maurice',     20,      'uk'),
+(996, 'batricia',    25,      'fr');
+
+
+INSERT INTO manche_joueur(id_joueur, id_manche, carte_main_1, carte_main_2, mise, gain, tour_couche) VALUES
+(998, 998, '3 de Pique', 'Dame de Pique', 100, -100, 2),
+(997, 997, '10 de Pique', 'Roi de Pique', 100, 300, 10);
+

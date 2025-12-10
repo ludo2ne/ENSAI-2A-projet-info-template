@@ -40,4 +40,11 @@
     ],
     "python.testing.pytestEnabled": true,
     "python.testing.unittestEnabled": false,
+
+
+{
+    "python.linting.enabled": true,
+    "python.linting.ruffEnabled": true,
+    "python.linting.ruffPath": ["ruff"],   // chemin de l’exécutable
+    "python.linting.ruffArgs": ["--fix"]   // applique les corrections auto
 }

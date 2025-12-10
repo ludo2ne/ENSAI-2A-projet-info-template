@@ -11,4 +11,4 @@ omit =
 
     
 [html]
-    directory = coverage_report
+directory = coverage_report

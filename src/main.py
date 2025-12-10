@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
     initialiser_logs("Application")
 
-    vue_courante = AccueilVue("Bienvenue")
+    vue_courante = AccueilVue("Bienvenue sur ENS-all-in")
     nb_erreurs = 0
 
     while vue_courante:
@@ -32,8 +32,10 @@ if __name__ == "__main__":
                 "Consultez les logs pour plus d'informations."
             )
 
-    # Lorsque l on quitte l application
+    # Lorsque l'on quitte l'application
     print("----------------------------------")
     print("Au revoir")
+    for _ in range(3):
+        print()
 
     logging.info("Fin de l'application")
