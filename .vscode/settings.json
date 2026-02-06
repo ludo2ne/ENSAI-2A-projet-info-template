@@ -1,5 +1,8 @@
 {
     "ruff.lint.enable": true,
+    "ruff.format.preview": true,
+    "ruff.lint.preview": true,
+    "editor.rulers": [100],
     "[python]": {
         "editor.defaultFormatter": "charliermarsh.ruff",
         "editor.formatOnSave": true,
@@ -10,34 +13,15 @@
         "source.fixAll": "explicit",            
         "source.organizeImports": "explicit"
     },
-    "editor.rulers": [100],
-    "ruff.lineLength": 100,
-    "flake8.enabled": false,
-    "python.analysis.extraPaths": [
-        "./*"
-    ],
-    "terminal.integrated.env.windows": {
-        "PYTHONPATH": "${workspaceFolder}/src"
-    },
-    "terminal.integrated.env.linux": {
-        "PYTHONPATH": "${workspaceFolder}/src"
-    },
-    "terminal.integrated.env.osx": {
-        "PYTHONPATH": "${workspaceFolder}/src"
-    },
     "python.languageServer": "Jedi",
     "terminal.integrated.defaultProfile.windows": "Git Bash",
     "files.exclude": {
         "**/__pycache__": true,
-        "**/.pytest_cache": true
+        "**/.pytest_cache": true,
+        "**/.ruff_cache": true,
+        "**/.mypy_cache": true
     },
-    "python.testing.unittestArgs": [
-        "-v",
-        "-s",
-        "./src",
-        "-p",
-        "test*.py"
-    ],
-    "python.testing.pytestEnabled": true,
-    "python.testing.unittestEnabled": false,
+    "editor.quickSuggestions": {
+        "strings": true
+    }
 }

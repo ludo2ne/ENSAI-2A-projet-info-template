@@ -1,8 +1,8 @@
 import os
-import dotenv
-import psycopg2
 
+import psycopg2
 from psycopg2.extras import RealDictCursor
+
 from utils.singleton import Singleton
 
 
@@ -14,7 +14,6 @@ class DBConnection(metaclass=Singleton):
 
     def __init__(self):
         """Ouverture de la connexion"""
-        dotenv.load_dotenv()
 
         self.__connection = psycopg2.connect(
             host=os.environ["POSTGRES_HOST"],

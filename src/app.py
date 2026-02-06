@@ -9,7 +9,6 @@ from utils.log_init import initialiser_logs
 
 app = FastAPI(title="Mon webservice")
 
-
 initialiser_logs("Webservice")
 
 joueur_service = JoueurService()
@@ -107,8 +106,13 @@ async def hello_name(name: str):
 
 # Run the FastAPI application
 if __name__ == "__main__":
+    import os
+
+    import dotenv
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=9876)
+    dotenv.load_dotenv(override=True)
+
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ["UVICORN_PORT"]))
 
     logging.info("Arret du Webservice")
