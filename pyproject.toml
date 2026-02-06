@@ -2,13 +2,33 @@
 name = "my_project_template"
 version = "0.1.0"
 
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "psycopg2-binary",
+    "python-dotenv",
+    "PyYAML",
+    "requests",
+    "tabulate",
+    "regex",
+    "inquirerPy"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "coverage",
+    "pylint",
+    "ruff"
+]
+
 [tool.setuptools]
 package-dir = {"" = "src"} #source files are in folder src
 
 [tool.ruff]
 line-length = 100
-target-version = "py311"
-src = ["src"]
+target-version = "py313"
+src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP"]
@@ -19,6 +39,22 @@ quote-style = "double"
 indent-style = "space"
 
 [tool.pytest.ini_options]
-testpaths = ["src"]
-python_files = ["test_*.py"]
+testpaths = ["tests"]
+python_files = ["*test*.py"]
 addopts = "-v -s"
+
+[tool.coverage.run]
+branch = true
+include = [
+    "src/service/*",
+    "src/dao/*"
+]
+omit = [
+    "*/__init__.py"
+]
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.coverage.html]
+directory = "coverage_report"

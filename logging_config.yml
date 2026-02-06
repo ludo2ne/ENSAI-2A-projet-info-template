@@ -12,6 +12,7 @@ handlers:
     encoding: utf8
 loggers:
   simpleLogger:
+    level: INFO
     handlers: [file]
     propagate: no
 root:

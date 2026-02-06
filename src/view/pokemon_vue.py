@@ -1,7 +1,7 @@
 from InquirerPy import inquirer
 
-from view.vue_abstraite import VueAbstraite
 from client.pokemon_client import PokemonClient
+from view.vue_abstraite import VueAbstraite
 
 
 class PokemonVue(VueAbstraite):

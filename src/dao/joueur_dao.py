@@ -1,11 +1,9 @@
 import logging
 
-from utils.singleton import Singleton
-from utils.log_decorator import log
-
-from dao.db_connection import DBConnection
-
 from business_object.joueur import Joueur
+from dao.db_connection import DBConnection
+from utils.log_decorator import log
+from utils.singleton import Singleton
 
 
 class JoueurDao(metaclass=Singleton):
@@ -199,8 +197,8 @@ class JoueurDao(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     # Supprimer le compte d'un joueur
                     cursor.execute(
-                        "DELETE FROM joueur                  "
-                        " WHERE id_joueur=%(id_joueur)s      ",
+                        "DELETE FROM joueur                                       "
+                        " WHERE id_joueur=%(id_joueur)s                           ",
                         {"id_joueur": joueur.id_joueur},
                     )
                     res = cursor.rowcount

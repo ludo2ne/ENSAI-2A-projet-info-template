@@ -84,11 +84,11 @@ Normally, for the purposes of your project, you won't need to modify these files
 ## :arrow_forward: Install required packages
 
 - [ ] In Git Bash, run the following commands to:
-  - install all packages from file `requirements.txt`
+  - install all packages listed in setup file pyproject.toml
   - list all packages
 
 ```bash
-pip install -r requirements.txt
+pip install -e .[dev]
 pip list
 ```
 

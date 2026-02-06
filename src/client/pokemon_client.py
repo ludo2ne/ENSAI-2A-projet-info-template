@@ -1,7 +1,6 @@
 import os
-import requests
 
-from typing import List
+import requests
 
 
 class PokemonClient:
@@ -10,7 +9,7 @@ class PokemonClient:
     def __init__(self) -> None:
         self.__host = os.environ["WEBSERVICE_HOST"]
 
-    def get_pokemon_types(self) -> List[str]:
+    def get_pokemon_types(self) -> list[str]:
         """
         Returns list of pokemon types (fire, water, grass...)
         """
@@ -28,7 +27,7 @@ class PokemonClient:
 
         return sorted(pokemon_types)
 
-    def get_all_pokemon_by_types(self, pokemon_type) -> List[str]:
+    def get_all_pokemon_by_types(self, pokemon_type) -> list[str]:
         """
         Renvoie la liste des Pokemons du type indiqué en paramètre
         """

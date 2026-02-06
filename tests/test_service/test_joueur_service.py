@@ -1,11 +1,8 @@
 from unittest.mock import MagicMock
 
-from service.joueur_service import JoueurService
-
-from dao.joueur_dao import JoueurDao
-
 from business_object.joueur import Joueur
-
+from dao.joueur_dao import JoueurDao
+from service.joueur_service import JoueurService
 
 liste_joueurs = [
     Joueur(pseudo="jp", age="10", mail="jp@mail.fr", mdp="1234"),
