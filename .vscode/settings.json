@@ -1,27 +1,37 @@
 {
-    "ruff.lint.enable": true,
-    "ruff.format.preview": true,
-    "ruff.lint.preview": true,
-    "editor.rulers": [100],
-    "[python]": {
-        "editor.defaultFormatter": "charliermarsh.ruff",
-        "editor.formatOnSave": true,
-        "editor.insertSpaces": true,
-        "editor.tabSize": 4,
-    },
+  "workbench.colorTheme": "Default Dark Modern",
+  "editor.fontSize": 16,
+  "[python]": {
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wrappingIndent": "indent",
+    "editor.wordWrapColumn": 120,
+    "editor.rulers": [
+      120
+    ],
     "editor.codeActionsOnSave": {
-        "source.fixAll": "explicit",            
-        "source.organizeImports": "explicit"
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit",
+      "source.addMissingImports": "explicit"
     },
-    "python.languageServer": "Jedi",
-    "terminal.integrated.defaultProfile.windows": "Git Bash",
-    "files.exclude": {
-        "**/__pycache__": true,
-        "**/.pytest_cache": true,
-        "**/.ruff_cache": true,
-        "**/.mypy_cache": true
-    },
-    "editor.quickSuggestions": {
-        "strings": true
-    }
+    "editor.inlayHints.enabled": "off",
+  },
+  "ruff.lint.enable": true,
+  "ruff.format.preview": true,
+  "ruff.lint.preview": true,
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/.ruff_cache": true,
+    "**/.mypy_cache": true,
+    "**/.egg-info": true
+  },
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "python.languageServer": "Jedi",
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
 }
