@@ -12,7 +12,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:15
+        image: postgres:latest
         env:
           POSTGRES_DB: test_db
           POSTGRES_USER: postgres_user
@@ -26,12 +26,13 @@ jobs:
           --health-retries=5
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
+          cache: "pip"
 
       - name: Install dependencies (prod + dev)
         run: |
@@ -41,7 +42,6 @@ jobs:
       - name: Create .env file
         run: |
           cat <<EOF > .env
-          WEBSERVICE_HOST=https://pokeapi.co/api/v2
           POSTGRES_HOST=localhost
           POSTGRES_PORT=5432
           POSTGRES_DATABASE=test_db
@@ -65,3 +65,7 @@ jobs:
       - name: Lint with Ruff
         run: |
           ruff check src tests
+
+      - name: Security scan
+        run: |
+          bandit -r src

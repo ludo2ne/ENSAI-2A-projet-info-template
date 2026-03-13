@@ -20,7 +20,7 @@ async def redirect_to_docs():
     return RedirectResponse(url="/docs")
 
 
-@app.get("/joueur/", tags=["Joueurs"])
+@app.get("/joueur", tags=["Joueurs"])
 async def lister_tous_joueurs():
     """Lister tous les joueurs"""
     logging.info("Lister tous les joueurs")
@@ -51,7 +51,7 @@ class JoueurModel(BaseModel):
     fan_pokemon: bool
 
 
-@app.post("/joueur/", tags=["Joueurs"])
+@app.post("/joueur", tags=["Joueurs"])
 async def creer_joueur(j: JoueurModel):
     """Créer un joueur"""
     logging.info("Créer un joueur")
@@ -113,6 +113,10 @@ if __name__ == "__main__":
 
     dotenv.load_dotenv(override=True)
 
-    uvicorn.run(app, host="0.0.0.0", port=int(os.environ["UVICORN_PORT"]))
+    uvicorn.run(
+        app,
+        host=os.getenv("UVICORN_HOST", "127.0.0.1"),
+        port=int(os.getenv("UVICORN_PORT", "5000")),
+    )
 
     logging.info("Arret du Webservice")
