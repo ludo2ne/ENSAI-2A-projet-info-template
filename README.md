@@ -93,10 +93,10 @@ Documentation :
 
 Examples of endpoints, assuming that the environment variable `$API_URL` contains the URL of the web service:
 
-- `curl -X GET $API_URL/joueur/3 | jq .`
+- `curl -X GET $API_URL/joueur | jq .`
 - `curl -X GET $API_URL/joueur/3 | jq .`
 - ```
-  curl -X POST "$API_URL/joueur/" \
+  curl -X POST "$API_URL/joueur" \
     -H "Content-Type: application/json" \
     -d '{
       "pseudo": "patapouf",
@@ -138,8 +138,6 @@ It is also possible to generate test coverage using [Coverage](https://coverage.
   - Download and open coverage_report/index.html
 
 
-
-
 ## :arrow_forward: Project structure
 
 ### Folders
@@ -163,7 +161,6 @@ It is also possible to generate test coverage using [Coverage](https://coverage.
 | `.gitignore`               | Lists files and folders that should not be tracked by Git                            |
 | `logging_config.yml`       | Setup for logging                                                                    |
 | `pyproject.toml`           | List dependencies and their settings                                                 |
-
 
 
 ## :arrow_forward: Logs
@@ -195,7 +192,6 @@ Example of logs :
 07/08/2024 09:07:08 - INFO     -        └─> Sortie : Joueur(a, 20 ans)
 07/08/2024 09:07:08 - INFO     - MenuJoueurVue
 ```
-
 
 
 ## :arrow_forward: Continuous integration (CI)

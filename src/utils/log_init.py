@@ -15,8 +15,9 @@ def initialiser_logs(nom):
     # Création du dossier logs à la racine si non existant
     os.makedirs("logs", exist_ok=True)
 
-    stream = open("logging_config.yml", encoding="utf-8")
-    config = yaml.load(stream, Loader=yaml.FullLoader)
+    with open("logging_config.yml", encoding="utf-8") as stream:
+        config = yaml.safe_load(stream)
+
     logging.config.dictConfig(config)
 
     logging.info("-" * 50)
