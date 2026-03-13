@@ -116,7 +116,7 @@ if __name__ == "__main__":
     uvicorn.run(
         app,
         host=os.getenv("UVICORN_HOST", "127.0.0.1"),
-        port=int(os.environ["UVICORN_PORT"]),
+        port=int(os.getenv("UVICORN_PORT", "5000")),
     )
 
     logging.info("Arret du Webservice")

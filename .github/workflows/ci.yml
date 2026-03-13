@@ -42,7 +42,6 @@ jobs:
       - name: Create .env file
         run: |
           cat <<EOF > .env
-          WEBSERVICE_HOST=https://pokeapi.co/api/v2
           POSTGRES_HOST=localhost
           POSTGRES_PORT=5432
           POSTGRES_DATABASE=test_db

@@ -52,7 +52,7 @@ At the root of the project:
 - [ ] Paste in and complete the elements below
 
 ```default
-WEBSERVICE_HOST=https://pokeapi.co/api/v2
+EXTERNAL_WEBSERVICE_HOST=https://pokeapi.co/api/v2
 
 POSTGRES_HOST=postgresql-cnpg-<suffixe>
 POSTGRES_PORT=5432
@@ -61,6 +61,7 @@ POSTGRES_USER=user-<username>
 POSTGRES_PASSWORD=<password>
 POSTGRES_SCHEMA=projet
 
+UVICORN_HOST=0.0.0.0
 UVICORN_PORT=9876
 ```
 
