@@ -1,6 +1,6 @@
 import logging
 import logging.config
-import os
+from pathlib import Path
 
 import yaml
 
@@ -13,12 +13,15 @@ def initialiser_logs(nom):
     # os.chdir('ENSAI-2A-projet-info-template')
 
     # Création du dossier logs à la racine si non existant
-    os.makedirs("logs", exist_ok=True)
+    logs_dir = Path(__file__).resolve().parents[4] / "logs"
+    logs_dir.mkdir(exist_ok=True)
 
-    stream = open("backend/logging_config.yml", encoding="utf-8")
-    config = yaml.load(stream, Loader=yaml.FullLoader)
-    logging.config.dictConfig(config)
+    config_file = Path(__file__).resolve().parents[2] / "logging_config.yml"
 
-    logging.info("-" * 50)
-    logging.info(f"Lancement {nom}                           ")
-    logging.info("-" * 50)
+    with open(config_file, encoding="utf-8") as stream:
+        config = yaml.load(stream, Loader=yaml.FullLoader)
+        logging.config.dictConfig(config)
+
+        logging.info("-" * 50)
+        logging.info(f"Lancement {nom}                           ")
+        logging.info("-" * 50)

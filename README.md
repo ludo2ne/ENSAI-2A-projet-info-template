@@ -71,8 +71,10 @@ UVICORN_PORT=5000
 
 :construction:
 
+Open two terminals:
+
 - Backend FastApi: `python backend/src//main.py`
-- Frontend Streamlit: `streamlit run frontend/src/app.py`
+- Frontend Streamlit: `cd frontend && streamlit run src/app.py`
 
 
 ### Launch the CLI application

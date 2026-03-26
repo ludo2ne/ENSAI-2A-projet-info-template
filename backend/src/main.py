@@ -3,9 +3,10 @@
 import logging
 
 import dotenv
-from controller import connexion_controller, joueur_controller
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+
+from controller import connexion_controller, joueur_controller
 from utils.log_init import initialiser_logs
 from utils.reset_database import ResetDatabase
 
@@ -50,7 +51,11 @@ if __name__ == "__main__":
     import dotenv
     import uvicorn
 
-    dotenv.load_dotenv(override=True)
+    import utils.env_variables as env_variables
+
+    env_variables.load_environment_variables()
+
+    env_variables.display_values()
 
     uvicorn.run(
         app,
