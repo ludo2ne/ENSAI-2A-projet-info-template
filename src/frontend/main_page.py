@@ -1,7 +1,7 @@
 import requests
 import streamlit as st
 
-API_URL = st.secrets.get("API_URL", "http://localhost:5001")
+API_URL = st.secrets.get("API_URL", "http://localhost:8000")
 
 st.set_page_config(page_title="Gestion des joueurs", page_icon="🎮", layout="centered")
 
