@@ -71,8 +71,8 @@ UVICORN_PORT=5000
 
 :construction:
 
-- Backend FastApi: `python src/backend/app.py`
-- Frontend Streamlit: `streamlit run src/frontend/main_page.py`
+- Backend FastApi: `python backend/src//main.py`
+- Frontend Streamlit: `streamlit run frontend/src/app.py`
 
 
 ### Launch the CLI application
@@ -137,11 +137,11 @@ The DAO unit tests use data from the `data/pop_db_test.sql` file.
 
 This data is loaded into a separate schema (projet_test_dao) so as not to pollute the other data.
 
-- [ ] Lanch unit tests: `pytest -v` 
+- [ ] Lanch unit tests: `pytest backend` 
 
 It is also possible to generate test coverage using [Coverage](https://coverage.readthedocs.io/en/7.4.0/index.html)
 
-- [ ] `coverage run -m pytest`
+- [ ] `coverage run -m pytest backend`
 - [ ] `coverage report -m`
 - [ ] `coverage html`
   - Download and open coverage_report/index.html

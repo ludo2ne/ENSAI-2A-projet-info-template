@@ -13,7 +13,7 @@ st.title("📋 Liste des joueurs")
 if st.session_state.get("joueur") is None:
     st.error("Accès non autorisé. Veuillez vous connecter.")
     time.sleep(1)
-    st.switch_page("main_page.py")
+    st.switch_page("pages/main_page.py")
 
 if st.button("⬅️ Retour au menu"):
     st.switch_page("pages/menu_page.py")

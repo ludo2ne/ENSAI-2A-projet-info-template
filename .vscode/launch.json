@@ -5,20 +5,20 @@
             "name": "Front-end Streamlit",
             "type": "node-terminal",
             "request": "launch",
-            "command": "streamlit run src/frontend/main_page.py",
+            "command": "streamlit run frontend/src/app.py",
             "cwd": "${workspaceFolder}",
             "env": {
-                "PYTHONPATH": "${workspaceFolder}/src/frontend"
+                "PYTHONPATH": "${workspaceFolder}/frontend/src"
             }
         },
         {
             "name": "Back-end FastApi",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/src/backend/app.py",
+            "program": "${workspaceFolder}/backend/src/main.py",
             "console": "integratedTerminal",
             "env": {
-                "PYTHONPATH": "${workspaceFolder}/src/backend"
+                "PYTHONPATH": "${workspaceFolder}/backend/src"
             }
         }
     ]

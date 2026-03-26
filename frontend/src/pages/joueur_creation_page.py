@@ -7,7 +7,7 @@ API_URL = st.secrets.get("API_URL", "http://localhost:5000")
 
 st.title("➕ Création d'un joueur")
 if st.button("⬅️ Retour au menu"):
-    st.switch_page("main_page.py")
+    st.switch_page("pages/main_page.py")
 
 pseudo = st.text_input("Pseudo")
 mdp = st.text_input("Mot de passe", type="password")

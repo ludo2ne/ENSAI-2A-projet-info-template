@@ -16,12 +16,16 @@ st.markdown(
 )
 
 pseudo = st.text_input("Pseudo", placeholder="Entrez votre pseudo")
-mdp = st.text_input("Mot de passe", type="password", placeholder="Entrez votre mot de passe")
+mdp = st.text_input(
+    "Mot de passe", type="password", placeholder="Entrez votre mot de passe"
+)
 
 with st.container(horizontal_alignment="center"):
     if st.button("Se connecter"):
         try:
-            r = requests.post(f"{API_URL}/connexion", json={"pseudo": pseudo, "mdp": mdp})
+            r = requests.post(
+                f"{API_URL}/connexion", json={"pseudo": pseudo, "mdp": mdp}
+            )
         except requests.RequestException:
             st.error("Erreur de connexion au serveur API.")
         if r.status_code == 200:
@@ -36,7 +40,9 @@ with st.container(horizontal_alignment="center"):
                 error_detail = r.json().get("detail", r.text)
             except ValueError:
                 error_detail = r.text
-            st.error(f"Erreur serveur.  \nStatut : {r.status_code}  \nDétail : {error_detail}")
+            st.error(
+                f"Erreur serveur.  \nStatut : {r.status_code}  \nDétail : {error_detail}"
+            )
 st.space("small")
 
 if st.button("➕ Créer un compte"):
