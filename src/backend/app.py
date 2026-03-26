@@ -45,7 +45,17 @@ async def reset_database():
 
 # Run the FastAPI application
 if __name__ == "__main__":
+    import os
+
+    import dotenv
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=5000)
-    logging.info("Arrêt du Webservice")
+    dotenv.load_dotenv(override=True)
+
+    uvicorn.run(
+        app,
+        host=os.getenv("UVICORN_HOST", "127.0.0.1"),
+        port=int(os.getenv("UVICORN_PORT", "5000")),
+    )
+
+    logging.info("Arret du Webservice")

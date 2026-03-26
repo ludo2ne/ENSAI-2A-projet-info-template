@@ -5,9 +5,11 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         python-version: ["3.13"]
+
     services:
       postgres:
         image: postgres:latest
@@ -18,51 +20,52 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U user -d test_db"
+          --health-cmd="pg_isready -U postgres_user -d test_db"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
+
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
 
-    - name: Set up Path
-      run: |
-        PWD=$(pwd)
-        export PYTHONPATH=$PWD/src
-        echo "PYTHONPATH=$PYTHONPATH" >> $GITHUB_ENV
+      - name: Install dependencies (prod + dev)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[dev]
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Create .env file
+        run: |
+          cat <<EOF > .env
+          POSTGRES_HOST=localhost
+          POSTGRES_PORT=5432
+          POSTGRES_DATABASE=test_db
+          POSTGRES_USER=postgres_user
+          POSTGRES_PASSWORD=postgres_pwd
+          POSTGRES_SCHEMA=projet
+          EOF
 
-    - name: Create .env file
-      run: |
-        echo "WEBSERVICE_HOST=https://pokeapi.co/api/v2" > .env
-        echo "POSTGRES_HOST=localhost" >> .env
-        echo "POSTGRES_PORT=5432" >> .env
-        echo "POSTGRES_DATABASE=test_db" >> .env
-        echo "POSTGRES_USER=postgres_user" >> .env
-        echo "POSTGRES_PASSWORD=postgres_pwd" >> .env
-        echo "POSTGRES_SCHEMA=projet" >> .env
+      - name: Wait for PostgreSQL
+        run: |
+          until pg_isready -h localhost -p 5432 -U postgres_user -d test_db; do
+            echo "Waiting for PostgreSQL..."
+            sleep 1
+          done
 
-    - name: Wait for PostgreSQL
-      run: |
-        until pg_isready -h localhost -p 5432 -U postgres_user -d test_db; do
-          echo "Waiting for PostgreSQL..."
-          sleep 1
-        done
+      - name: Run tests with coverage
+        run: |
+          coverage run -m pytest
+          coverage report
 
-    - name: Unit Tests with pytest
-      run: |
-        coverage run -m pytest
-        coverage report
+      - name: Lint with Ruff
+        run: |
+          ruff check src tests
 
-    - name: Analysing the code with pylint
-      run: |
-        pylint --output-format=colorized --disable=C0114,C0411,C0415,W0718 $(git ls-files '*.py') --fail-under=7.5
+      - name: Security scan
+        run: |
+          bandit -r src
