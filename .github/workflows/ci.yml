@@ -28,22 +28,23 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Install uv
+        run: |
+          curl -Ls https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
-          cache: "pip"
 
-      - name: Install dependencies (prod + dev)
+      - name: Sync backend dependencies
         run: |
-          cd backend
-          python -m pip install --upgrade pip
-          pip install -e .[dev]
+          uv sync --project backend --all-extras
 
       - name: Create .env file
         run: |
-          cd backend
-          cat <<EOF > .env
+          cat <<EOF > backend/.env
           POSTGRES_HOST=localhost
           POSTGRES_PORT=5432
           POSTGRES_DATABASE=test_db
@@ -61,13 +62,13 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          coverage run -m pytest backend
-          coverage report
+          uv run --project backend coverage run -m pytest
+          uv run --project backend coverage report
 
       - name: Lint with Ruff
         run: |
-          ruff check backend/src backend/tests frontend/src
+          uv run --project backend ruff check backend/src backend/tests frontend/src
 
       - name: Security scan
         run: |
-          bandit -r backend/src frontend/src
+          uv run --project backend bandit -r backend/src frontend/src
