@@ -33,6 +33,12 @@ jobs:
           curl -Ls https://astral.sh/uv/install.sh | sh
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
+      - name: Cache uv
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/uv
+          key: uv-${{ runner.os }}-${{ hashFiles('**/uv.lock') }}
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -42,17 +48,6 @@ jobs:
         run: |
           uv sync --project backend --all-extras
 
-      - name: Create .env file
-        run: |
-          cat <<EOF > backend/.env
-          POSTGRES_HOST=localhost
-          POSTGRES_PORT=5432
-          POSTGRES_DATABASE=test_db
-          POSTGRES_USER=postgres_user
-          POSTGRES_PASSWORD=postgres_pwd
-          POSTGRES_SCHEMA=projet
-          EOF
-
       - name: Wait for PostgreSQL
         run: |
           until pg_isready -h localhost -p 5432 -U postgres_user -d test_db; do
@@ -61,6 +56,13 @@ jobs:
           done
 
       - name: Run tests with coverage
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_DATABASE: test_db
+          POSTGRES_USER: postgres_user
+          POSTGRES_PASSWORD: postgres_pwd
+          POSTGRES_SCHEMA: projet
         run: |
           uv run --project backend coverage run -m pytest
           uv run --project backend coverage report
