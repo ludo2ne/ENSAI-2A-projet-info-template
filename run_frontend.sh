@@ -1,2 +1,2 @@
-cd frontend
-streamlit run src/app.py
+cd frontend/
+uv run streamlit run src/app.py

@@ -3,4 +3,4 @@
 
 # PYTHONPATH=backend/src uvicorn backend.src.main:app --reload --env-file backend/.env
 
-python backend/src/main.py
+uv run python backend/src/main.py

@@ -1,7 +1,7 @@
 [project]
-name = "project_name"
+name = "project_name_back"
 version = "0.1.0"
-description = "Template for the ENSAI 2nd year IT project"
+description = "API Template for the ENSAI 2nd year IT project"
 authors = [{ name = "Lastname Firstname" }, { name = "Author2" }]
 requires-python = ">=3.13"
 

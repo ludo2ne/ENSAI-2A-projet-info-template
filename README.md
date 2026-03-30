@@ -41,8 +41,9 @@ Softwares and tools used:
 Install and manage all dependencies instantly with `uv`, a high-performance Python package manager:
 
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-uv sync --all-extras
+# curl -LsSf https://astral.sh/uv/install.sh | sh
+uv sync --project backend --all-extras
+uv sync --project frontend --all-extras
 ```
 
 ### Environment variables
@@ -76,7 +77,7 @@ UVICORN_PORT=5000
 Open two terminals:
 
 - Backend FastApi: `uv run python backend/src/main.py`
-- Frontend Streamlit: `cd frontend && streamlit run src/app.py`
+- Frontend Streamlit: `uv run --project frontend streamlit run frontend/src/app.py`
 
 
 ### Launch the CLI application
