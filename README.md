@@ -37,10 +37,12 @@ Softwares and tools used:
 
 ### Install required packages
 
-Install the list of dependencies from the pyproject.toml file:
+Install and manage all dependencies instantly with `uv`, a high-performance Python package manager:
 
-- [ ] `pip install -e .[dev]`
-  - `pip list` to check the list of installed packages
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv sync --all-extras
+```
 
 ### Environment variables
 
@@ -73,7 +75,7 @@ UVICORN_PORT=9876
 
 This application provides a very basic graphical interface for navigating between different menus.
 
-- [ ] `python src/main.py`
+- [ ] `uv run python src/main.py`
 - [ ] On first launch, choose **Reset database**
   - this calls the `src/utils/reset_database.py` program
   - which will itself execute the SQL scripts in the `data` folder
@@ -85,7 +87,7 @@ This application provides a very basic graphical interface for navigating betwee
 
 This application can also be used to create a webservice:
 
-- [ ] `python src/app.py`
+- [ ] `uv run python src/app.py`
 
 Documentation :
 
@@ -129,13 +131,13 @@ The DAO unit tests use data from the `data/pop_db_test.sql` file.
 
 This data is loaded into a separate schema (projet_test_dao) so as not to pollute the other data.
 
-- [ ] Lanch unit tests: `pytest -v` 
+- [ ] Lanch unit tests: `uv run pytest -v` 
 
 It is also possible to generate test coverage using [Coverage](https://coverage.readthedocs.io/en/7.4.0/index.html)
 
-- [ ] `coverage run -m pytest`
-- [ ] `coverage report -m`
-- [ ] `coverage html`
+- [ ] `uv run coverage run -m pytest`
+- [ ] `uv run coverage report -m`
+- [ ] `uv run coverage html`
   - Download and open coverage_report/index.html
 
 
@@ -162,6 +164,7 @@ It is also possible to generate test coverage using [Coverage](https://coverage.
 | `.gitignore`               | Lists files and folders that should not be tracked by Git                            |
 | `logging_config.yml`       | Setup for logging                                                                    |
 | `pyproject.toml`           | List dependencies and their settings                                                 |
+| `uv.lock`           | lockfile that specifies the exact versions of all direct and transitive dependencies to ensure reproducible and consistent Python environments across different systems                                                |
 
 
 ## :arrow_forward: Logs
