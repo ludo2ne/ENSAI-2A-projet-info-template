@@ -1,6 +1,7 @@
+from tabulate import tabulate
+
 from business_object.joueur import Joueur
 from dao.joueur_dao import JoueurDao
-from tabulate import tabulate
 from utils.log_decorator import log
 from utils.securite import hash_password
 
@@ -60,9 +61,7 @@ class JoueurService:
 
         joueurs = JoueurDao().lister_tous()
 
-        for j in joueurs:
-            if j.pseudo == "admin":
-                joueurs.remove(j)
+        joueurs = [j for j in joueurs if j.pseudo != "admin"]
 
         joueurs_as_list = [j.as_list() for j in joueurs]
 

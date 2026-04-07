@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+
 from service.joueur_service import JoueurService
 
 router = APIRouter()
