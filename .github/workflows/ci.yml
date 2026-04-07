@@ -34,7 +34,7 @@ jobs:
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: Cache uv
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/uv
           key: uv-backend-${{ runner.os }}-${{ hashFiles('backend/uv.lock') }}
@@ -89,7 +89,7 @@ jobs:
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: Cache uv
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/uv
           key: uv-frontend-${{ runner.os }}-${{ hashFiles('frontend/uv.lock') }}

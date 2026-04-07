@@ -1,11 +1,10 @@
 # frontend/pages/joueur_creation.py
-import requests
 import streamlit as st
 
-API_URL = st.secrets.get("API_URL", "http://localhost:5000")
-
+from utils.api_client import api_client
 
 st.title("➕ Création d'un joueur")
+
 if st.button("⬅️ Retour au menu"):
     st.switch_page("pages/main_page.py")
 
@@ -23,17 +22,11 @@ if st.button("Créer le joueur"):
         "mail": mail,
         "fan_pokemon": fan_pokemon,
     }
-    try:
-        r = requests.post(f"{API_URL}/joueur/", json=joueur)
-        if r.status_code == 200:
+
+    response = api_client.post("/joueur/", json=joueur)
+
+    if response:
+        if response["status_code"] == 200:
             st.success(f"Joueur {pseudo} créé avec succès ! 🎉")
         else:
-            try:
-                error_detail = r.json().get("detail", r.text)
-            except ValueError:
-                error_detail = r.text
-            st.error(
-                f"Erreur lors de la création.  \nStatut : {r.status_code}  \nDétail : {error_detail}"
-            )
-    except requests.RequestException as e:
-        st.error(f"Impossible de contacter le serveur API : {e}")
+            st.error(f"Erreur : {response['data']}")

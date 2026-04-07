@@ -1,12 +1,11 @@
 # frontend/pages/joueurs.py
+import logging
 import time
 
 import pandas as pd
-import requests
 import streamlit as st
 
-API_URL = st.secrets.get("API_URL", "http://localhost:5000")
-
+from utils.api_client import api_client
 
 st.title("📋 Liste des joueurs")
 
@@ -17,15 +16,15 @@ if st.session_state.get("joueur") is None:
 
 if st.button("⬅️ Retour au menu"):
     st.switch_page("pages/menu_page.py")
-try:
-    r = requests.get(f"{API_URL}/joueur/")
-    r.raise_for_status()
-    joueurs = r.json()
-    if isinstance(joueurs, list) and joueurs:
+
+joueurs = api_client.get("/joueur").get("data")
+
+if joueurs:
+    logging.info(joueurs)
+    if isinstance(joueurs, list):
         df = pd.DataFrame(joueurs)
-        df = df.drop(columns=["mdp"])
+        if "mdp" in df.columns:
+            df = df.drop(columns=["mdp"])
         st.dataframe(df)
     else:
         st.info("Aucun joueur trouvé.")
-except requests.RequestException:
-    st.error("Erreur de connexion au serveur API.")
