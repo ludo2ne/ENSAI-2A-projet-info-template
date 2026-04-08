@@ -1,10 +1,14 @@
 import logging
+from pathlib import Path
 
 import dotenv
 
 
 def load_environment_variables():
-    dotenv.load_dotenv(override=True)
+    succes = dotenv.load_dotenv(
+        dotenv_path=Path(__file__).resolve().parents[2] / ".env", override=True
+    )
+    logging.info(f"Load environment variables: {'SUCCES' if succes else 'FAIL'}")
 
 
 def mask_value(key, value):

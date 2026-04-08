@@ -44,7 +44,7 @@ indent-style = "space"
 pythonpath = ["src"]
 testpaths = ["tests"]
 python_files = ["*test*.py"]
-addopts = "-v -s"
+addopts = "-v -s -x"
 
 [tool.coverage.run]
 branch = true
