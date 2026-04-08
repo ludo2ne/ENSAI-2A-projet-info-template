@@ -5,6 +5,7 @@
 code-server --uninstall-extension ms-python.flake8
 code-server --install-extension charliermarsh.ruff
 code-server --install-extension tamasfe.even-better-toml
+code-server --install-extension mermaidchart.vscode-mermaid-chart
 
 # Webservice url
 export API_URL="https://${KUBERNETES_NAMESPACE}-${KUBERNETES_SERVICE_ACCOUNT##*-}-user.user.lab.sspcloud.fr/"

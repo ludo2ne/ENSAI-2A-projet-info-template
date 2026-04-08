@@ -24,7 +24,7 @@ if players:
         df = pd.DataFrame(players)
         if "password" in df.columns:
             df = df.drop(columns=["password"])
-        st.dataframe(df)
+        st.dataframe(df, hide_index=True)
     else:
         logging.info("No players found.")
         st.info("No players found.")

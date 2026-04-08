@@ -83,6 +83,7 @@ Open two terminals:
 
 By default, the API runs on port 5000 and the GUI on port 8000.
 
+> Shortcut: in VSCode, you can launch the backend and/or frontend directly via the Run and Debug menu
 
 ### Endpoints
 
