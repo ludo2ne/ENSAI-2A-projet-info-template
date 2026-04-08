@@ -27,6 +27,7 @@ Softwares and tools used:
 
 - [ ] Ensure you have an active GitHub token on Datalab
 - [ ] Launch a VSCode-python service
+  - Open ports 5000 and 8000
 - [ ] Open a terminal
 - [ ] Clone the repository using a token
   - `git clone https://$GIT_PERSONAL_ACCESS_TOKEN@github.com/ludo2ne/ENSAI-2A-projet-info-template.git`
@@ -40,8 +41,9 @@ Softwares and tools used:
 Install and manage all dependencies instantly with `uv`, a high-performance Python package manager:
 
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-uv sync --all-extras
+# curl -LsSf https://astral.sh/uv/install.sh | sh
+uv sync --project backend --all-extras
+uv sync --project frontend --all-extras
 ```
 
 ### Environment variables
@@ -64,63 +66,59 @@ POSTGRES_PASSWORD=<password>
 POSTGRES_SCHEMA=projet
 
 UVICORN_HOST=0.0.0.0
-UVICORN_PORT=9876
+UVICORN_PORT=5000
+
+ELO_K_FACTOR=32
 ```
 
 
+### Launch applications
 
-### Launch the CLI application
+> First Launch: don't forget to reset database
 
-:construction:
+Open two terminals:
 
-This application provides a very basic graphical interface for navigating between different menus.
+- Backend FastApi: `uv run --project backend python backend/src/main.py`
+- Frontend Streamlit: `uv run --project frontend streamlit run frontend/src/app.py`
 
-- [ ] `uv run python src/main.py`
-- [ ] On first launch, choose **Reset database**
-  - this calls the `src/utils/reset_database.py` program
-  - which will itself execute the SQL scripts in the `data` folder
+By default, the API runs on port 5000 and the GUI on port 8000.
 
+> Shortcut: in VSCode, you can launch the backend and/or frontend directly via the Run and Debug menu
 
-### Launch the webservice
-
-:construction:
-
-This application can also be used to create a webservice:
-
-- [ ] `uv run python src/app.py`
+### Endpoints
 
 Documentation :
 
-- /docs
-- /redoc
+- `/docs`
+- `/redoc`
 
 Examples of endpoints, assuming that the environment variable `$API_URL` contains the URL of the web service:
 
-- `curl -X GET $API_URL/joueur | jq .`
-- `curl -X GET $API_URL/joueur/3 | jq .`
+- `curl -X GET $API_URL/player | jq .`
+- `curl -X GET $API_URL/player/3 | jq .`
 - ```
-  curl -X POST "$API_URL/joueur" \
+  curl -X POST "$API_URL/player" \
     -H "Content-Type: application/json" \
     -d '{
-      "pseudo": "patapouf",
-      "mdp": "9999",
-      "age": 95,
+      "username": "patapouf",
+      "password": "9999",
+      "elo": 1500,
       "mail": "patapouf@mail.fr",
-      "fan_pokemon": true
+      "pokemon_fan": true
     }' | jq .
   ```
 - ```
-  curl -X PUT "$API_URL/joueur/3" \
+  curl -X PUT "$API_URL/player/3" \
     -H "Content-Type: application/json" \
     -d '{
-      "pseudo": "maurice_new",
-      "mdp": "1234",
-      "age": 20,
+      "username": "maurice_new",
+      "password": "1234",
+      "elo": 1400,
       "mail": "maurice@ensai.fr",
-      "fan_pokemon": true
+      "pokemon_fan": true
     }' | jq .
   ```
-- `curl -X DELETE "$API_URL/joueur/5" | jq .`
+- `curl -X DELETE "$API_URL/player/5" | jq .`
 
 
 ### Unit tests
@@ -131,13 +129,13 @@ The DAO unit tests use data from the `data/pop_db_test.sql` file.
 
 This data is loaded into a separate schema (projet_test_dao) so as not to pollute the other data.
 
-- [ ] Lanch unit tests: `uv run pytest -v` 
+- [ ] Lanch unit tests: `uv run --project backend pytest -v` 
 
 It is also possible to generate test coverage using [Coverage](https://coverage.readthedocs.io/en/7.4.0/index.html)
 
-- [ ] `uv run coverage run -m pytest`
-- [ ] `uv run coverage report -m`
-- [ ] `uv run coverage html`
+- [ ] `uv run --project backend coverage run -m pytest backend`
+- [ ] `uv run --project backend coverage report -m`
+- [ ] `uv run --project backend coverage html`
   - Download and open coverage_report/index.html
 
 
@@ -149,8 +147,8 @@ It is also possible to generate test coverage using [Coverage](https://coverage.
 | -------------------------- | ------------------------------------------------------------------------ |
 | `data`                     | SQL script containing data sets                                          |
 | `doc`                      | UML diagrams, project status...                                          |
-| `logs`                     | Containing logs files (once you have launched the application)           |
-| `src`                      | Folder containing Python files organized using a layered architecture    |
+| `backend`                  | API code organized using a layered architecture                          |
+| `frontend`                 | GUI code (graphical user interface)                                      |
 
 
 ### Files
@@ -162,14 +160,24 @@ It is also possible to generate test coverage using [Coverage](https://coverage.
 | `.github/workflows/ci.yml` | Automated workflow that runs predefined tasks (like testing, linting, or deploying)  |
 | `.vscode/settings.json`    | VSCode settings specific to this project                                             |
 | `.gitignore`               | Lists files and folders that should not be tracked by Git                            |
+
+In both projects, backend and frontend:
+
+| Item                       | Description                                                                          |
+| -------------------------- | -------------------------------------------------------------------------------------|
 | `logging_config.yml`       | Setup for logging                                                                    |
 | `pyproject.toml`           | List dependencies and their settings                                                 |
-| `uv.lock`           | lockfile that specifies the exact versions of all direct and transitive dependencies to ensure reproducible and consistent Python environments across different systems                                                |
+| `uv.lock`                  | lockfile that specifies the exact versions of all direct and transitive dependencies to ensure reproducible and consistent Python environments across different systems                                                |
+
+
+This repository contains a large number of configuration files for setting the parameters of the various tools used.
+
+Normally, for the purposes of your project, you won't need to modify these files, except for `.env` and `pyproject.toml`.
 
 
 ## :arrow_forward: Logs
 
-It is initialised in the `src/utils/log_init.py` module:
+It is initialised for each project in the `src/utils/log_init.py` module:
 
 - This is called when the application or webservice is started.
 - It uses the `logging_config.yml` file for configuration.
@@ -188,13 +196,13 @@ Example of logs :
 
 ```
 07/08/2024 09:07:07 - INFO     - ConnexionVue
-07/08/2024 09:07:08 - INFO     -     JoueurService.se_connecter('a', '*****') - DEBUT
-07/08/2024 09:07:08 - INFO     -         JoueurDao.se_connecter('a', '*****') - DEBUT
-07/08/2024 09:07:08 - INFO     -         JoueurDao.se_connecter('a', '*****') - FIN
-07/08/2024 09:07:08 - INFO     -            └─> Sortie : Joueur(a, 20 ans)
-07/08/2024 09:07:08 - INFO     -     JoueurService.se_connecter('a', '*****') - FIN
-07/08/2024 09:07:08 - INFO     -        └─> Sortie : Joueur(a, 20 ans)
-07/08/2024 09:07:08 - INFO     - MenuJoueurVue
+07/08/2024 09:07:08 - INFO     -     PlayerService.se_connecter('a', '*****') - DEBUT
+07/08/2024 09:07:08 - INFO     -         PlayerDao.se_connecter('a', '*****') - DEBUT
+07/08/2024 09:07:08 - INFO     -         PlayerDao.se_connecter('a', '*****') - FIN
+07/08/2024 09:07:08 - INFO     -            └─> Sortie : Player(a, 20 ans)
+07/08/2024 09:07:08 - INFO     -     PlayerService.se_connecter('a', '*****') - FIN
+07/08/2024 09:07:08 - INFO     -        └─> Sortie : Player(a, 20 ans)
+07/08/2024 09:07:08 - INFO     - MenuPlayerVue
 ```
 
 

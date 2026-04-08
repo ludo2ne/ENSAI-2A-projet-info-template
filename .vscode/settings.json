@@ -1,5 +1,5 @@
 {
-  "workbench.colorTheme": "Default Dark Modern",
+  "workbench.colorTheme": "Dark Modern",
   "editor.fontSize": 16,
   "[python]": {
     "editor.formatOnSave": true,
@@ -27,11 +27,12 @@
     "**/.pytest_cache": true,
     "**/.ruff_cache": true,
     "**/.mypy_cache": true,
-    "**/.egg-info": true
+    "**/*.egg-info": true,
+    "**/.venv": true
   },
   "editor.quickSuggestions": {
     "strings": true
   },
   "python.languageServer": "Jedi",
-  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "terminal.integrated.defaultProfile.windows": "Git Bash"
 }

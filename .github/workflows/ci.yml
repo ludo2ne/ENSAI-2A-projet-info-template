@@ -3,7 +3,7 @@ name: pipeline
 on: [push]
 
 jobs:
-  build:
+  backend:
     runs-on: ubuntu-latest
 
     strategy:
@@ -28,27 +28,24 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Install uv
+        run: |
+          curl -Ls https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Cache uv
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/uv
+          key: uv-backend-${{ runner.os }}-${{ hashFiles('backend/uv.lock') }}
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
-          cache: "pip"
 
-      - name: Install dependencies (prod + dev)
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e .[dev]
-
-      - name: Create .env file
-        run: |
-          cat <<EOF > .env
-          POSTGRES_HOST=localhost
-          POSTGRES_PORT=5432
-          POSTGRES_DATABASE=test_db
-          POSTGRES_USER=postgres_user
-          POSTGRES_PASSWORD=postgres_pwd
-          POSTGRES_SCHEMA=projet
-          EOF
+      - name: Sync backend dependencies
+        run: uv sync --project backend --all-extras
 
       - name: Wait for PostgreSQL
         run: |
@@ -57,15 +54,55 @@ jobs:
             sleep 1
           done
 
-      - name: Run tests with coverage
+      - name: Run backend tests with coverage
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_DATABASE: test_db
+          POSTGRES_USER: postgres_user
+          POSTGRES_PASSWORD: postgres_pwd
+          POSTGRES_SCHEMA: projet
         run: |
-          coverage run -m pytest
-          coverage report
+          uv run --project backend coverage run -m pytest
+          uv run --project backend coverage report
 
-      - name: Lint with Ruff
-        run: |
-          ruff check src tests
+      - name: Lint backend with Ruff
+        run: uv run --project backend ruff check backend/src backend/tests
 
-      - name: Security scan
+      - name: Security scan backend
+        run: uv run --project backend bandit -r backend/src
+
+  frontend:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.13"]
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install uv
         run: |
-          bandit -r src
+          curl -Ls https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Cache uv
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/uv
+          key: uv-frontend-${{ runner.os }}-${{ hashFiles('frontend/uv.lock') }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Sync frontend dependencies
+        run: uv sync --project frontend --all-extras
+
+      - name: Lint frontend with Ruff
+        run: uv run --project frontend ruff check frontend/src
+
+      - name: Security scan frontend
+        run: uv run --project frontend bandit -r frontend/src
