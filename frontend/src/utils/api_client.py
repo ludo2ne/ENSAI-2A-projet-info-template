@@ -17,28 +17,21 @@ class APIClient:
             response = self.session.request(
                 method=method, url=url, timeout=kwargs.pop("timeout", self.timeout), **kwargs
             )
-            response.raise_for_status()
 
-            if response.headers.get("Content-Type", "").startswith("application/json"):
-                return {
-                    "status_code": response.status_code,
-                    "data": response.json()
-                    if "application/json" in response.headers.get("Content-Type", "")
-                    else response.text,
-                }
+            data = None
+            try:
+                data = response.json()
+            except Exception:
+                data = response.text
 
-            return response.text
+            return {"status_code": response.status_code, "data": data}
 
         except requests.exceptions.Timeout:
-            st.error("⏱️ Le serveur met trop de temps à répondre.")
+            return {"status_code": 0, "data": "Timeout"}
         except requests.exceptions.ConnectionError:
-            st.error("🔌 Impossible de se connecter au serveur.")
-        except requests.exceptions.HTTPError:
-            st.error(f"❌ Erreur HTTP {response.status_code}")
+            return {"status_code": 0, "data": "Connection error"}
         except requests.exceptions.RequestException as e:
-            st.error(f"❌ Erreur inconnue : {e}")
-
-        return None
+            return {"status_code": 0, "data": str(e)}
 
     def get(self, path: str, params=None, **kwargs):
         return self._request("GET", path, params=params, **kwargs)

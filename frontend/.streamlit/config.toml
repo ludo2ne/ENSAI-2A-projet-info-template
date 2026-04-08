@@ -2,8 +2,17 @@
 port = 8000
 
 [theme]
-primaryColor="#4b9cd3"
-backgroundColor="#abf1abff"
-secondaryBackgroundColor="#ffffff"
 textColor="#1a1a1a"
 font="Calibri"
+
+primaryColor="#1963a0"
+backgroundColor="#90C090"
+secondaryBackgroundColor="#ffffff"
+
+redTextColor="#8b0303"
+redBackgroundColor="#ff5f5f"
+greenTextColor="#016806"
+greenBackgroundColor="#9cd1b7"
+
+dataframeBorderColor="#946602"
+dataframeHeaderBackgroundColor="#eb9a20"

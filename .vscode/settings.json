@@ -34,5 +34,5 @@
     "strings": true
   },
   "python.languageServer": "Jedi",
-  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "terminal.integrated.defaultProfile.windows": "Git Bash"
 }
