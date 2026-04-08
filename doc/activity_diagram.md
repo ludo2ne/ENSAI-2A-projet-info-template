@@ -18,27 +18,27 @@ Pour afficher ce diagramme dans VScode :
 
 ```mermaid
 stateDiagram
-    login : Se connecter
-    menu_joueur : Menu Joueur
-    logon : Créer un compte
-    player_list : Lister les joueurs
-    poke_list : Lister les pokemons
-    logout : Se déconnecter
+    login : Login
+    menu_player : Player Menu
+    signup : Sign Up
+    player_list : List Players
+    play_game : Play a game
+    logout : Logout
     
-    [*] --> Accueil
+    [*] --> Home
     
-    Accueil --> login
-    login --> menu_joueur
+    Home --> login
+    login --> menu_player
     
-    Accueil --> logon
+    Home --> signup
     
-    Accueil --> quitter
-    quitter --> [*]
+    Home --> quit
+    quit --> [*]
     
-    state menu_joueur {
+    state menu_player {
     	[*] --> player_list
-    	[*] --> poke_list
+    	[*] --> play_game
     	[*] --> logout
-        logout --> [*]:retour accueil
+        logout --> [*]: return to home
     }
 ```

@@ -7,12 +7,12 @@ router = APIRouter()
 game_service = GameService()
 
 
-class PartieRequest(BaseModel):
-    joueur1_id: int
-    joueur2_id: int
+class GameRequest(BaseModel):
+    player1_id: int
+    player2_id: int
     choice: str
 
 
 @router.post("/", tags=["Games"])
-def jouer_partie(req: PartieRequest):
-    return game_service.play(req.joueur1_id, req.joueur2_id, req.choice)
+def play_game(req: GameRequest):
+    return game_service.play(req.player1_id, req.player2_id, req.choice)

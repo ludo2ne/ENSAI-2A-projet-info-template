@@ -74,11 +74,9 @@ ELO_K_FACTOR=32
 
 ### New streamlit app
 
-:construction:
-
 Open two terminals:
 
-- Backend FastApi: `uv run python backend/src/main.py`
+- Backend FastApi: `uv run --project backend python backend/src/main.py`
 - Frontend Streamlit: `uv run --project frontend streamlit run frontend/src/app.py`
 
 
@@ -109,31 +107,31 @@ Documentation :
 
 Examples of endpoints, assuming that the environment variable `$API_URL` contains the URL of the web service:
 
-- `curl -X GET $API_URL/joueur | jq .`
-- `curl -X GET $API_URL/joueur/3 | jq .`
+- `curl -X GET $API_URL/player | jq .`
+- `curl -X GET $API_URL/player/3 | jq .`
 - ```
-  curl -X POST "$API_URL/joueur" \
+  curl -X POST "$API_URL/player" \
     -H "Content-Type: application/json" \
     -d '{
-      "pseudo": "patapouf",
-      "mdp": "9999",
+      "username": "patapouf",
+      "password": "9999",
       "elo": 1500,
       "mail": "patapouf@mail.fr",
-      "fan_pokemon": true
+      "pokemon_fan": true
     }' | jq .
   ```
 - ```
-  curl -X PUT "$API_URL/joueur/3" \
+  curl -X PUT "$API_URL/player/3" \
     -H "Content-Type: application/json" \
     -d '{
-      "pseudo": "maurice_new",
-      "mdp": "1234",
+      "username": "maurice_new",
+      "password": "1234",
       "elo": 1400,
       "mail": "maurice@ensai.fr",
-      "fan_pokemon": true
+      "pokemon_fan": true
     }' | jq .
   ```
-- `curl -X DELETE "$API_URL/joueur/5" | jq .`
+- `curl -X DELETE "$API_URL/player/5" | jq .`
 
 
 ### Unit tests
@@ -210,13 +208,13 @@ Example of logs :
 
 ```
 07/08/2024 09:07:07 - INFO     - ConnexionVue
-07/08/2024 09:07:08 - INFO     -     JoueurService.se_connecter('a', '*****') - DEBUT
-07/08/2024 09:07:08 - INFO     -         JoueurDao.se_connecter('a', '*****') - DEBUT
-07/08/2024 09:07:08 - INFO     -         JoueurDao.se_connecter('a', '*****') - FIN
-07/08/2024 09:07:08 - INFO     -            └─> Sortie : Joueur(a, 20 ans)
-07/08/2024 09:07:08 - INFO     -     JoueurService.se_connecter('a', '*****') - FIN
-07/08/2024 09:07:08 - INFO     -        └─> Sortie : Joueur(a, 20 ans)
-07/08/2024 09:07:08 - INFO     - MenuJoueurVue
+07/08/2024 09:07:08 - INFO     -     PlayerService.se_connecter('a', '*****') - DEBUT
+07/08/2024 09:07:08 - INFO     -         PlayerDao.se_connecter('a', '*****') - DEBUT
+07/08/2024 09:07:08 - INFO     -         PlayerDao.se_connecter('a', '*****') - FIN
+07/08/2024 09:07:08 - INFO     -            └─> Sortie : Player(a, 20 ans)
+07/08/2024 09:07:08 - INFO     -     PlayerService.se_connecter('a', '*****') - FIN
+07/08/2024 09:07:08 - INFO     -        └─> Sortie : Player(a, 20 ans)
+07/08/2024 09:07:08 - INFO     - MenuPlayerVue
 ```
 
 

@@ -5,14 +5,10 @@ from pathlib import Path
 import yaml
 
 
-def initialiser_logs(nom):
-    """Initialiser les logs à partir du fichier de config"""
+def initialize_logs(name: str):
+    """Initialize logging from a configuration file"""
 
-    # print current working directory
-    # print(os.getcwd())
-    # os.chdir('ENSAI-2A-projet-info-template')
-
-    # Création du dossier logs à la racine si non existant
+    # Create the logs folder at project root if it doesn't exist
     logs_dir = Path(__file__).resolve().parents[2] / "logs"
     logs_dir.mkdir(exist_ok=True)
 
@@ -23,5 +19,5 @@ def initialiser_logs(nom):
         logging.config.dictConfig(config)
 
         logging.info("-" * 50)
-        logging.info(f"Lancement {nom}                           ")
+        logging.info(f"Starting {name}                           ")
         logging.info("-" * 50)

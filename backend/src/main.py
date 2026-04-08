@@ -1,4 +1,4 @@
-# app.py
+# main.py
 
 import logging
 
@@ -6,18 +6,18 @@ import dotenv
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
-from controller import connexion_controller, game_controller, joueur_controller
-from utils.log_init import initialiser_logs
+from controller import game_controller, login_controller, player_controller
+from utils.log_init import initialize_logs
 from utils.reset_database import ResetDatabase
 
-# Initialisation
-initialiser_logs("Webservice")
+# Initialization
+initialize_logs("Webservice")
 dotenv.load_dotenv()
 
-app = FastAPI(title="Mon webservice")
+app = FastAPI(title="My Webservice")
 
-app.include_router(joueur_controller.router, prefix="/joueur", tags=["Joueurs"])
-app.include_router(connexion_controller.router, prefix="/connexion", tags=["Connexion"])
+app.include_router(player_controller.router, prefix="/player", tags=["Players"])
+app.include_router(login_controller.router, prefix="/login", tags=["Login"])
 app.include_router(game_controller.router, prefix="/game", tags=["Games"])
 
 
@@ -27,22 +27,20 @@ async def redirect_to_docs():
     return RedirectResponse(url="/docs")
 
 
-@app.get("/hello/{name}", tags=["Divers"])
+@app.get("/hello/{name}", tags=["Misc"])
 async def hello_name(name: str):
-    """Afficher Hello"""
-    logging.info("Afficher Hello")
+    """Display Hello"""
+    logging.info("Display Hello")
     return {"message": f"Hello {name}"}
 
 
-@app.get("/reset_database", tags=["Divers"])
+@app.get("/reset_database", tags=["Misc"])
 async def reset_database():
-    """Réinitialiser la base de données"""
-    logging.info("Réinitialisation de la base de données")
-    succes = ResetDatabase().lancer()
+    """Reset the database"""
+    logging.info("Database reset")
+    success = ResetDatabase().run()
 
-    return {
-        "message": f"Ré-initilisation de la base de données - {'SUCCES' if succes else 'ECHEC'}"
-    }
+    return {"message": f"Database re-initialization - {'SUCCESS' if success else 'FAILURE'}"}
 
 
 # Run the FastAPI application
@@ -55,7 +53,6 @@ if __name__ == "__main__":
     import utils.env_variables as env_variables
 
     env_variables.load_environment_variables()
-
     env_variables.display_values()
 
     uvicorn.run(
@@ -64,4 +61,4 @@ if __name__ == "__main__":
         port=int(os.getenv("UVICORN_PORT", "5000")),
     )
 
-    logging.info("Arret du Webservice")
+    logging.info("Webservice stopped")

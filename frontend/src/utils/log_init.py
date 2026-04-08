@@ -5,7 +5,7 @@ from pathlib import Path
 import yaml
 
 
-def initialiser_logs(nom: str):
+def initialize_logs(nom: str):
 
     logs_dir = Path(__file__).resolve().parents[2] / "logs"
     logs_dir.mkdir(exist_ok=True)
@@ -17,5 +17,5 @@ def initialiser_logs(nom: str):
         logging.config.dictConfig(config)
 
     logging.info("-" * 50)
-    logging.info(f"Lancement FRONTEND : {nom}")
+    logging.info(f"Launch FRONTEND : {nom}")
     logging.info("-" * 50)

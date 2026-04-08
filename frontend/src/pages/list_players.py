@@ -1,4 +1,4 @@
-# frontend/pages/joueurs.py
+# frontend/pages/players.py
 import logging
 import time
 
@@ -9,7 +9,7 @@ from utils.api_client import api_client
 
 st.title("Player list")
 
-if not st.session_state.get("joueur"):
+if not st.session_state.get("player"):
     logging.info("Not logged in, return to the home page")
     st.error("Access restricted to logged-in users.")
     time.sleep(1)
@@ -17,13 +17,13 @@ if not st.session_state.get("joueur"):
 
 logging.info("Display players list")
 
-joueurs = api_client.get("/joueur").get("data")
+players = api_client.get("/player").get("data")
 
-if joueurs:
-    if isinstance(joueurs, list):
-        df = pd.DataFrame(joueurs)
-        if "mdp" in df.columns:
-            df = df.drop(columns=["mdp"])
+if players:
+    if isinstance(players, list):
+        df = pd.DataFrame(players)
+        if "password" in df.columns:
+            df = df.drop(columns=["password"])
         st.dataframe(df)
     else:
         logging.info("No players found.")

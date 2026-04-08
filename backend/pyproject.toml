@@ -13,7 +13,6 @@ dependencies = [
     "PyYAML",
     "requests",
     "regex",
-    "tabulate",
     "uvicorn",
 ]
 

@@ -2,7 +2,7 @@
 
 # :clipboard:  Présentation du sujet
 
-* **Sujet** : Application pour gérer une liste de joueurs et de joueuses
+* **Sujet** : Application pour gérer une liste de players et de joueuses
 * **Tuteur / Tutrice** : Rick Auray (rick.auray@ensai.fr)
 * [Dépôt GitHub](https://github.com/ludo2ne/ENSAI-projet-info-2A-template)
 
@@ -83,7 +83,7 @@ gantt
 * [ ] appel WS
 * [ ] création WS
 * [ ] Vue inscription
-* [ ] hacher mdp
+* [ ] hacher password
 
 ---
 

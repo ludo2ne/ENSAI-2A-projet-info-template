@@ -7,30 +7,30 @@ from utils.api_client import api_client
 
 st.title("Play a Coin flip")
 
-joueur = st.session_state.get("joueur")
+player = st.session_state.get("player")
 
-if not st.session_state.get("joueur"):
+if not st.session_state.get("player"):
     logging.info("Not logged in, return to the home page")
     st.error("Access restricted to logged-in users.")
     time.sleep(1)
     st.switch_page("pages/home.py")
 
-response = api_client.get("/joueur/")
+response = api_client.get("/player/")
 
 if response["status_code"] != 200:
     st.error("Error loading players")
     st.stop()
 
-joueurs = response["data"]
+players = response["data"]
 adversaires = [
-    j for j in joueurs if j["id_joueur"] != joueur["id_joueur"] and j["pseudo"] != "admin"
+    j for j in players if j["id_player"] != player["id_player"] and j["username"] != "admin"
 ]
 
 if not adversaires:
     st.warning("No opponents available")
     st.stop()
 
-adversaire = st.selectbox("Choose an opponent", adversaires, format_func=lambda j: j["pseudo"])
+adversaire = st.selectbox("Choose an opponent", adversaires, format_func=lambda j: j["username"])
 
 genre = st.radio("Heads or Tails", ["heads", "tails"])
 
@@ -42,8 +42,8 @@ if st.button("Play"):
     response = api_client.post(
         "/game/",
         json={
-            "joueur1_id": joueur["id_joueur"],
-            "joueur2_id": adversaire["id_joueur"],
+            "player1_id": player["id_player"],
+            "player2_id": adversaire["id_player"],
             "choice": genre,
         },
     )
@@ -56,7 +56,7 @@ if st.button("Play"):
 
     st.write(f"Result : **{data['result']}**")
 
-    if data["winner"] == joueur["pseudo"]:
+    if data["winner"] == player["username"]:
         st.success(f"""🎉 **You win!**\n\nYour new Elo rating is {data["new_elo1"]}""")
         st.balloons()
     else:

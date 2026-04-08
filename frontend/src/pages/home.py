@@ -5,7 +5,7 @@ from streamlit import config
 
 from utils.api_client import api_client
 
-if "joueur" in st.session_state:
+if "player" in st.session_state:
     st.switch_page("pages/player_menu.py")
 
 st.set_page_config(page_title="Coin flip game", page_icon="🪙", layout="centered")
@@ -19,20 +19,20 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-pseudo = st.text_input("Pseudo", placeholder="Enter username")
-mdp = st.text_input("Password", type="password", placeholder="Enter password")
+username = st.text_input("Username", placeholder="Enter username")
+password = st.text_input("Password", type="password", placeholder="Enter password")
 
 with st.container(horizontal_alignment="center"):
     if st.button("Log in"):
-        logging.info(f"{pseudo} is trying to log in")
-        response = api_client.post("/connexion", json={"pseudo": pseudo, "mdp": mdp})
+        logging.info(f"{username} is trying to log in")
+        response = api_client.post("/login", json={"username": username, "password": password})
 
         if response:
             if response["status_code"] == 200:
-                logging.info(f"{pseudo} successfully logged in")
-                joueur = response["data"]
-                st.session_state["joueur"] = joueur
-                st.success(f"Welcome {joueur['pseudo']} ! 🎉")
+                logging.info(f"{username} successfully logged in")
+                player = response["data"]
+                st.session_state["player"] = player
+                st.success(f"Welcome {player['username']} ! 🎉")
                 st.switch_page("pages/player_menu.py")
             elif response["status_code"] == 401:
                 logging.info("Connection error")

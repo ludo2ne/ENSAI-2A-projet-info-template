@@ -5,22 +5,23 @@ from unittest import mock
 import dotenv
 
 from dao.db_connection import DBConnection
-from service.joueur_service import JoueurService
+from service.player_service import PlayerService
 from utils.log_decorator import log
 from utils.singleton import Singleton
 
 
 class ResetDatabase(metaclass=Singleton):
     """
-    Reinitialisation de la base de données
+    Database reset utility
     """
 
     @log
-    def lancer(self, test_dao=False):
-        """Lancement de la réinitialisation des données
-        Si test_dao = True : réinitialisation des données de test"""
+    def run(self, test_dao=False):
+        """Run the database reset
+        If test_dao=True: reset test data
+        """
         if test_dao:
-            mock.patch.dict(os.environ, {"POSTGRES_SCHEMA": "projet_test_dao"}).start()
+            mock.patch.dict(os.environ, {"POSTGRES_SCHEMA": "project_test_dao"}).start()
             pop_data_path = "data/pop_db_test.sql"
         else:
             pop_data_path = "data/pop_db.sql"
@@ -31,13 +32,11 @@ class ResetDatabase(metaclass=Singleton):
 
         create_schema = f"DROP SCHEMA IF EXISTS {schema} CASCADE; CREATE SCHEMA {schema};"
 
-        init_db = open("data/init_db.sql", encoding="utf-8")
-        init_db_as_string = init_db.read()
-        init_db.close()
+        with open("data/init_db.sql", encoding="utf-8") as init_db_file:
+            init_db_as_string = init_db_file.read()
 
-        pop_db = open(pop_data_path, encoding="utf-8")
-        pop_db_as_string = pop_db.read()
-        pop_db.close()
+        with open(pop_data_path, encoding="utf-8") as pop_db_file:
+            pop_db_as_string = pop_db_file.read()
 
         try:
             with DBConnection().connection as connection:
@@ -49,14 +48,14 @@ class ResetDatabase(metaclass=Singleton):
             logging.info(e)
             raise
 
-        # Appliquer le hashage des mots de passe à chaque joueur
-        joueur_service = JoueurService()
-        for j in joueur_service.lister_tous(inclure_mdp=True):
-            joueur_service.modifier(j)
+        # Apply password hashing to all players
+        player_service = PlayerService()
+        for p in player_service.find_all(include_password=True):
+            player_service.update(p)
 
         return True
 
 
 if __name__ == "__main__":
-    ResetDatabase().lancer()
-    ResetDatabase().lancer(True)
+    ResetDatabase().run()
+    ResetDatabase().run(True)
