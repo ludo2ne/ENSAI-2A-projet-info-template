@@ -6,7 +6,7 @@ import dotenv
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
-from controller import connexion_controller, joueur_controller
+from controller import connexion_controller, game_controller, joueur_controller
 from utils.log_init import initialiser_logs
 from utils.reset_database import ResetDatabase
 
@@ -18,6 +18,7 @@ app = FastAPI(title="Mon webservice")
 
 app.include_router(joueur_controller.router, prefix="/joueur", tags=["Joueurs"])
 app.include_router(connexion_controller.router, prefix="/connexion", tags=["Connexion"])
+app.include_router(game_controller.router, prefix="/game", tags=["Games"])
 
 
 @app.get("/", include_in_schema=False)

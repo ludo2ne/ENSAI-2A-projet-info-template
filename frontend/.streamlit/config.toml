@@ -13,6 +13,9 @@ redTextColor="#8b0303"
 redBackgroundColor="#ff5f5f"
 greenTextColor="#016806"
 greenBackgroundColor="#9cd1b7"
+yellowTextColor="#bd7f0c"
+yellowBackgroundColor="#f7bd53"
 
-dataframeBorderColor="#946602"
-dataframeHeaderBackgroundColor="#eb9a20"
+
+dataframeBorderColor="#976a09"
+dataframeHeaderBackgroundColor="#eea73d"

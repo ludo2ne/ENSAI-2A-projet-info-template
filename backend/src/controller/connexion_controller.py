@@ -16,5 +16,5 @@ class ConnexionRequest(BaseModel):
 def connexion(req: ConnexionRequest):
     joueur = service.se_connecter(req.pseudo, req.mdp)
     if joueur:
-        return {"id": joueur.id_joueur, "pseudo": joueur.pseudo}
+        return {"id_joueur": joueur.id_joueur, "pseudo": joueur.pseudo}
     raise HTTPException(status_code=401, detail="Identifiants invalides")

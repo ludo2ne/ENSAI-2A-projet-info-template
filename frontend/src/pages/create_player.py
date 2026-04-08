@@ -25,10 +25,8 @@ with st.container(horizontal_alignment="center"):
 
         if response:
             if response["status_code"] == 200:
-                st.balloons()
                 st.success(f"Player {pseudo} successfully created! 🎉")
             else:
-                st.snow()
                 st.error(f"Error: {response['data']}")
 
 if st.button("Back to homepage", type="primary"):
