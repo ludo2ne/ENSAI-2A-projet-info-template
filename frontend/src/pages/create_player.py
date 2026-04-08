@@ -1,4 +1,6 @@
 # frontend/pages/joueur_creation.py
+import logging
+
 import streamlit as st
 
 from utils.api_client import api_client
@@ -13,6 +15,7 @@ fan_pokemon = st.checkbox("Pokemons fan?")
 
 with st.container(horizontal_alignment="center"):
     if st.button("Create", width=150, disabled=not pseudo):
+        logging.info("Create player")
         joueur = {
             "pseudo": pseudo,
             "mdp": mdp,
@@ -26,8 +29,11 @@ with st.container(horizontal_alignment="center"):
         if response:
             if response["status_code"] == 200:
                 st.success(f"Player {pseudo} successfully created! 🎉")
+                logging.info("Player created successfully")
             else:
                 st.error(f"Error: {response['data']}")
+                logging.info("Error while creating player")
 
 if st.button("Back to homepage", type="primary"):
+    logging.info("Back to homepage")
     st.switch_page("pages/home.py")

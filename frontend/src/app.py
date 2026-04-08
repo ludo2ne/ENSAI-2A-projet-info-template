@@ -2,7 +2,9 @@ import streamlit as st
 
 from utils.log_init import initialiser_logs
 
-initialiser_logs("Streamlit App")
+if "logs_initialized" not in st.session_state:
+    initialiser_logs("Streamlit App")
+    st.session_state["logs_initialized"] = True
 
 st.markdown(
     """

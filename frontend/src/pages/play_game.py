@@ -1,3 +1,4 @@
+import logging
 import time
 
 import streamlit as st
@@ -9,6 +10,7 @@ st.title("Play a Coin flip")
 joueur = st.session_state.get("joueur")
 
 if not st.session_state.get("joueur"):
+    logging.info("Not logged in, return to the home page")
     st.error("Access restricted to logged-in users.")
     time.sleep(1)
     st.switch_page("pages/home.py")
@@ -33,6 +35,7 @@ adversaire = st.selectbox("Choose an opponent", adversaires, format_func=lambda 
 genre = st.radio("Heads or Tails", ["heads", "tails"])
 
 if st.button("Play"):
+    logging.info("Play a game")
     with st.spinner("Wait for it..."):
         time.sleep(1)
 
@@ -51,14 +54,17 @@ if st.button("Play"):
 
     data = response["data"]
 
-    st.write(f"Result : **{data['resultat']}**")
+    st.write(f"Result : **{data['result']}**")
 
-    if data["gagnant"] == joueur["pseudo"]:
-        st.success("🎉 **You win!**")
+    if data["winner"] == joueur["pseudo"]:
+        st.success(f"""🎉 **You win!**\n\nYour new Elo rating is {data["new_elo1"]}""")
         st.balloons()
     else:
-        st.warning("😢 **You lose**")
+        st.warning(f"""😢 **You lose**\n\nYour new Elo rating is {data["new_elo1"]}""")
+
+    logging.info("Game is over")
 
 
 if st.button("Back to menu", type="primary"):
+    logging.info("Back to player menu")
     st.switch_page("pages/player_menu.py")

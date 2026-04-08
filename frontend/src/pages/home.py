@@ -24,28 +24,36 @@ mdp = st.text_input("Password", type="password", placeholder="Enter password")
 
 with st.container(horizontal_alignment="center"):
     if st.button("Log in"):
+        logging.info(f"{pseudo} is trying to log in")
         response = api_client.post("/connexion", json={"pseudo": pseudo, "mdp": mdp})
 
         if response:
-            logging.info(response)
             if response["status_code"] == 200:
+                logging.info(f"{pseudo} successfully logged in")
                 joueur = response["data"]
                 st.session_state["joueur"] = joueur
                 st.success(f"Welcome {joueur['pseudo']} ! 🎉")
                 st.switch_page("pages/player_menu.py")
-                logging.info(f"Player {joueur['pseudo']} logged")
             elif response["status_code"] == 401:
+                logging.info("Connection error")
                 st.error("Invalid credentials")
             else:
+                logging.info("Connection error")
                 st.error(f"Server error: {response['data']}")
 
 st.space("small")
 
 if st.button("Sign Up"):
+    logging.info("Create an account")
     st.switch_page("pages/create_player.py")
 
 if st.button("Reset Database", type="primary"):
+    logging.info("Reset the database")
     response = api_client.get("/reset_database")
 
     if response:
+        logging.info("Database successfully reset")
         st.toast("Database successfully reset ✅")
+    else:
+        logging.info("Error during database reset")
+        st.toast("Error during database reset ❌")

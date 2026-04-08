@@ -1,5 +1,5 @@
 import os
-import random
+import secrets
 
 from fastapi import HTTPException
 
@@ -19,16 +19,17 @@ class GameService:
         if not j1 or not j2:
             raise HTTPException(status_code=404, detail="Joueur non trouvé")
 
-        resultat = random.choice(["heads", "tails"])
+        resultat = secrets.choice(["heads", "tails"])
         winner = j1 if resultat == choice else j2
 
         self.update_elo(j1, j2, winner)
 
         return {
-            "joueuelo1": j1.pseudo,
-            "joueuelo2": j2.pseudo,
-            "resultat": resultat,
-            "gagnant": winner.pseudo,
+            "player1": j1.pseudo,
+            "player2": j2.pseudo,
+            "result": resultat,
+            "winner": winner.pseudo,
+            "new_elo1": j1.elo,
         }
 
     def expected_score(self, elo1, elo2):

@@ -1,3 +1,5 @@
+import logging
+
 import requests
 import streamlit as st
 
@@ -32,6 +34,9 @@ class APIClient:
             return {"status_code": 0, "data": "Connection error"}
         except requests.exceptions.RequestException as e:
             return {"status_code": 0, "data": str(e)}
+        finally:
+            logging.info(f"{response.status_code or 0} {method} {url}")
+            logging.info(f"\t{data}")
 
     def get(self, path: str, params=None, **kwargs):
         return self._request("GET", path, params=params, **kwargs)
