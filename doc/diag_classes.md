@@ -20,7 +20,7 @@ classDiagram
         +id_joueur: int
         +pseudo: string
         +mdp: string
-        +age: int
+        +elo: int
         +mail: string
         +fan_pokemon: bool
     }

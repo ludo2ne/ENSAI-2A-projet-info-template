@@ -5,9 +5,9 @@ from dao.joueur_dao import JoueurDao
 from service.joueur_service import JoueurService
 
 liste_joueurs = [
-    Joueur(pseudo="jp", age="10", mail="jp@mail.fr", mdp="1234"),
-    Joueur(pseudo="lea", age="10", mail="lea@mail.fr", mdp="0000"),
-    Joueur(pseudo="gg", age="10", mail="gg@mail.fr", mdp="abcd"),
+    Joueur(pseudo="jp", elo="1000", mail="jp@mail.fr", mdp="1234"),
+    Joueur(pseudo="lea", elo="1000", mail="lea@mail.fr", mdp="0000"),
+    Joueur(pseudo="gg", elo="1000", mail="gg@mail.fr", mdp="abcd"),
 ]
 
 
@@ -15,11 +15,11 @@ def test_creer_ok():
     """ "Création de Joueur réussie"""
 
     # GIVEN
-    pseudo, mdp, age, mail, fan_pokemon = "jp", "1234", 15, "z@mail.oo", True
+    pseudo, mdp, elo, mail, fan_pokemon = "jp", "1234", 1500, "z@mail.oo", True
     JoueurDao().creer = MagicMock(return_value=True)
 
     # WHEN
-    joueur = JoueurService().creer(pseudo, mdp, age, mail, fan_pokemon)
+    joueur = JoueurService().creer(pseudo, mdp, elo, mail, fan_pokemon)
 
     # THEN
     assert joueur.pseudo == pseudo
@@ -30,11 +30,11 @@ def test_creer_echec():
     (car la méthode JoueurDao().creer retourne False)"""
 
     # GIVEN
-    pseudo, mdp, age, mail, fan_pokemon = "jp", "1234", 15, "z@mail.oo", True
+    pseudo, mdp, elo, mail, fan_pokemon = "jp", "1234", 1500, "z@mail.oo", True
     JoueurDao().creer = MagicMock(return_value=False)
 
     # WHEN
-    joueur = JoueurService().creer(pseudo, mdp, age, mail, fan_pokemon)
+    joueur = JoueurService().creer(pseudo, mdp, elo, mail, fan_pokemon)
 
     # THEN
     assert joueur is None

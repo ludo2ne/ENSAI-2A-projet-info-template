@@ -10,13 +10,13 @@ class JoueurService:
     """Classe contenant les méthodes de service des Joueurs"""
 
     @log
-    def creer(self, pseudo, mdp, age, mail, fan_pokemon) -> Joueur:
+    def creer(self, pseudo, mdp, elo, mail, fan_pokemon) -> Joueur:
         """Création d'un joueur à partir de ses attributs"""
 
         nouveau_joueur = Joueur(
             pseudo=pseudo,
             mdp=hash_password(mdp, pseudo),
-            age=age,
+            elo=elo,
             mail=mail,
             fan_pokemon=fan_pokemon,
         )
@@ -57,7 +57,7 @@ class JoueurService:
         """Afficher tous les joueurs
         Sortie : Une chaine de caractères mise sous forme de tableau
         """
-        entetes = ["pseudo", "age", "mail", "est fan de Pokemon"]
+        entetes = ["pseudo", "elo", "mail", "est fan de Pokemon"]
 
         joueurs = JoueurDao().lister_tous()
 

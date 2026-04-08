@@ -7,7 +7,7 @@ st.title("Create a player account")
 
 pseudo = st.text_input("Username", max_chars=20)
 mdp = st.text_input("Password", type="password")
-age = st.number_input("Age", min_value=1, max_value=120)
+elo = st.number_input("Elo", min_value=1000, max_value=3000)
 mail = st.text_input("Email")
 fan_pokemon = st.checkbox("Pokemons fan?")
 
@@ -16,7 +16,7 @@ with st.container(horizontal_alignment="center"):
         joueur = {
             "pseudo": pseudo,
             "mdp": mdp,
-            "age": age,
+            "elo": elo,
             "mail": mail,
             "fan_pokemon": fan_pokemon,
         }

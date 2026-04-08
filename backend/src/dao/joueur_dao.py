@@ -30,13 +30,13 @@ class JoueurDao(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO joueur(pseudo, mdp, age, mail, fan_pokemon) VALUES        "
-                        "(%(pseudo)s, %(mdp)s, %(age)s, %(mail)s, %(fan_pokemon)s)             "
+                        "INSERT INTO joueur(pseudo, mdp, elo, mail, fan_pokemon) VALUES        "
+                        "(%(pseudo)s, %(mdp)s, %(elo)s, %(mail)s, %(fan_pokemon)s)             "
                         "  RETURNING id_joueur;                                                ",
                         {
                             "pseudo": joueur.pseudo,
                             "mdp": joueur.mdp,
-                            "age": joueur.age,
+                            "elo": joueur.elo,
                             "mail": joueur.mail,
                             "fan_pokemon": joueur.fan_pokemon,
                         },
@@ -84,7 +84,7 @@ class JoueurDao(metaclass=Singleton):
         if res:
             joueur = Joueur(
                 pseudo=res["pseudo"],
-                age=res["age"],
+                elo=res["elo"],
                 mail=res["mail"],
                 fan_pokemon=res["fan_pokemon"],
                 id_joueur=res["id_joueur"],
@@ -103,7 +103,7 @@ class JoueurDao(metaclass=Singleton):
         Returns
         -------
         liste_joueurs : list[Joueur]
-            renvoie la liste de tous les joueurs dans la base de données
+            renvoie la liste de tous les joueurs dans la base de données triée par pseudo
         """
 
         try:
@@ -111,7 +111,8 @@ class JoueurDao(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT *                              "
-                        "  FROM joueur;                        "
+                        "  FROM joueur                         "
+                        " ORDER BY pseudo;                     "
                     )
                     res = cursor.fetchall()
         except Exception as e:
@@ -126,7 +127,7 @@ class JoueurDao(metaclass=Singleton):
                     id_joueur=row["id_joueur"],
                     pseudo=row["pseudo"],
                     mdp=row["mdp"],
-                    age=row["age"],
+                    elo=row["elo"],
                     mail=row["mail"],
                     fan_pokemon=row["fan_pokemon"],
                 )
@@ -159,14 +160,14 @@ class JoueurDao(metaclass=Singleton):
                         "UPDATE joueur                                      "
                         "   SET pseudo      = %(pseudo)s,                   "
                         "       mdp         = %(mdp)s,                      "
-                        "       age         = %(age)s,                      "
+                        "       elo         = %(elo)s,                      "
                         "       mail        = %(mail)s,                     "
                         "       fan_pokemon = %(fan_pokemon)s               "
                         " WHERE id_joueur = %(id_joueur)s;                  ",
                         {
                             "pseudo": joueur.pseudo,
                             "mdp": joueur.mdp,
-                            "age": joueur.age,
+                            "elo": joueur.elo,
                             "mail": joueur.mail,
                             "fan_pokemon": joueur.fan_pokemon,
                             "id_joueur": joueur.id_joueur,
@@ -245,7 +246,7 @@ class JoueurDao(metaclass=Singleton):
             joueur = Joueur(
                 pseudo=res["pseudo"],
                 mdp=res["mdp"],
-                age=res["age"],
+                elo=res["elo"],
                 mail=res["mail"],
                 fan_pokemon=res["fan_pokemon"],
                 id_joueur=res["id_joueur"],

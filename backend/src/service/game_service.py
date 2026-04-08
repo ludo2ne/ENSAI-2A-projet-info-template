@@ -1,3 +1,4 @@
+import os
 import random
 
 from fastapi import HTTPException
@@ -19,11 +20,35 @@ class GameService:
             raise HTTPException(status_code=404, detail="Joueur non trouvé")
 
         resultat = random.choice(["heads", "tails"])
-        gagnant = j1 if resultat == choice else j2
+        winner = j1 if resultat == choice else j2
+
+        self.update_elo(j1, j2, winner)
 
         return {
-            "joueur1": j1.pseudo,
-            "joueur2": j2.pseudo,
+            "joueuelo1": j1.pseudo,
+            "joueuelo2": j2.pseudo,
             "resultat": resultat,
-            "gagnant": gagnant.pseudo,
+            "gagnant": winner.pseudo,
         }
+
+    def expected_score(self, elo1, elo2):
+        return 1 / (1 + 10 ** ((elo2 - elo1) / 400))
+
+    def compute_elo(self, elo1, elo2, win1):
+
+        K_FACTOR = int(os.environ["ELO_K_FACTOR"])
+
+        e1 = self.expected_score(elo1, elo2)
+
+        s1, s2 = win1 * 1, 1 - win1 * 1
+
+        new_elo1 = round(elo1 + K_FACTOR * (s1 - e1))
+        new_elo2 = round(elo2 + K_FACTOR * (s2 - (1 - e1)))
+
+        return new_elo1, new_elo2
+
+    def update_elo(self, j1, j2, winner):
+        j1.elo, j2.elo = self.compute_elo(j1.elo, j2.elo, j1 == winner)
+
+        JoueurDao().modifier(j1)
+        JoueurDao().modifier(j2)

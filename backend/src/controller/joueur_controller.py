@@ -17,7 +17,7 @@ class JoueurModel(BaseModel):
     id_joueur: int | None = None
     pseudo: str
     mdp: str
-    age: int
+    elo: int
     mail: str
     fan_pokemon: bool
 
@@ -47,7 +47,7 @@ async def creer_joueur(j: JoueurModel):
     if joueur_service.pseudo_deja_utilise(j.pseudo):
         raise HTTPException(status_code=400, detail="Pseudo déjà utilisé")
 
-    joueur = joueur_service.creer(j.pseudo, j.mdp, j.age, j.mail, j.fan_pokemon)
+    joueur = joueur_service.creer(j.pseudo, j.mdp, j.elo, j.mail, j.fan_pokemon)
     if not joueur:
         raise HTTPException(status_code=500, detail="Erreur lors de la création du joueur")
 
@@ -64,7 +64,7 @@ async def modifier_joueur(id_joueur: int, j: JoueurModel):
 
     joueur.pseudo = j.pseudo
     joueur.mdp = j.mdp
-    joueur.age = j.age
+    joueur.elo = j.elo
     joueur.mail = j.mail
     joueur.fan_pokemon = j.fan_pokemon
 

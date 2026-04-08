@@ -67,6 +67,8 @@ POSTGRES_SCHEMA=projet
 
 UVICORN_HOST=0.0.0.0
 UVICORN_PORT=5000
+
+ELO_K_FACTOR=32
 ```
 
 
@@ -115,7 +117,7 @@ Examples of endpoints, assuming that the environment variable `$API_URL` contain
     -d '{
       "pseudo": "patapouf",
       "mdp": "9999",
-      "age": 95,
+      "elo": 1500,
       "mail": "patapouf@mail.fr",
       "fan_pokemon": true
     }' | jq .
@@ -126,7 +128,7 @@ Examples of endpoints, assuming that the environment variable `$API_URL` contain
     -d '{
       "pseudo": "maurice_new",
       "mdp": "1234",
-      "age": 20,
+      "elo": 1400,
       "mail": "maurice@ensai.fr",
       "fan_pokemon": true
     }' | jq .
