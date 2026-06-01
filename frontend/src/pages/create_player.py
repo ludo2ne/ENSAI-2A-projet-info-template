@@ -9,12 +9,17 @@ st.title("Create a player account")
 
 username = st.text_input("Username", max_chars=20)
 password = st.text_input("Password", type="password")
+
+is_pwd_long_enough = len(password) >= 35
+st.write("✅" if is_pwd_long_enough else "❌", "At least 35 characters")
+
+
 elo = st.number_input("Elo", min_value=1000, max_value=3000)
 email = st.text_input("Email")
 pokemon_fan = st.checkbox("Pokemons fan?")
 
 with st.container(horizontal_alignment="center"):
-    if st.button("Create", width=150, disabled=not username):
+    if st.button("Create", width=150, disabled=not username or not is_pwd_long_enough):
         logging.info("Create player")
         player = {
             "username": username,
