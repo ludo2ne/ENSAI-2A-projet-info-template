@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
@@ -14,6 +16,7 @@ class LoginRequest(BaseModel):
 
 @router.post("/", tags=["Login"])
 def login(req: LoginRequest):
+    logging.info("Login")
     player = service.login(req.username, req.password)
     if player:
         return {"id_player": player.id_player, "username": player.username}

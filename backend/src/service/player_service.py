@@ -34,16 +34,18 @@ class PlayerService:
         return players
 
     @log
-    def find_by_id(self, id_player) -> Player:
-        """Find a player by their id"""
-        return PlayerDao().find_by_id(id_player)
+    def find_by_id(self, id_player, include_password=False) -> Player:
+        """Find a player by its id"""
+        player = PlayerDao().find_by_id(id_player)
+        if not include_password:
+            player.password = None
+        return player
 
     @log
-    def update(self, player) -> Player:
+    def update(self, player, include_password=False) -> Player:
         """Update a player"""
-
         player.password = hash_password(player.password, player.username)
-        return player if PlayerDao().update(player) else None
+        return player if PlayerDao().update(player, include_password) else None
 
     @log
     def delete(self, player) -> bool:

@@ -86,6 +86,7 @@ class PlayerDao(metaclass=Singleton):
                 email=res["email"],
                 pokemon_fan=res["pokemon_fan"],
                 id_player=res["id_player"],
+                password=res["password"],
             )
 
         return player
@@ -149,7 +150,7 @@ class PlayerDao(metaclass=Singleton):
                     cursor.execute(
                         "UPDATE player "
                         "SET username = %(username)s, "
-                        "    password = %(password)s, "
+                        "    password = COALESCE(%(password)s, password), "
                         "    elo = %(elo)s, "
                         "    email = %(email)s, "
                         "    pokemon_fan = %(pokemon_fan)s "

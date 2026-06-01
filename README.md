@@ -79,7 +79,7 @@ ELO_K_FACTOR=32
 Open two terminals:
 
 - Backend FastApi: `uv run --project backend python backend/src/main.py`
-- Frontend Streamlit: `uv run --project frontend streamlit run frontend/src/app.py`
+- Frontend Streamlit: `cd frontend` and `uv run --project . streamlit run src/app.py`
 
 By default, the API runs on port 5000 and the GUI on port 8000.
 
