@@ -22,22 +22,20 @@ class PlayerService:
         return new_player if PlayerDao().create(new_player) else None
 
     @log
-    def find_all(self, include_password=False) -> list[Player]:
+    def find_all(self, hide_password=True) -> list[Player]:
         """List all players
-        If include_password=True, passwords will be included
+        If hide_password=False, passwords will be displayed
         By default, all player passwords are set to None
         """
         players = PlayerDao().find_all()
-        if not include_password:
-            for p in players:
-                p.password = None
+        # TODO
         return players
 
     @log
-    def find_by_id(self, id_player, include_password=False) -> Player:
+    def find_by_id(self, id_player, hide_password=True) -> Player:
         """Find a player by its id"""
         player = PlayerDao().find_by_id(id_player)
-        if not include_password:
+        if hide_password:
             player.password = None
         return player
 

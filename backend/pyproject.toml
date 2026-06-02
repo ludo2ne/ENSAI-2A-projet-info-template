@@ -10,6 +10,7 @@ dependencies = [
     "inquirerPy",
     "psycopg2-binary",
     "python-dotenv",
+    "pydantic[email]",
     "PyYAML",
     "requests",
     "regex",

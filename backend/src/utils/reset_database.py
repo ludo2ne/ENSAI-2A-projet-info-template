@@ -50,7 +50,7 @@ class ResetDatabase(metaclass=Singleton):
 
         # Apply password hashing to all players
         player_service = PlayerService()
-        for p in player_service.find_all(include_password=True):
+        for p in player_service.find_all(hide_password=False):
             player_service.update(p)
 
         return True

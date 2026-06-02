@@ -3,7 +3,7 @@
 import logging
 
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr, Field
 
 from service.player_service import PlayerService
 
@@ -18,7 +18,7 @@ class PlayerModel(BaseModel):
     username: str
     password: str = Field(..., min_length=35)
     elo: int
-    email: str
+    email: EmailStr
     pokemon_fan: bool
 
 
