@@ -70,7 +70,9 @@ class PlayerDao(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "SELECT * FROM player WHERE id_player = %(id_player)s;",
+                        "SELECT *                            "
+                        "  FROM player                       "
+                        " WHERE id_player = %(id_player)s;   ",
                         {"id_player": id_player},
                     )
                     res = cursor.fetchone()
@@ -104,7 +106,11 @@ class PlayerDao(metaclass=Singleton):
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
-                    cursor.execute("SELECT * FROM player ORDER BY username;")
+                    cursor.execute(
+                        "SELECT *                                "
+                        "  FROM player                           "
+                        " ORDER BY username;                     "
+                    )
                     res = cursor.fetchall()
         except Exception as e:
             logging.info(e)
@@ -148,13 +154,13 @@ class PlayerDao(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "UPDATE player "
-                        "SET username = %(username)s, "
-                        "    password = COALESCE(%(password)s, password), "
-                        "    elo = %(elo)s, "
-                        "    email = %(email)s, "
-                        "    pokemon_fan = %(pokemon_fan)s "
-                        "WHERE id_player = %(id_player)s;",
+                        "UPDATE player                                       "
+                        "   SET username = %(username)s,                     "
+                        "       password = COALESCE(%(password)s, password), "
+                        "       elo = %(elo)s,                               "
+                        "       email = %(email)s,                           "
+                        "       pokemon_fan = %(pokemon_fan)s                "
+                        " WHERE id_player = %(id_player)s;                   ",
                         {
                             "username": player.username,
                             "password": player.password,
@@ -189,7 +195,8 @@ class PlayerDao(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "DELETE FROM player WHERE id_player = %(id_player)s",
+                        "DELETE FROM player                               "
+                        " WHERE id_player = %(id_player)s                 ",
                         {"id_player": player.id_player},
                     )
                     res = cursor.rowcount
@@ -220,10 +227,10 @@ class PlayerDao(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "SELECT * "
-                        "FROM player "
-                        "WHERE username = %(username)s "
-                        "AND password = %(password)s;",
+                        "SELECT *                               "
+                        "  FROM player                          "
+                        " WHERE username = %(username)s         "
+                        "   AND password = %(password)s;        ",
                         {"username": username, "password": password},
                     )
                     res = cursor.fetchone()

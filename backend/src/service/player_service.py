@@ -42,10 +42,10 @@ class PlayerService:
         return player
 
     @log
-    def update(self, player, include_password=False) -> Player:
+    def update(self, player) -> Player:
         """Update a player"""
         player.password = hash_password(player.password, player.username)
-        return player if PlayerDao().update(player, include_password) else None
+        return player if PlayerDao().update(player) else None
 
     @log
     def delete(self, player) -> bool:
