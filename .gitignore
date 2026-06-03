@@ -160,3 +160,9 @@ cython_debug/
 
 .env
 logs/
+
+# Project Reports (Generated files)
+doc/report/*.pdf
+doc/report/*.html
+doc/report/report_files/
+doc/report/.quarto/
