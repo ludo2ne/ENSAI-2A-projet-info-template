@@ -3,23 +3,12 @@
 import logging
 
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, EmailStr, Field
 
+from schema.player_model import PlayerModel
 from service.player_service import PlayerService
 
 router = APIRouter()
 player_service = PlayerService()
-
-
-class PlayerModel(BaseModel):
-    """Define a Pydantic model for Players"""
-
-    id_player: int | None = None
-    username: str
-    password: str = Field(..., min_length=35)
-    elo: int
-    email: EmailStr
-    pokemon_fan: bool
 
 
 @router.get("/", tags=["Players"])
