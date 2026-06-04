@@ -11,7 +11,7 @@ format:
       x: 1.5cm
       y: 2.0cm
     section-numbering: 1.1.a
-    mainfont: "DejaVu Serif"
+    mainfont: "Libertinus Serif"
     fontsize: 11pt
 ---
 
@@ -30,6 +30,10 @@ format:
 ```
 
 ## Introduction {.unnumbered}
+
+```{=typst} 
+#lorem(100)
+```
 
 {{< pagebreak >}}
 

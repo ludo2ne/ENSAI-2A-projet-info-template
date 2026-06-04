@@ -1,21 +1,16 @@
 import logging
 
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
 
+from schema.player_model import PlayerLoginModel
 from service.player_service import PlayerService
 
 router = APIRouter()
 service = PlayerService()
 
 
-class LoginRequest(BaseModel):
-    username: str
-    password: str
-
-
 @router.post("/", tags=["Login"])
-def login(req: LoginRequest):
+def login(req: PlayerLoginModel):
     logging.info("Login")
     player = service.login(req.username, req.password)
     if player:

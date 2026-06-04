@@ -13,3 +13,8 @@ class PlayerModel(BaseModel):
     elo: int
     email: EmailStr
     pokemon_fan: bool
+
+
+class PlayerLoginModel(BaseModel):
+    username: str
+    password: str

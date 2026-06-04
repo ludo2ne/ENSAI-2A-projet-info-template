@@ -1,18 +1,12 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
 
+from schema.game_model import GameModel
 from service.game_service import GameService
 
 router = APIRouter()
 game_service = GameService()
 
 
-class GameRequest(BaseModel):
-    player1_id: int
-    player2_id: int
-    choice: str
-
-
 @router.post("/", tags=["Games"])
-def play_game(req: GameRequest):
+def play_game(req: GameModel):
     return game_service.play(req.player1_id, req.player2_id, req.choice)

@@ -7,21 +7,19 @@ from utils.singleton import Singleton
 
 
 class PlayerDao(metaclass=Singleton):
-    """Class containing methods to access Players in the database"""
+    """Class containing methods to access Players in the database."""
 
     @log
     def create(self, player) -> bool:
-        """Create a player in the database
+        """Create a player in the database.
 
         Parameters
         ----------
-        player : Player
+        Player to create
 
         Returns
         -------
-        created : bool
-            True if creation is successful
-            False otherwise
+        True if creation is successful, False otherwise
         """
 
         res = None
@@ -63,8 +61,7 @@ class PlayerDao(metaclass=Singleton):
 
         Returns
         -------
-        player : Player
-            returns the player matching the given id
+        Player matching the given id
         """
         try:
             with DBConnection().connection as connection:
@@ -95,12 +92,11 @@ class PlayerDao(metaclass=Singleton):
 
     @log
     def find_all(self) -> list[Player]:
-        """List all players
+        """List all players in the database.
 
         Returns
         -------
-        players_list : list[Player]
-            returns the list of all players in the database sorted by username
+        list[Player] sorted by username.
         """
 
         try:
@@ -135,19 +131,16 @@ class PlayerDao(metaclass=Singleton):
 
     @log
     def update(self, player) -> bool:
-        """Update a player in the database
+        """Update a player in the database.
 
         Parameters
         ----------
-        player : Player
+        Player to be updated.
 
         Returns
         -------
-        updated : bool
-            True if update is successful
-            False otherwise
+        True if update is successful, False otherwise.
         """
-
         res = None
 
         try:
@@ -182,13 +175,11 @@ class PlayerDao(metaclass=Singleton):
 
         Parameters
         ----------
-        player : Player
-            player to delete from the database
+        Player to delete from the database
 
         Returns
         -------
-        bool
-            True if the player was successfully deleted
+        True if the player was successfully deleted, False otherwise.
         """
 
         try:
@@ -213,14 +204,11 @@ class PlayerDao(metaclass=Singleton):
         Parameters
         ----------
         username : str
-            player's username
         password : str
-            player's password
 
         Returns
         -------
-        player : Player
-            returns the matching player
+        Player or None
         """
         res = None
         try:
