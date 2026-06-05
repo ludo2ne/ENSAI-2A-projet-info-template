@@ -1,18 +1,29 @@
 import logging
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from schema.player_model import PlayerLoginModel
 from service.player_service import PlayerService
 
 router = APIRouter()
-service = PlayerService()
+
+
+def get_player_service():
+    """Dependency provider."""
+    return PlayerService()
 
 
 @router.post("/", tags=["Login"])
-def login(req: PlayerLoginModel):
+def login(credentials: PlayerLoginModel, service=Depends(get_player_service)):
+    """Authenticates a user.
+    Args:
+        credentials: username and password.
+    Returns:
+        dict: containing id_player and username
+    Raises:
+        HTTPException: 401 error if the credentials are invalid or the user does not exist."""
     logging.info("Login")
-    player = service.login(req.username, req.password)
+    player = service.login(credentials.username, credentials.password)
     if player:
         return {"id_player": player.id_player, "username": player.username}
     raise HTTPException(status_code=401, detail="Invalid credentials")

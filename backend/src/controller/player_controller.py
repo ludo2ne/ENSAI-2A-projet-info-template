@@ -2,17 +2,21 @@
 
 import logging
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from schema.player_model import PlayerModel
 from service.player_service import PlayerService
 
 router = APIRouter()
-player_service = PlayerService()
+
+
+def get_player_service():
+    """Dependency provider."""
+    return PlayerService()
 
 
 @router.get("/", tags=["Players"])
-async def find_all_players():
+async def find_all_players(player_service=Depends(get_player_service)):
     """List all players"""
     logging.info("List all players")
     players_list = player_service.find_all()
@@ -20,7 +24,7 @@ async def find_all_players():
 
 
 @router.get("/{id_player}", tags=["Players"])
-async def player_by_id(id_player: int):
+async def player_by_id(id_player: int, player_service=Depends(get_player_service)):
     """Find a player by id"""
     logging.info("Find a player by id")
     player = player_service.find_by_id(id_player)
@@ -30,7 +34,7 @@ async def player_by_id(id_player: int):
 
 
 @router.post("/", tags=["Players"])
-async def create_player(p: PlayerModel):
+async def create_player(p: PlayerModel, player_service=Depends(get_player_service)):
     """Create a player"""
     logging.info("Create a player")
     if player_service.username_already_used(p.username):
@@ -44,7 +48,7 @@ async def create_player(p: PlayerModel):
 
 
 @router.put("/{id_player}", tags=["Players"])
-async def update_player(id_player: int, p: PlayerModel):
+async def update_player(id_player: int, p: PlayerModel, player_service=Depends(get_player_service)):
     """Update a player"""
     logging.info("Update a player")
     player = player_service.find_by_id(id_player)
@@ -65,7 +69,7 @@ async def update_player(id_player: int, p: PlayerModel):
 
 
 @router.delete("/{id_player}", tags=["Players"])
-async def delete_player(id_player: int):
+async def delete_player(id_player: int, player_service=Depends(get_player_service)):
     """Delete a player"""
     logging.info("Delete a player")
     player = player_service.find_by_id(id_player)
