@@ -1,17 +1,20 @@
+"""
+Streamlit page for the main player menu.
+
+Provides navigation to available actions such as listing players or playing games for logged-in users.
+"""
+
 import logging
-import time
 
 import streamlit as st
 
-player = st.session_state.get("player")
+from utils.auth_guard import check_authentification
 
 st.title("Main menu")
 
-if not player:
-    logging.info("Not logged in, return to the home page")
-    st.error("Access restricted to logged-in users.")
-    time.sleep(1)
-    st.switch_page("pages/home.py")
+check_authentification()
+
+player = st.session_state.get("player")
 
 st.badge(f"Hello {player['username']}!", color="green")
 

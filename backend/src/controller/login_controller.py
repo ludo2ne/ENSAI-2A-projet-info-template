@@ -25,5 +25,9 @@ def login(credentials: PlayerLoginModel, service=Depends(get_player_service)):
     logging.info("Login")
     player = service.login(credentials.username, credentials.password)
     if player:
-        return {"id_player": player.id_player, "username": player.username}
+        return {
+            "id_player": player.id_player,
+            "username": player.username,
+            "access_token": player.access_token,
+        }
     raise HTTPException(status_code=401, detail="Invalid credentials")

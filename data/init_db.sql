@@ -8,5 +8,8 @@ CREATE TABLE player (
     password     VARCHAR(256),
     elo          INTEGER,
     email        VARCHAR(50),
-    pokemon_fan  BOOLEAN
+    pokemon_fan  BOOLEAN,
+    access_token VARCHAR(255)
 );
+
+

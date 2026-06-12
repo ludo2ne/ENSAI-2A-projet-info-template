@@ -5,8 +5,9 @@ from unittest import mock
 import dotenv
 
 from dao.db_connection import DBConnection
-from service.player_service import PlayerService
+from dao.player_dao import PlayerDao
 from utils.log_decorator import log
+from utils.security import hash_password
 from utils.singleton import Singleton
 
 
@@ -49,9 +50,9 @@ class ResetDatabase(metaclass=Singleton):
             raise
 
         # Apply password hashing to all players
-        player_service = PlayerService()
-        for p in player_service.find_all(hide_password=False):
-            player_service.update(p)
+        for p in PlayerDao().find_all():
+            p.password = hash_password(p.password, p.username)
+            PlayerDao().update(p)
 
         return True
 

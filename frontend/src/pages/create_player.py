@@ -1,4 +1,12 @@
-# frontend/pages/player_creation.py
+"""
+Streamlit page for player account registration.
+
+Allows users to create a new player profile with username, password, Elo, email, etc.
+
+Endpoint used:
+    POST /player
+"""
+
 import logging
 
 import streamlit as st

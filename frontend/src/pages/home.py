@@ -1,3 +1,13 @@
+"""
+Streamlit home page.
+
+Provides options to log in, sign up for a new account, or reset the database.
+
+Endpoints used:
+    POST /login
+    GET /reset_database
+"""
+
 import logging
 
 import streamlit as st
@@ -32,6 +42,7 @@ with st.container(horizontal_alignment="center"):
                 logging.info(f"{username} successfully logged in")
                 player = response["data"]
                 st.session_state["player"] = player
+                st.session_state["access_token"] = player["access_token"]
                 st.success(f"Welcome {player['username']} ! 🎉")
                 st.switch_page("pages/player_menu.py")
             elif response["status_code"] == 401:

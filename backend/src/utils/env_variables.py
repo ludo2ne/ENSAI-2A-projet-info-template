@@ -5,6 +5,7 @@ import dotenv
 
 
 def load_environment_variables():
+    """Loads environment variables from the .env file."""
     succes = dotenv.load_dotenv(
         dotenv_path=Path(__file__).resolve().parents[2] / ".env", override=True
     )
@@ -12,7 +13,14 @@ def load_environment_variables():
 
 
 def mask_value(key, value):
-    """Mask sensitive values"""
+    """Masks sensitive values based on their key name.
+    Args:
+        key (str): The name of the environment variable.
+        value (str): The actual value of the environment variable.
+    Returns:
+        str: A masked string ("*******") if the key contains sensitive
+            keywords, otherwise the original value.
+    """
     sensitive_keywords = ["PASSWORD", "SECRET", "KEY", "TOKEN"]
 
     if any(word in key.upper() for word in sensitive_keywords):
@@ -21,5 +29,6 @@ def mask_value(key, value):
 
 
 def display_values():
+    """Logs all environment variables to the console."""
     for key, value in dotenv.dotenv_values().items():
         logging.info(f"{key}={mask_value(key, value)}")

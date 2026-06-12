@@ -1,19 +1,26 @@
+"""
+Streamlit page for playing a coin flip game.
+
+Allows a player to select an opponent and play a game of Heads or Tails.
+
+Endpoints used:
+    GET /player
+    POST /game
+"""
+
 import logging
 import time
 
 import streamlit as st
 
 from utils.api_client import api_client
+from utils.auth_guard import check_authentification
 
 st.title("Play a Coin flip")
 
-player = st.session_state.get("player")
+check_authentification()
 
-if not st.session_state.get("player"):
-    logging.info("Not logged in, return to the home page")
-    st.error("Access restricted to logged-in users.")
-    time.sleep(1)
-    st.switch_page("pages/home.py")
+player = st.session_state.get("player")
 
 response = api_client.get("/player/")
 
@@ -42,8 +49,7 @@ if st.button("Play"):
     response = api_client.post(
         "/game/",
         json={
-            "id_player1": player["id_player"],
-            "id_player2": adversaire["id_player"],
+            "id_opponent": adversaire["id_player"],
             "choice": genre,
         },
     )

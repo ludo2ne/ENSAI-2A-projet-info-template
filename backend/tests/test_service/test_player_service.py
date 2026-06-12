@@ -39,23 +39,8 @@ def test_create_fail():
     assert player is None
 
 
-def test_find_all_hide_password_false():
-    """List Players including passwords"""
-
-    # GIVEN
-    PlayerDao().find_all = MagicMock(return_value=player_list)
-
-    # WHEN
-    res = PlayerService().find_all(hide_password=False)
-
-    # THEN
-    assert len(res) == 3
-    for player in res:
-        assert player.password is not None
-
-
-def test_find_all_hide_password_true():
-    """List Players excluding passwords"""
+def test_find_all():
+    """List Players"""
 
     # GIVEN
     PlayerDao().find_all = MagicMock(return_value=player_list)
@@ -65,8 +50,6 @@ def test_find_all_hide_password_true():
 
     # THEN
     assert len(res) == 3
-    # for player in res:
-    #    assert not player.password
 
 
 def test_username_already_used_yes():

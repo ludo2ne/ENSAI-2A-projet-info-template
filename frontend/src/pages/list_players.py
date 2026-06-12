@@ -1,19 +1,23 @@
-# frontend/pages/players.py
+"""
+Streamlit page for listing all players.
+
+Retrieves and displays a list of registered players in a table, excluding sensitive data like passwords.
+
+Endpoint used:
+    GET /player
+"""
+
 import logging
-import time
 
 import pandas as pd
 import streamlit as st
 
 from utils.api_client import api_client
+from utils.auth_guard import check_authentification
 
 st.title("Player list")
 
-if not st.session_state.get("player"):
-    logging.info("Not logged in, return to the home page")
-    st.error("Access restricted to logged-in users.")
-    time.sleep(1)
-    st.switch_page("pages/home.py")
+check_authentification()
 
 logging.info("Display players list")
 
@@ -22,8 +26,6 @@ players = api_client.get("/player").get("data")
 if players:
     if isinstance(players, list):
         df = pd.DataFrame(players)
-        if "password" in df.columns:
-            df = df.drop(columns=["password"])
         st.dataframe(df, hide_index=True)
     else:
         logging.info("No players found.")

@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field
 
 
-class PlayerModel(BaseModel):
+class PlayerCreateUpdateModel(BaseModel):
     """Acts as the data contract between the frontend and the backend.
 
     It defines the JSON structure used to exchange player information,
@@ -13,6 +13,14 @@ class PlayerModel(BaseModel):
     elo: int
     email: EmailStr
     pokemon_fan: bool
+
+
+class PlayerReadModel(BaseModel):
+    id_player: int
+    username: str
+    elo: int | None
+    email: EmailStr
+    pokemon_fan: bool | None
 
 
 class PlayerLoginModel(BaseModel):

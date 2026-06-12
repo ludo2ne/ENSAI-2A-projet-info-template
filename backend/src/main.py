@@ -1,4 +1,9 @@
-# main.py
+"""
+Main entry point for the FastAPI web service.
+
+Initializes logging, loads environment variables, and sets up API routers
+for players, login, and games.
+"""
 
 import logging
 
