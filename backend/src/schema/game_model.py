@@ -2,6 +2,6 @@ from pydantic import BaseModel
 
 
 class GameModel(BaseModel):
-    player1_id: int
-    player2_id: int
+    id_player1: int
+    id_player2: int
     choice: str

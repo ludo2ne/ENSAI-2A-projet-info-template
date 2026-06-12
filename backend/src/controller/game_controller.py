@@ -14,9 +14,8 @@ def get_game_service():
 @router.post("/", tags=["Games"])
 def play_game(req: GameModel, game_service=Depends(get_game_service)):
     """Executes a game session.
-
     Args:
         req (GameModel): Request containing player IDs and game choice.
     Returns:
         dict: Match results (winner, result, new elo, etc.)."""
-    return game_service.play(req.player1_id, req.player2_id, req.choice)
+    return game_service.play(req.id_player1, req.id_player2, req.choice)

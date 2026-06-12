@@ -42,8 +42,8 @@ if st.button("Play"):
     response = api_client.post(
         "/game/",
         json={
-            "player1_id": player["id_player"],
-            "player2_id": adversaire["id_player"],
+            "id_player1": player["id_player"],
+            "id_player2": adversaire["id_player"],
             "choice": genre,
         },
     )

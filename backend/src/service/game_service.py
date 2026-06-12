@@ -13,15 +13,15 @@ class GameService:
     """
 
     @log
-    def play(self, player_id: int, opponent_id: int, choice="heads"):
+    def play(self, id_player: int, id_opponent: int, choice="heads"):
         """
         Executes a single round of a coin-flip game between two players.
 
         Parameters
         ----------
-        player_id : int
+        id_player : int
             The unique identifier of the first player.
-        opponent_id : int
+        id_opponent : int
             The unique identifier of the opponent.
         choice : str, optional
             The player's choice ('heads' or 'tails'), by default "heads".
@@ -43,11 +43,11 @@ class GameService:
             400 if the two players are the same.
             404 if one or both players are not found in the database.
         """
-        if player_id == opponent_id:
+        if id_player == id_opponent:
             raise HTTPException(status_code=400, detail="Two different players required")
 
-        p1 = PlayerDao().find_by_id(player_id)
-        p2 = PlayerDao().find_by_id(opponent_id)
+        p1 = PlayerDao().find_by_id(id_player)
+        p2 = PlayerDao().find_by_id(id_opponent)
 
         if not p1 or not p2:
             raise HTTPException(status_code=404, detail="Player not found")

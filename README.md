@@ -63,7 +63,7 @@ POSTGRES_PORT=5432
 POSTGRES_DATABASE=defaultdb
 POSTGRES_USER=user-<username>
 POSTGRES_PASSWORD=<password>
-POSTGRES_SCHEMA=projet
+POSTGRES_SCHEMA=project
 
 UVICORN_HOST=0.0.0.0
 UVICORN_PORT=5000
@@ -127,7 +127,7 @@ To ensure tests are repeatable, safe, and **do not interfere with the real datab
 
 The DAO unit tests use data from the `data/pop_db_test.sql` file.
 
-This data is loaded into a separate schema (projet_test_dao) so as not to pollute the other data.
+This data is loaded into a separate schema (project_test_dao) so as not to pollute the other data.
 
 - [ ] Lanch unit tests: `uv run --project backend pytest -v` 
 

@@ -1,4 +1,4 @@
-# Projet report
+# Project report
 
 <https://ludo2ne.github.io/ENSAI-tools/doc/quarto/report.html>
 

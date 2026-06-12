@@ -61,7 +61,7 @@ jobs:
           POSTGRES_DATABASE: test_db
           POSTGRES_USER: postgres_user
           POSTGRES_PASSWORD: postgres_pwd
-          POSTGRES_SCHEMA: projet
+          POSTGRES_SCHEMA: project
         run: |
           uv run --project backend coverage run -m pytest
           uv run --project backend coverage report

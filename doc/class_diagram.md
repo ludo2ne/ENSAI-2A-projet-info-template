@@ -48,7 +48,7 @@ classDiagram
     }
 
     class GameService {
-        +play(player_id:int, opponent_id:int, choice:str): dict
+        +play(id_player:int, id_opponent:int, choice:str): dict
         +expected_score(elo1:int, elo2:int): float
         +compute_elo(elo1:int, elo2:int, win1:bool): tuple[int,int]
         +update_elo(j1:Player, j2:Player, winner:Player)
