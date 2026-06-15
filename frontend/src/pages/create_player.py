@@ -15,7 +15,7 @@ from utils.api_client import api_client
 
 st.title("Create a player account")
 
-username = st.text_input("Username", max_chars=20)
+username = st.text_input("Username", max_chars=30)
 password = st.text_input("Password", type="password")
 
 is_pwd_long_enough = len(password) >= 35

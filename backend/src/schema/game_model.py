@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
 
-class GameModel(BaseModel):
+class GamePlayModel(BaseModel):
     id_opponent: int
     choice: str

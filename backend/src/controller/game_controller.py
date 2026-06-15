@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from schema.game_model import GameModel
+from schema.game_model import GamePlayModel
 from service.game_service import GameService
 from utils.security import verify_token
 
@@ -14,11 +14,11 @@ def get_game_service():
 
 @router.post("/", tags=["Games"], response_model=dict)
 def play_game(
-    req: GameModel, game_service=Depends(get_game_service), current_player=Depends(verify_token)
+    req: GamePlayModel, game_service=Depends(get_game_service), current_player=Depends(verify_token)
 ):
     """Starts and executes a new game session.
     Args:
-        req (GameModel): Request containing player IDs and game mode.
+        req (GamePlayModel): Request containing player IDs and game mode.
         game_service (GameService): Service handling game logic.
         current_player (Player): The authenticated user.
     Returns:

@@ -58,8 +58,8 @@ classDiagram
     class PlayerController {
         +list_all_players(): list[Player]
         +player_by_id(int): Player
-        +create_player(PlayerCreateUpdateModel): Player
-        +update_player(int, PlayerCreateUpdateModel): str
+        +create_player(PlayerModel): Player
+        +update_player(int, PlayerModel): str
         +delete_player(int): str
     }
 
