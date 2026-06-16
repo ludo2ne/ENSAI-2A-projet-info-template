@@ -6,31 +6,23 @@ Template for the ENSAI 2nd year IT project.
 
 This very simple application includes a few elements that may help with the info 2A project:
 
+- Creating a webservice with FastAPI
 - Layer programming (DAO, service, view, business_object)
 - Connection to a database
-- Terminal interface (view layer) with [inquirerPy](https://inquirerpy.readthedocs.io/en/latest/)
 - Calling a Webservice
-- Creating a webservice
-
-
-Softwares and tools used:
-
-- [Visual Studio Code](https://code.visualstudio.com/)
-- [Python 3.13](https://www.python.org/)
-- [Git](https://git-scm.com/)
-- A [PostgreSQL](https://www.postgresql.org/) database
-
+- Interface with Streamlit
 
 ## :arrow_forward: Quick launch with SSP Cloud
 
+Needed: [SSP Cloud](https://datalab.sspcloud.fr/) account.
+
 ### Start a service and import the project
 
-- [ ] Ensure you have an active GitHub token on Datalab
 - [ ] Launch a VSCode-python service
   - Open ports 5000 and 8000
 - [ ] Open a terminal
-- [ ] Clone the repository using a token
-  - `git clone https://$GIT_PERSONAL_ACCESS_TOKEN@github.com/ludo2ne/ENSAI-2A-projet-info-template.git`
+- [ ] Clone the repository
+  - `git clone https://github.com/ludo2ne/ENSAI-2A-projet-info-template.git`
 - [ ] Open Folder of the repository
   - `code-server ENSAI-2A-projet-info-template` or File > Open Folder
   - *ENSAI-2A-projet-info-template* should be the root directory of your Explorer
@@ -71,7 +63,6 @@ UVICORN_PORT=5000
 ELO_K_FACTOR=32
 ```
 
-
 ### Launch applications
 
 > First Launch: don't forget to reset database
@@ -101,7 +92,7 @@ Examples of endpoints, assuming that the environment variable `$API_URL` contain
     -H "Content-Type: application/json" \
     -d '{
       "username": "patapouf",
-      "password": "9999",
+      "password": "123456789abcdefghijklmnopqrstuvwxyz",
       "elo": 1500,
       "mail": "patapouf@mail.fr",
       "pokemon_fan": true
@@ -169,10 +160,42 @@ In both projects, backend and frontend:
 | `pyproject.toml`           | List dependencies and their settings                                                 |
 | `uv.lock`                  | lockfile that specifies the exact versions of all direct and transitive dependencies to ensure reproducible and consistent Python environments across different systems                                                |
 
-
 This repository contains a large number of configuration files for setting the parameters of the various tools used.
 
 Normally, for the purposes of your project, you won't need to modify these files, except for `.env` and `pyproject.toml`.
+
+### Layers
+
+Sequence diagram of the player retrieval flow through the application layers:
+
+```mermaid
+sequenceDiagram
+    participant Client as Client
+    participant Router as API Router (main)
+    participant WS as PlayerController
+    participant Service as PlayerService
+    participant DAO as PlayerDao
+
+    Client->>Router: GET /player/1
+    Note right of Router: Route matching /player
+    Router->>WS: player_by_id(id_player=1)
+
+    WS->>Service: find_by_id(1)
+
+    Service->>DAO: find_by_id(1)
+    DAO-->>DAO: Database request <br/>SELECT *<br/>FROM player<br/> WHERE id = 1
+    DAO-->>Service: Player instance (or None)
+    Service-->>WS: Player instance (or None)
+    WS-->>Client: 200 OK JSON {id_player: 1, username: "...", ...} <br/> or 404 Not Found
+```
+
+## :arrow_forward: Softwares and tools
+
+- Visual Studio Code
+- Python 3.13
+- Git
+- A PostgreSQL database
+- dependancies: managed by *uv* via the **pyproject.toml** files
 
 
 ## :arrow_forward: Logs

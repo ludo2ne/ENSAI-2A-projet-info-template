@@ -19,6 +19,7 @@ from utils.reset_database import ResetDatabase
 initialize_logs("Webservice")
 dotenv.load_dotenv()
 
+
 app = FastAPI(title="My Webservice")
 
 app.include_router(player_controller.router, prefix="/player", tags=["Players"])
@@ -52,18 +53,17 @@ async def reset_database():
 if __name__ == "__main__":
     import os
 
-    import dotenv
     import uvicorn
 
-    import utils.env_variables as env_variables
+    from utils.env_variables import display_values, load_environment_variables
 
-    env_variables.load_environment_variables()
-    env_variables.display_values()
+    load_environment_variables()
+    display_values()
 
     uvicorn.run(
         app,
         host=os.getenv("UVICORN_HOST", "127.0.0.1"),
-        port=int(os.getenv("UVICORN_PORT", "5000")),
+        port=int(os.getenv("UVICORN_PORT", "5555")),
     )
 
     logging.info("Webservice stopped")

@@ -29,6 +29,6 @@ def mask_value(key, value):
 
 
 def display_values():
-    """Logs all environment variables to the console."""
+    """Logs all environment variables."""
     for key, value in dotenv.dotenv_values().items():
         logging.info(f"{key}={mask_value(key, value)}")

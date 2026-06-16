@@ -34,10 +34,10 @@ def verify_token(x_auth_token=Header(None)) -> PlayerDao:
         HTTPException: 401 error if the token is not found in the database.
     """
     if not x_auth_token:
-        raise HTTPException(status_code=401, detail="Missing token")
+        raise HTTPException(status_code=401, detail="Missing token.")
 
     player = PlayerDao().find_by_token(x_auth_token)
     if not player:
-        raise HTTPException(status_code=401, detail="Invalid token")
+        raise HTTPException(status_code=401, detail="Invalid token.")
 
     return player

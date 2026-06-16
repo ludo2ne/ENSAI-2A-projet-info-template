@@ -11,7 +11,7 @@ router = APIRouter()
 
 
 def get_player_service():
-    """Dependency provider."""
+    """Dependency Injection provider for PlayerService."""
     return PlayerService()
 
 
