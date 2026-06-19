@@ -7,17 +7,19 @@ for players, login, and games.
 
 import logging
 
-import dotenv
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 
 from controller import game_controller, login_controller, player_controller
+from utils.env_variables import display_values, load_environment_variables
 from utils.log_init import initialize_logs
 from utils.reset_database import ResetDatabase
 
 # Initialization
 initialize_logs("Webservice")
-dotenv.load_dotenv()
+
+load_environment_variables()
+display_values()
 
 
 app = FastAPI(title="My Webservice")
@@ -55,15 +57,10 @@ if __name__ == "__main__":
 
     import uvicorn
 
-    from utils.env_variables import display_values, load_environment_variables
-
-    load_environment_variables()
-    display_values()
-
     uvicorn.run(
         app,
         host=os.getenv("UVICORN_HOST", "127.0.0.1"),
-        port=int(os.getenv("UVICORN_PORT", "5555")),
+        port=int(os.getenv("UVICORN_PORT", "5000")),
     )
 
     logging.info("Webservice stopped")

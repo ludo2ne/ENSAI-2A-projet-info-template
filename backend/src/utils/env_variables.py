@@ -1,14 +1,11 @@
 import logging
-from pathlib import Path
 
 import dotenv
 
 
 def load_environment_variables():
     """Loads environment variables from the .env file."""
-    succes = dotenv.load_dotenv(
-        dotenv_path=Path(__file__).resolve().parents[2] / ".env", override=True
-    )
+    succes = dotenv.load_dotenv(override=True)
     logging.info(f"Load environment variables: {'SUCCES' if succes else 'FAIL'}")
 
 
