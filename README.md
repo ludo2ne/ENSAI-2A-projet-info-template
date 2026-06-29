@@ -34,8 +34,8 @@ Install and manage all dependencies with [uv](https://docs.astral.sh/uv/):
 
 ```bash
 # curl -LsSf https://astral.sh/uv/install.sh | sh
-uv sync --project backend --all-extras
-uv sync --project frontend --all-extras
+uv sync --project backend
+uv sync --project frontend
 ```
 
 ### Environment variables

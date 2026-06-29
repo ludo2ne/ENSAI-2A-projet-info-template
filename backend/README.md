@@ -8,6 +8,7 @@ This is the core engine of the application. It is a layered REST API built with 
 Command to run from the repository's root directory:
 
 - Install all dependencies: `uv sync --project backend --all-extras`
+  - option all-extras: including dev dependancies
 - Launch the API in development mode: `uv run --project backend python src/main.py`
 
 

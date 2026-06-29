@@ -1,11 +1,13 @@
 import logging
+import os
 
 import requests
 import streamlit as st
 
-# Retrieve configuration from Streamlit secrets
-DEFAULT_TIMEOUT = st.secrets.get("API_TIMEOUT", 5)
-API_URL = st.secrets.get("API_URL", "http://localhost:5000")
+DEFAULT_TIMEOUT = int(os.getenv("BACKEND_TIMEOUT", 5))
+API_URL = os.getenv("BACKEND_URL", "http://localhost:5555")
+
+
 
 
 class APIClient:
@@ -45,12 +47,11 @@ class APIClient:
             dict: A dictionary containing the 'status_code' and the response 'data'.
         """
         url = f"{self.base_url}{path}"
+        logging.info(f"\t{method} {url}")
 
         # Automatically inject headers (including the token)
         headers = kwargs.pop("headers", {})
         headers.update(self._get_headers())
-
-        # Handle timeout
         timeout = kwargs.pop("timeout", self.timeout)
 
         try:
@@ -75,8 +76,8 @@ class APIClient:
         finally:
             # Only log if a response was actually received to avoid errors in the finally block
             if "response" in locals():
-                logging.info(f"{response.status_code} {method} {url}")
-                logging.info(f"\t{data}")
+                logging.info(f"\t{response.status_code} {response.reason}")
+                logging.debug(f"\t{data}")
 
     def get(self, path: str, params=None, **kwargs):
         """Sends a GET request.

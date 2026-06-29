@@ -5,11 +5,7 @@ description = "User interface template for the ENSAI 2nd year IT project"
 authors = [{ name = "Lastname Firstname" }, { name = "Author2" }]
 requires-python = ">=3.13"
 
-dependencies = [
-    "streamlit",
-    "requests",
-    "pandas",
-]
+dependencies = ["pandas", "python-dotenv", "PyYAML", "requests", "streamlit"]
 
 [project.optional-dependencies]
 dev = ["bandit", "coverage", "pylint", "pytest", "ruff"]

@@ -28,34 +28,46 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+logging.info("Homepage")
 
 username = st.text_input("Username", placeholder="Enter username")
 password = st.text_input("Password", type="password", placeholder="Enter password")
 
 with st.container(horizontal_alignment="center"):
     if st.button("Log in"):
-        logging.info(f"{username} is trying to log in")
-        response = api_client.post("/login", json={"username": username, "password": password})
+        logging.info(f"Attempting login for user: {username}")
+        
+        try:
+            response = api_client.post("/login", json={"username": username, "password": password})
 
-        if response:
-            if response["status_code"] == 200:
-                logging.info(f"{username} successfully logged in")
-                player = response["data"]
-                st.session_state["player"] = player
-                st.session_state["access_token"] = player["access_token"]
-                st.success(f"Welcome {player['username']} ! 🎉")
-                st.switch_page("pages/player_menu.py")
-            elif response["status_code"] == 401:
-                logging.info("Connection error")
-                st.error("Invalid credentials")
+            if response:
+                status_code = response.get("status_code")
+                data = response.get("data")
+
+                if status_code == 200:
+                    logging.info(f"User {username} successfully logged in.")
+                    player = data
+                    st.session_state["player"] = player
+                    st.session_state["access_token"] = player["access_token"]
+                    st.success(f"Welcome {player['username']} ! 🎉")
+                    st.switch_page("pages/player_menu.py")
+                elif status_code == 401:
+                    logging.warning(f"Login failed: 401 Unauthorized for user {username}.")
+                    st.error("Invalid credentials")
+                else:
+                    logging.error(f"Login failed: Status {status_code}, Data: {data}")
+                    st.error(f"Server error, see logs.")
             else:
-                logging.info("Connection error")
-                st.error(f"Server error: {response['data']}")
+                logging.error("API returned None or empty response")
+                st.error("No response from server.")
+
+        except Exception as e:
+            logging.exception(f"Critical error during API call: {str(e)}")
+            st.error(f"Connection error: {str(e)}")
 
 st.space("small")
 
 if st.button("Sign Up"):
-    logging.info("Create an account")
     st.switch_page("pages/create_player.py")
 
 if st.button("Reset Database", type="primary"):

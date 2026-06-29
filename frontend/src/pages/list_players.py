@@ -16,6 +16,7 @@ from utils.api_client import api_client
 from utils.auth_guard import check_authentification
 
 st.title("Player list")
+logging.info("List all players")
 
 check_authentification()
 
@@ -33,5 +34,4 @@ if players:
 
 
 if st.button("Back to menu", type="primary"):
-    logging.info("Back to homepage")
     st.switch_page("pages/player_menu.py")

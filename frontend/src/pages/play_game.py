@@ -17,6 +17,7 @@ from utils.api_client import api_client
 from utils.auth_guard import check_authentification
 
 st.title("Play a Coin flip")
+logging.info("Play games")
 
 check_authentification()
 
@@ -72,5 +73,4 @@ if st.button("Play"):
 
 
 if st.button("Back to menu", type="primary"):
-    logging.info("Back to player menu")
     st.switch_page("pages/player_menu.py")
