@@ -1,6 +1,5 @@
 import logging
 import os
-
 from pathlib import Path
 from unittest import mock
 
@@ -66,8 +65,6 @@ class ResetDatabase(metaclass=Singleton):
             PlayerDao().update(p)
 
         return True
-
-
 
 
 if __name__ == "__main__":

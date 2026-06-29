@@ -1,8 +1,7 @@
 import streamlit as st
 
+from utils.env_variables import display_values, load_environment_variables
 from utils.log_init import initialize_logs
-
-from utils.env_variables import load_environment_variables, display_values
 
 if "logs_initialized" not in st.session_state:
     initialize_logs("Streamlit App")

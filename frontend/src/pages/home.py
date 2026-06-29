@@ -36,7 +36,7 @@ password = st.text_input("Password", type="password", placeholder="Enter passwor
 with st.container(horizontal_alignment="center"):
     if st.button("Log in"):
         logging.info(f"Attempting login for user: {username}")
-        
+
         try:
             response = api_client.post("/login", json={"username": username, "password": password})
 
@@ -56,7 +56,7 @@ with st.container(horizontal_alignment="center"):
                     st.error("Invalid credentials")
                 else:
                     logging.error(f"Login failed: Status {status_code}, Data: {data}")
-                    st.error(f"Server error, see logs.")
+                    st.error("Server error, see logs.")
             else:
                 logging.error("API returned None or empty response")
                 st.error("No response from server.")

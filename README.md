@@ -157,3 +157,28 @@ When you *push* on GitHub, it triggers a pipeline that will perform the followin
   - If the score is less than 7.5, the step will fail
 
 You can check how this pipeline is progressing on your repository's GitHub page, *Actions* tab.
+
+
+## :arrow_forward: Quick launch with Docker
+
+Prerequisites: [Docker Desktop](https://docs.docker.com/desktop/).
+
+**Dockerfile**: A text document containing all the commands a user could call to assemble a specific image (the blueprint of your application and its environment).
+
+**Docker Compose**: A tool for defining and running multi-container applications, using a YAML file to configure how different services (like your backend, frontend, and database) interact and start together.
+
+- [ ] Build containers:  `docker compose up --build -d`
+- [ ] See running processes: `docker compose ps`
+
+To see logs:
+
+- `docker compose logs -f` for all containers
+- `docker compose logs -f backend` only for backend
+
+**Backend API:** http://localhost:5000
+**Frontend UI:** http://localhost:8000
+
+- [ ]  `docker compose down` to remove conainers
+  - `docker compose stop` to simply stop
+
+[How it works](https://github.com/olevitt/kubernetes)
