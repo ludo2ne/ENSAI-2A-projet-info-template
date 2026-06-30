@@ -15,9 +15,10 @@ import streamlit as st
 
 from utils.api_client import api_client
 from utils.auth_guard import check_authentification
+from utils.log_init import track_page
 
 st.title("Play a Coin flip")
-logging.info("Play games")
+track_page("Play a game")
 
 check_authentification()
 

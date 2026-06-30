@@ -28,6 +28,7 @@ services:
       - "8000:8000"
     environment:
       - BACKEND_URL=http://backend:5000
+      - BACKEND_TIMEOUT=5
     depends_on:
       - backend
 

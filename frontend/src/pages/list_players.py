@@ -14,13 +14,12 @@ import streamlit as st
 
 from utils.api_client import api_client
 from utils.auth_guard import check_authentification
+from utils.log_init import track_page
 
 st.title("Player list")
-logging.info("List all players")
+track_page("List all players")
 
 check_authentification()
-
-logging.info("Display players list")
 
 players = api_client.get("/player").get("data")
 

@@ -12,9 +12,10 @@ import logging
 import streamlit as st
 
 from utils.api_client import api_client
+from utils.log_init import track_page
 
 st.title("Create a player account")
-logging.info("Create an account")
+track_page("Create an account")
 
 username = st.text_input("Username", max_chars=30)
 password = st.text_input("Password", type="password")

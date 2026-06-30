@@ -9,9 +9,10 @@ import logging
 import streamlit as st
 
 from utils.auth_guard import check_authentification
+from utils.log_init import track_page
 
 st.title("Main menu")
-logging.info("Player menu")
+track_page("Player menu")
 
 check_authentification()
 

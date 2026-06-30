@@ -5,9 +5,7 @@ import requests
 import streamlit as st
 
 DEFAULT_TIMEOUT = int(os.getenv("BACKEND_TIMEOUT", 5))
-API_URL = os.getenv("BACKEND_URL", "http://localhost:5555")
-
-
+API_URL = os.getenv("BACKEND_URL", "http://localhost:5000")
 
 
 class APIClient:

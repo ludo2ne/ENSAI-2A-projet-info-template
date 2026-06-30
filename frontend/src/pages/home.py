@@ -14,6 +14,7 @@ import streamlit as st
 from streamlit import config
 
 from utils.api_client import api_client
+from utils.log_init import track_page
 
 if "player" in st.session_state:
     st.switch_page("pages/player_menu.py")
@@ -28,7 +29,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-logging.info("Homepage")
+track_page("Homepage")
 
 username = st.text_input("Username", placeholder="Enter username")
 password = st.text_input("Password", type="password", placeholder="Enter password")

@@ -9,8 +9,9 @@ Command to run from the repository's root directory:
 
 - Install all dependencies: `uv sync --project backend --all-extras`
   - option all-extras: including dev dependancies
-- Launch the API in development mode: `uv run --project backend python src/main.py`
+- Launch the API in development mode: `uv run --project backend python backend/src/main.py`
 
+:bulb: First Launch: Click on **Reset Database** to initialize it.
 
 ## 🏛️ Architecture
 

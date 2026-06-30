@@ -42,15 +42,11 @@ uv sync --project frontend
 
 Define environment variables to declare the database and webservice to which you are going to connect your python application.
 
-At the root of the project:
-
 - [ ] Launch a [PostreSQL](https://www.postgresql.org/) database
-- [ ] Create a file called `.env`
+- [ ] Create a file called `.env` in the project's root directory
 - [ ] Paste in and complete the elements below
 
 ```default
-EXTERNAL_WEBSERVICE_HOST=https://pokeapi.co/api/v2
-
 POSTGRES_HOST=postgresql-cnpg-<suffixe>
 POSTGRES_PORT=5432
 POSTGRES_DATABASE=defaultdb
@@ -60,6 +56,9 @@ POSTGRES_SCHEMA=project
 
 UVICORN_HOST=0.0.0.0
 UVICORN_PORT=5000
+
+BACKEND_URL=http://localhost:5000
+BACKEND_TIMEOUT=5
 
 ELO_K_FACTOR=32
 ```
