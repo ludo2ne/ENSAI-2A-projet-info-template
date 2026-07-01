@@ -1,6 +1,7 @@
 import os
 from unittest.mock import patch
 
+import psycopg2
 import pytest
 
 from business_object.player import Player
@@ -78,11 +79,11 @@ def test_create_ko():
     # GIVEN
     player = Player(username="gg", elo="string_value", email=12)
 
-    # WHEN
-    creation_ok = PlayerDao().create(player)
+    # WHEN / THEN
+    with pytest.raises(psycopg2.Error):
+        PlayerDao().create(player)
 
-    # THEN
-    assert not creation_ok
+    # assert not PlayerDao().create(player)
 
 
 def test_update_ok():

@@ -8,7 +8,6 @@ Endpoints used:
     POST /game
 """
 
-import logging
 import time
 
 import streamlit as st
