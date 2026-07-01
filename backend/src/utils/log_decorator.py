@@ -7,6 +7,7 @@ class LogIndentation:
     """For indenting logs when entering a new method"""
 
     current_indentation = 0
+    indentation_size = 2
 
     @classmethod
     def increase_indentation(cls):
@@ -21,8 +22,16 @@ class LogIndentation:
     @classmethod
     def get_indentation(cls):
         """Get the current indentation"""
-        return "    " * cls.current_indentation
+        return " " * cls.indentation_size * cls.current_indentation
 
+def shorten_path(path_str: str, max_size: int = 20) -> str:
+    """Shortens dot-separated path by using initials for prefixes if exceeds max_size."""
+    if len(path_str) <= max_size:
+        return path_str
+    
+    parts = path_str.split('.')
+    short_prefix = [p[0] for p in parts[:-1]]
+    return ".".join(short_prefix + [parts[-1]])
 
 def log(func):
     """Decorator to log method calls and their outputs.
@@ -34,13 +43,16 @@ def log(func):
 
     @wraps(func)
     def wrapper(*args, **kwargs):
-        logger = logging.getLogger(__name__)
+        if args and hasattr(args[0], '__class__'):
+            class_path = shorten_path(f"{args[0].__class__.__module__}")
+            logger = logging.getLogger(class_path)
+        else:
+            logger = logging.getLogger(__name__)
 
         LogIndentation.increase_indentation()
         indentation = LogIndentation.get_indentation()
 
         # Retrieve method parameters
-        class_name = args[0].__class__.__name__ if args else ""
         method_name = func.__name__
         args_list = list(
             [str(arg) if not isinstance(arg, numbers.Number) else arg for arg in args[1:]]
@@ -57,9 +69,9 @@ def log(func):
         args_list = tuple(args_list)
 
         # Log method entry
-        logger.info(f"{indentation}{class_name}.{method_name}{args_list} - START")
+        logger.info(f"{indentation}{method_name}{args_list} - START")
         result = func(*args, **kwargs)
-        logger.info(f"{indentation}{class_name}.{method_name}{args_list} - END")
+        logger.info(f"{indentation}{method_name}{args_list} - END")
 
         # Shorten long output for readability
         if isinstance(result, list):
@@ -73,7 +85,7 @@ def log(func):
         else:
             result_str = str(result)
 
-        logger.info(f"{indentation}   └─> Output: {result_str}")
+        logger.info(f"{indentation}  └─> Output: {result_str}")
 
         LogIndentation.decrease_indentation()
 

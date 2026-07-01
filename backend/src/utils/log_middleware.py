@@ -5,8 +5,6 @@ import logging
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 
-logger = logging.getLogger(__name__)
-
 
 class LogMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
@@ -18,13 +16,13 @@ class LogMiddleware(BaseHTTPMiddleware):
         method = request.method
         path = str(request.url.path)
 
-        logger.info(f"{method} {path} - START")
+        logging.info(f"{method} {path} - START")
 
         try:
             response = await call_next(request)
-            logger.info(f"{method} {path} - END [Status: {response.status_code}]")
+            logging.info(f"{method} {path} - END [Status: {response.status_code}]")
             return response
 
         except Exception as e:
-            logger.error(f"{method} {path} - FAILED [Status: 500] Error: {str(e)}")
+            logging.error(f"{method} {path} - FAILED [Status: 500] Error: {str(e)}")
             raise e
