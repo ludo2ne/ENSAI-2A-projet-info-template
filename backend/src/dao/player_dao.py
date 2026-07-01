@@ -1,9 +1,9 @@
-import logging
-
 from business_object.player import Player
 from dao.db_connection import DBConnection
-from utils.log_decorator import log
+from utils.log_utils import get_logger, log
 from utils.singleton import Singleton
+
+logger = get_logger(__name__)
 
 
 class PlayerDao(metaclass=Singleton):
@@ -36,7 +36,8 @@ class PlayerDao(metaclass=Singleton):
                     )
                     res = cursor.fetchone()
         except Exception as e:
-            logging.info(e)
+            logger.error(e)
+            raise
 
         created = False
         if res:
@@ -64,7 +65,7 @@ class PlayerDao(metaclass=Singleton):
                     )
                     res = cursor.fetchone()
         except Exception as e:
-            logging.info(e)
+            logger.error(e)
             raise
 
         player = None
@@ -97,7 +98,7 @@ class PlayerDao(metaclass=Singleton):
                     )
                     res = cursor.fetchall()
         except Exception as e:
-            logging.info(e)
+            logger.error(e)
             raise
 
         players_list = []
@@ -151,7 +152,8 @@ class PlayerDao(metaclass=Singleton):
                     )
                     nb_affected_rows = cursor.rowcount
         except Exception as e:
-            logging.info(e)
+            logger.error(e)
+            raise
 
         return nb_affected_rows == 1
 
@@ -173,7 +175,7 @@ class PlayerDao(metaclass=Singleton):
                     )
                     res = cursor.rowcount
         except Exception as e:
-            logging.info(e)
+            logger.error(e)
             raise
 
         return res > 0
@@ -200,7 +202,8 @@ class PlayerDao(metaclass=Singleton):
                     )
                     res = cursor.fetchone()
         except Exception as e:
-            logging.info(e)
+            logger.error(e)
+            raise
 
         player = None
 
@@ -240,7 +243,7 @@ class PlayerDao(metaclass=Singleton):
                     )
                     res = cursor.fetchone()
         except Exception as e:
-            logging.error(f"Error finding player by token: {e}")
+            logger.error(f"Error finding player by token: {e}")
             raise
 
         player = None

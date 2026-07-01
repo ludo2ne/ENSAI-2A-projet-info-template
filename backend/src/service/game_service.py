@@ -4,7 +4,7 @@ import secrets
 from fastapi import HTTPException
 
 from dao.player_dao import PlayerDao
-from utils.log_decorator import log
+from utils.log_utils import log
 
 
 class GameService:

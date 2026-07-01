@@ -4,15 +4,13 @@ Streamlit page for the main player menu.
 Provides navigation to available actions such as listing players or playing games for logged-in users.
 """
 
-import logging
-
 import streamlit as st
 
 from utils.auth_guard import check_authentification
-from utils.log_init import track_page
+from utils.log_init import get_page_logger
 
 st.title("Main menu")
-track_page("Player menu")
+logger = get_page_logger("player_menu")
 
 check_authentification()
 
@@ -27,6 +25,6 @@ if st.button("List all players"):
 if st.button(label="Play"):
     st.switch_page("pages/play_game.py")
 if st.button(label="Log out", type="primary"):
-    logging.info("Log out")
+    logger.info("Log out")
     del st.session_state["player"]
     st.switch_page("pages/home.py")

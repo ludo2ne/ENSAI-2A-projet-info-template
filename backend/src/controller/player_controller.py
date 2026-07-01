@@ -1,15 +1,15 @@
 # controller/player_controller.py
 
-import logging
 
 from fastapi import APIRouter, Depends, HTTPException
 
 from schema.player_model import PlayerModel, PlayerReadModel
 from service.player_service import PlayerService
+from utils.log_utils import get_logger
 
 router = APIRouter()
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 def get_player_service():

@@ -2,9 +2,12 @@ from fastapi import APIRouter, Depends
 
 from schema.game_model import GamePlayModel
 from service.game_service import GameService
+from utils.log_utils import get_logger
 from utils.security import verify_token
 
 router = APIRouter()
+
+logger = get_logger(__name__)
 
 
 def get_game_service():
@@ -27,4 +30,5 @@ def play_game(
     Raises:
         HTTPException: 401 if unauthenticated, 400 if invalid request.
     """
+    logger.info("Play a game")
     return game_service.play(current_player.id_player, req.id_opponent, req.choice)

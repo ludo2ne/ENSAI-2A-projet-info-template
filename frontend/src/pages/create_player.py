@@ -7,15 +7,13 @@ Endpoint used:
     POST /player
 """
 
-import logging
-
 import streamlit as st
 
 from utils.api_client import api_client
-from utils.log_init import track_page
+from utils.log_init import get_page_logger
 
 st.title("Create a player account")
-track_page("Create an account")
+logger = get_page_logger("create_player")
 
 username = st.text_input("Username", max_chars=30)
 password = st.text_input("Password", type="password")
@@ -29,7 +27,7 @@ pokemon_fan = st.checkbox("Pokemons fan?")
 
 with st.container(horizontal_alignment="center"):
     if st.button("Create", width=150, disabled=not username or not is_pwd_long_enough):
-        logging.info("Create player")
+        logger.info("Create a player")
         player = {
             "username": username,
             "password": password,
@@ -43,10 +41,10 @@ with st.container(horizontal_alignment="center"):
         if response:
             if response["status_code"] == 200:
                 st.success(f"Player {username} successfully created! 🎉")
-                logging.info("Player created successfully")
+                logger.info("Player created successfully")
             else:
                 st.error(f"Error: {response['data']}")
-                logging.info("Error while creating player")
+                logger.info("Error while creating player")
 
 if st.button("Back to homepage", type="primary"):
     st.switch_page("pages/home.py")

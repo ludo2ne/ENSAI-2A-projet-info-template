@@ -1,4 +1,3 @@
-import logging
 import os
 
 import requests
@@ -45,7 +44,8 @@ class APIClient:
             dict: A dictionary containing the 'status_code' and the response 'data'.
         """
         url = f"{self.base_url}{path}"
-        logging.info(f"\t{method} {url}")
+        logger = st.session_state.get("logger")
+        logger.info(f"  {method} {url}")
 
         # Automatically inject headers (including the token)
         headers = kwargs.pop("headers", {})
@@ -74,8 +74,8 @@ class APIClient:
         finally:
             # Only log if a response was actually received to avoid errors in the finally block
             if "response" in locals():
-                logging.info(f"\t{response.status_code} {response.reason}")
-                logging.debug(f"\t{data}")
+                logger.info(f"  {response.status_code} {response.reason}")
+                logger.debug(f"  {data}")
 
     def get(self, path: str, params=None, **kwargs):
         """Sends a GET request.

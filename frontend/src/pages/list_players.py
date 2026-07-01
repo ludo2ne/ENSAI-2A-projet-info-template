@@ -7,17 +7,16 @@ Endpoint used:
     GET /player
 """
 
-import logging
-
 import pandas as pd
 import streamlit as st
 
 from utils.api_client import api_client
 from utils.auth_guard import check_authentification
-from utils.log_init import track_page
+from utils.log_init import get_page_logger
 
 st.title("Player list")
-track_page("List all players")
+logger = get_page_logger("list_players")
+
 
 check_authentification()
 
@@ -28,7 +27,7 @@ if players:
         df = pd.DataFrame(players)
         st.dataframe(df, hide_index=True)
     else:
-        logging.info("No players found.")
+        logger.info("No players found.")
         st.info("No players found.")
 
 

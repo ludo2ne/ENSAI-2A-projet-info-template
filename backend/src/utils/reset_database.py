@@ -1,4 +1,3 @@
-import logging
 import os
 from pathlib import Path
 from unittest import mock
@@ -7,9 +6,11 @@ import dotenv
 
 from dao.db_connection import DBConnection
 from dao.player_dao import PlayerDao
-from utils.log_decorator import log
+from utils.log_utils import get_logger, log
 from utils.security import hash_password
 from utils.singleton import Singleton
+
+logger = get_logger(__name__)
 
 
 class ResetDatabase(metaclass=Singleton):
@@ -46,7 +47,7 @@ class ResetDatabase(metaclass=Singleton):
             with open(pop_data_path, encoding="utf-8") as pop_db_file:
                 pop_db_as_string = pop_db_file.read()
         except FileNotFoundError as e:
-            logging.error(f"Erreur de chemin : impossible de trouver le fichier {e.filename}")
+            logger.error(f"Erreur de chemin : impossible de trouver le fichier {e.filename}")
             raise
 
         try:
@@ -56,7 +57,7 @@ class ResetDatabase(metaclass=Singleton):
                     cursor.execute(init_db_as_string)
                     cursor.execute(pop_db_as_string)
         except Exception as e:
-            logging.info(e)
+            logger.info(e)
             raise
 
         # Apply password hashing to all players

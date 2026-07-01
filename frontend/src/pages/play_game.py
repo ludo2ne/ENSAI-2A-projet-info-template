@@ -15,10 +15,10 @@ import streamlit as st
 
 from utils.api_client import api_client
 from utils.auth_guard import check_authentification
-from utils.log_init import track_page
+from utils.log_init import get_page_logger
 
 st.title("Play a Coin flip")
-track_page("Play a game")
+logger = get_page_logger("play_game")
 
 check_authentification()
 
@@ -44,7 +44,7 @@ adversaire = st.selectbox("Choose an opponent", adversaires, format_func=lambda 
 genre = st.radio("Heads or Tails", ["heads", "tails"])
 
 if st.button("Play"):
-    logging.info("Play a game")
+    logger.info("Play a game")
     with st.spinner("Wait for it..."):
         time.sleep(1)
 
@@ -70,7 +70,7 @@ if st.button("Play"):
     else:
         st.warning(f"""😢 **You lose**\n\nYour new Elo rating is {data["new_elo1"]}""")
 
-    logging.info("Game is over")
+    logger.info("Game is over")
 
 
 if st.button("Back to menu", type="primary"):

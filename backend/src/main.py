@@ -12,8 +12,7 @@ from fastapi.responses import RedirectResponse
 
 from controller import game_controller, login_controller, player_controller
 from utils.env_variables import display_values, load_environment_variables
-from utils.log_init import initialize_logs
-from utils.log_middleware import LogMiddleware
+from utils.log_utils import initialize_logs, LogMiddleware
 from utils.reset_database import ResetDatabase
 
 # Initialization

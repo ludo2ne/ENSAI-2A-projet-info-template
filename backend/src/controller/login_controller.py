@@ -1,11 +1,12 @@
-import logging
-
 from fastapi import APIRouter, Depends, HTTPException
 
 from schema.player_model import PlayerLoginModel
 from service.player_service import PlayerService
+from utils.log_utils import get_logger
 
 router = APIRouter()
+
+logger = get_logger(__name__)
 
 
 def get_player_service():
@@ -22,7 +23,7 @@ def login(credentials: PlayerLoginModel, service=Depends(get_player_service)):
         dict: containing id_player and username
     Raises:
         HTTPException: 401 error if the credentials are invalid or the user does not exist."""
-    logging.info("Login")
+    logger.info("Login")
     player = service.login(credentials.username, credentials.password)
     if player:
         return {
