@@ -4,13 +4,44 @@ import streamlit as st
 from utils.api_client import api_client
 from utils.log_init import get_page_logger
 
-st.title("Player Stats")
+st.set_page_config(page_title="Player Stats", page_icon="📊")
 
+# --- WINDOWS 98 CSS ---
+st.markdown(
+    """
+<style>
+    .stApp { background-color: #008080; }
+    .win98-window {
+        background-color: #c0c0c0;
+        border: 2px solid;
+        border-color: #ffffff #808080 #808080 #ffffff;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    .win98-titlebar {
+        background: linear-gradient(90deg, #000080, #1084d0);
+        color: white;
+        padding: 3px 10px;
+        font-family: 'Tahoma', sans-serif;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+    h1 { font-family: 'Tahoma', sans-serif; color: white; text-shadow: 2px 2px #000000; }
+    h3 { font-family: 'Tahoma', sans-serif; color: black; margin-top: 0; }
+    
+    /* Style pour le dataframe (aspect gris/blanc classique) */
+    [data-testid="stDataFrame"] {
+        border: 2px solid #808080;
+    }
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
+st.title("📊 Player Statistics")
 logger = get_page_logger("player_stats")
-
 query_params = st.query_params
 player_id = query_params.get("id_player")
-logger.info(f"Player {player_id} stats")
 
 if player_id is not None:
     try:
@@ -19,30 +50,33 @@ if player_id is not None:
 
         if player_res["status_code"] == 200:
             player = player_res["data"]
-            logger.info(f"Successfully retrieved profile for: {player['username']}")
 
-            # --- PROFIL ---
+            # --- SECTION PROFIL ---
+            st.markdown(
+                '<div class="win98-window"><div class="win98-titlebar">Profile_View</div>',
+                unsafe_allow_html=True,
+            )
             st.subheader(f"👤 {player['username']}")
+
             col1, col2 = st.columns(2)
             with col1:
                 st.metric("Elo Rating", player["elo"])
             with col2:
                 st.write(f"**Email:** {player['email']}")
                 st.write(f"**Pokemon Fan:** {'Yes' if player['pokemon_fan'] else 'No'}")
-                st.checkbox("Pokemon Fan", value=player["pokemon_fan"], disabled=True)
+            st.markdown("</div>", unsafe_allow_html=True)
 
-            st.divider()
-
-            # --- GAMES PLAYED ---
+            # --- SECTION HISTORIQUE ---
+            st.markdown(
+                '<div class="win98-window"><div class="win98-titlebar">Match_History.log</div>',
+                unsafe_allow_html=True,
+            )
             st.subheader("Game History")
 
-            logger.info(f"Fetching match history for player: {player['username']}")
             games_res = api_client.get(f"/game?id_player={player_id}")
 
             if games_res["status_code"] == 200:
                 games_list = games_res["data"]
-                logger.info(f"Found {len(games_list)} games for player {player_id}")
-
                 if not games_list:
                     st.info("No games played yet.")
                 else:
@@ -58,31 +92,22 @@ if player_id is not None:
                                 result = "Win"
                             case _:
                                 result = "Loss"
-                        row = {
+                        rows_for_df.append({
                             "Mode": g["game_mode"],
                             "Opponent": f"{opponent['username']} ({opponent['elo']})",
                             "Result": result,
                             "Date": g["timestamp"],
-                        }
-                        rows_for_df.append(row)
-
+                        })
                     df = pd.DataFrame(rows_for_df)
-
                     st.dataframe(df, use_container_width=True, hide_index=True)
-
             else:
-                logger.error(f"Failed to fetch games. Status: {games_res['status_code']}")
                 st.error("Could not fetch games history.")
+            st.markdown("</div>", unsafe_allow_html=True)
 
         else:
-            logger.warning(f"Player not found. Status: {player_res['status_code']}")
-            st.error(f"Player not found (Status: {player_res['status_code']})")
+            st.error("Player not found.")
 
-    except ValueError:
-        logger.error(f"Invalid ID format: {player_id}")
-        st.error("Invalid Player ID format in URL.")
     except Exception as e:
-        logger.exception(f"Unexpected error: {e}")
         st.error(f"An error occurred: {e}")
 else:
-    st.warning("No player selected. Please go back to the player list.")
+    st.warning("No player selected.")

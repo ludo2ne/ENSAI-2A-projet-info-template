@@ -1,12 +1,3 @@
-"""
-Streamlit page for player account registration.
-
-Allows users to create a new player profile with username, password, Elo, email, etc.
-
-Endpoint used:
-    POST /player
-"""
-
 import os
 
 import streamlit as st
@@ -14,14 +5,59 @@ import streamlit as st
 from utils.api_client import api_client
 from utils.log_init import get_page_logger
 
-st.title("Create a player account")
+st.set_page_config(page_title="Registration", page_icon="📝")
+
+# --- WINDOWS 98 CSS ---
+st.markdown(
+    """
+<style>
+    .stApp { background-color: #008080; }
+    .win98-window {
+        background-color: #c0c0c0;
+        border: 2px solid;
+        border-color: #ffffff #808080 #808080 #ffffff;
+        padding: 20px;
+    }
+    .win98-titlebar {
+        background: linear-gradient(90deg, #000080, #1084d0);
+        color: white;
+        padding: 3px 10px;
+        font-family: 'Tahoma', sans-serif;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+    /* Inset effect for inputs */
+    .stTextInput input, .stNumberInput input, .stSelectbox div {
+        background-color: white !important;
+        border: 2px solid !important;
+        border-color: #808080 #ffffff #ffffff #808080 !important;
+        border-radius: 0px !important;
+    }
+    .stButton button {
+        background-color: #c0c0c0 !important;
+        border: 2px solid !important;
+        border-color: #ffffff #808080 #808080 #ffffff !important;
+        border-radius: 0px !important;
+        font-family: 'Tahoma', sans-serif !important;
+        box-shadow: 1px 1px 0px #000000 !important;
+    }
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
+st.title("User Registration")
 logger = get_page_logger("create_player")
+
+st.markdown(
+    '<div class="win98-window"><div class="win98-titlebar">Setup Wizard - New Account</div>',
+    unsafe_allow_html=True,
+)
 
 username = st.text_input("Username", max_chars=30)
 password = st.text_input("Password", type="password")
 
-password_min_length = int(os.environ["PASSWORD_MIN_LENGTH"])
-
+password_min_length = int(os.environ.get("PASSWORD_MIN_LENGTH", 6))
 is_pwd_long_enough = len(password) >= password_min_length
 st.write("✅" if is_pwd_long_enough else "❌", f"At least {password_min_length} characters")
 
@@ -29,26 +65,27 @@ elo = st.number_input("Elo", min_value=1000, max_value=3000)
 email = st.text_input("Email")
 pokemon_fan = st.checkbox("Pokemons fan?")
 
-with st.container(horizontal_alignment="center"):
-    if st.button("Create", width=150, disabled=not username or not is_pwd_long_enough):
-        logger.info("Create a player")
-        player = {
-            "username": username,
-            "password": password,
-            "elo": elo,
-            "email": email,
-            "pokemon_fan": pokemon_fan,
-        }
+if st.button(
+    "Create Account", use_container_width=True, disabled=not username or not is_pwd_long_enough
+):
+    logger.info("Create a player")
+    player = {
+        "username": username,
+        "password": password,
+        "elo": elo,
+        "email": email,
+        "pokemon_fan": pokemon_fan,
+    }
 
-        response = api_client.post("/player/", json=player)
+    response = api_client.post("/player/", json=player)
 
-        if response:
-            if response["status_code"] == 200:
-                st.success(f"Player {username} successfully created! 🎉")
-                logger.info("Player created successfully")
-            else:
-                st.error(f"Error: {response['data']}")
-                logger.info("Error while creating player")
+    if response:
+        if response["status_code"] == 200:
+            st.success(f"Player {username} successfully created! 🎉")
+        else:
+            st.error(f"Error: {response['data']}")
 
-if st.button("Back to homepage", type="primary"):
+st.markdown("</div>", unsafe_allow_html=True)
+
+if st.button("Back to homepage"):
     st.switch_page("pages/home.py")

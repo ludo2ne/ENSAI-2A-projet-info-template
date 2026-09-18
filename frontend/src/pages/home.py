@@ -1,5 +1,5 @@
 """
-Streamlit home page.
+Streamlit home page - Windows 98 Edition.
 
 Provides options to log in, sign up for a new account, or reset the database.
 
@@ -9,7 +9,6 @@ Endpoints used:
 """
 
 import streamlit as st
-from streamlit import config
 
 from utils.api_client import api_client
 from utils.log_init import get_page_logger
@@ -19,21 +18,109 @@ if "player" in st.session_state:
 
 st.set_page_config(page_title="Coin flip game", page_icon="🪙", layout="centered")
 
+# --- WINDOWS 98 CSS ---
 st.markdown(
-    f"""
-    <div style="text-align:center">
-        <h1 style="color:{config.get_option("theme.primaryColor")}">Coin flip game</h1>
-    </div>
-    """,
+    """
+<style>
+    /* Fond de l'application */
+    .stApp {
+        background-color: #008080; /* Le célèbre vert-bleu de Windows 98 */
+    }
+
+    /* Simulation d'une fenêtre Windows 98 */
+    .win98-window {
+        background-color: #c0c0c0;
+        border: 2px solid;
+        border-color: #ffffff #808080 #808080 #ffffff;
+        padding: 10px;
+        margin-bottom: 20px;
+        box-shadow: 2px 2px 0px #000000;
+    }
+
+    /* Barre de titre */
+    .win98-titlebar {
+        background: linear-gradient(90deg, #000080, #1084d0);
+        color: white;
+        padding: 3px 10px;
+        font-weight: bold;
+        font-family: 'Tahoma', sans-serif;
+        font-size: 14px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Stylisation des inputs et boutons pour l'effet "Inset" */
+    .stTextInput input {
+        background-color: #ffffff !important;
+        border: 2px solid !important;
+        border-color: #808080 #ffffff #ffffff #808080 !important;
+        border-radius: 0px !important;
+        color: black !important;
+    }
+
+    /* Boutons style Windows 98 */
+    .stButton button {
+        background-color: #c0c0c0 !important;
+        color: black !important;
+        border: 2px solid !important;
+        border-color: #ffffff #808080 #808080 #ffffff !important;
+        border-radius: 0px !important;
+        padding: 5px 20px !important;
+        font-family: 'Tahoma', sans-serif !important;
+        text-transform: none !important;
+        box-shadow: 1px 1px 0px #000000 !important;
+    }
+
+    .stButton button:active {
+        border-color: #808080 #ffffff #ffffff #808080 !important;
+        box-shadow: none !important;
+    }
+
+    /* Suppression des marges inutiles de Streamlit */
+    [data-testid="stVerticalBlock"] > div:has(div.stTextInput) {
+        background-color: #c0c0c0;
+        padding: 20px;
+        border: 2px solid;
+        border-color: #ffffff #808080 #808080 #ffffff;
+    }
+    
+    h1 {
+        font-family: 'Tahoma', sans-serif;
+        color: black !important;
+        text-shadow: 1px 1px #ffffff;
+    }
+</style>
+""",
     unsafe_allow_html=True,
 )
+
+# --- UI CONTENT ---
+
+# Titre principal style rétro
+st.markdown('<h1 style="text-align:center;">🪙 Coin Flip Game v1.0</h1>', unsafe_allow_html=True)
+
 logger = get_page_logger("home")
 
-username = st.text_input("Username", placeholder="Enter username")
-password = st.text_input("Password", type="password", placeholder="Enter password")
+# Fenêtre de Login
+st.markdown(
+    """
+    <div class="win98-window">
+        <div class="win98-titlebar">
+            <span>Login</span>
+        </div>
+    </div>
+""",
+    unsafe_allow_html=True,
+)
 
-with st.container(horizontal_alignment="center"):
-    if st.button("Log in"):
+# On utilise un container pour grouper les inputs dans la "fenêtre"
+with st.container():
+    username = st.text_input("Username", placeholder="Enter username")
+    password = st.text_input("Password", type="password", placeholder="Enter password")
+
+    if st.button("Log in", use_container_width=True):
         logger.info(f"Attempting login for user: {username}")
 
         try:
@@ -64,18 +151,7 @@ with st.container(horizontal_alignment="center"):
             logger.exception(f"Critical error during API call: {str(e)}")
             st.error(f"Connection error: {str(e)}")
 
-st.space("small")
+st.write("---")
 
-if st.button("Sign Up"):
+if st.button("Sign Up", use_container_width=True):
     st.switch_page("pages/create_player.py")
-
-if st.button("Reset Database", type="primary"):
-    logger.info("Reset the database")
-    response = api_client.get("/reset_database")
-
-    if response:
-        logger.info("Database successfully reset")
-        st.toast("Database successfully reset ✅")
-    else:
-        logger.info("Error during database reset")
-        st.toast("Error during database reset ❌")

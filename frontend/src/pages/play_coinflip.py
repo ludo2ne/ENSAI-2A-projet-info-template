@@ -1,13 +1,3 @@
-"""
-Streamlit page for playing a coin flip game.
-
-Allows a player to select an opponent and play a game of Heads or Tails.
-
-Endpoints used:
-    GET /player
-    POST /game
-"""
-
 import time
 
 import streamlit as st
@@ -16,15 +6,50 @@ from utils.api_client import api_client
 from utils.auth_guard import check_authentification
 from utils.log_init import get_page_logger
 
-st.title("Play a Coin flip")
+st.set_page_config(page_title="Coin Flip", page_icon="🪙")
+
+# --- WINDOWS 98 CSS ---
+st.markdown(
+    """
+<style>
+    .stApp { background-color: #008080; }
+    .win98-window {
+        background-color: #c0c0c0;
+        border: 2px solid;
+        border-color: #ffffff #808080 #808080 #ffffff;
+        padding: 15px;
+        box-shadow: 2px 2px 0px #000000;
+        margin-bottom: 20px;
+    }
+    .win98-titlebar {
+        background: linear-gradient(90deg, #000080, #1084d0);
+        color: white;
+        padding: 3px 10px;
+        font-family: 'Tahoma', sans-serif;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+    .stButton button {
+        background-color: #c0c0c0 !important;
+        color: black !important;
+        border: 2px solid !important;
+        border-color: #ffffff #808080 #808080 #ffffff !important;
+        border-radius: 0px !important;
+        font-family: 'Tahoma', sans-serif !important;
+        box-shadow: 1px 1px 0px #000000 !important;
+    }
+    h1 { font-family: 'Tahoma', sans-serif; color: white; text-shadow: 2px 2px #000000; }
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
+st.title("🪙 Play a Coin flip")
 logger = get_page_logger("play_game")
-
 check_authentification()
-
 player = st.session_state.get("player")
 
 response = api_client.get("/player/")
-
 if response["status_code"] != 200:
     st.error("Error loading players")
     st.stop()
@@ -38,11 +63,15 @@ if not opponents:
     st.warning("No opponents available")
     st.stop()
 
-opponent = st.selectbox("Choose an opponent", opponents, format_func=lambda j: j["username"])
+st.markdown(
+    '<div class="win98-window"><div class="win98-titlebar">CoinFlip_Engine</div>',
+    unsafe_allow_html=True,
+)
 
+opponent = st.selectbox("Choose an opponent", opponents, format_func=lambda j: j["username"])
 bet = st.radio("Heads or Tails", ["heads", "tails"])
 
-if st.button("Play"):
+if st.button("Play Game", use_container_width=True):
     logger.info("Play a game")
     with st.spinner("Wait for it..."):
         time.sleep(1)
@@ -61,19 +90,19 @@ if st.button("Play"):
         st.stop()
 
     data = response["data"]
-
     st.write(f"**{data['description']}**")
 
     if data["winner"] == player["username"]:
-        st.success(f"""🎉 **You win!**\n\nYour new Elo rating is {data["new_elo1"]}""")
+        st.success(f"🎉 **You win!**\n\nNew Elo: {data['new_elo1']}")
         st.balloons()
     elif data["winner"] == opponent["username"]:
-        st.warning(f"""😢 **You lose**\n\nYour new Elo rating is {data["new_elo1"]}""")
+        st.warning(f"😢 **You lose**\n\nNew Elo: {data['new_elo1']}")
     else:
         st.info("Draw, no change in Elo rating")
 
     logger.info("Game is over")
 
+st.markdown("</div>", unsafe_allow_html=True)
 
-if st.button("Back to menu", type="primary"):
+if st.button("Back to menu"):
     st.switch_page("pages/player_menu.py")
