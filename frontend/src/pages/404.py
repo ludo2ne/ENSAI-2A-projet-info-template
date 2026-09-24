@@ -1,29 +1,20 @@
 """
-Streamlit page for the main player menu.
-
-Provides navigation to available actions such as listing players or playing games for logged-in users.
+Streamlit 404 error page - 1990s Web Edition.
 """
 
 import streamlit as st
 
-from utils.auth_guard import check_authentification
 from utils.log_init import get_page_logger
 
-logger = get_page_logger("player_menu")
+logger = get_page_logger("404")
 
 st.set_page_config(
-    page_title="Coin Flip Game - Main Menu",
-    page_icon="🪙",
+    page_title="404 - Page Not Found",
+    page_icon="❌",
     layout="centered",
 )
 
-# ---------------------------------------------------------------------------
-# AUTHENTICATION
-# ---------------------------------------------------------------------------
-
-check_authentification()
-
-player = st.session_state.get("player")
+logger.warning("404 page displayed")
 
 
 # ---------------------------------------------------------------------------
@@ -49,6 +40,28 @@ st.markdown(
     border: 1px solid #555;
     padding: 15px 25px;
     box-shadow: 3px 3px #888;
+}
+
+.error-box {
+    background: white;
+    border: 3px double #555;
+    padding: 20px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.error-code {
+    font-family: "Courier New", monospace;
+    font-size: 72px;
+    font-weight: bold;
+    color: #0000aa;
+    margin: 5px 0;
+}
+
+.error-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #aa0000;
 }
 
 h1 {
@@ -81,10 +94,6 @@ a {
     border-style: inset !important;
 }
 
-.stAlert {
-    border-radius: 0 !important;
-}
-
 .small {
     font-size: 12px;
 }
@@ -97,6 +106,11 @@ a {
     color: red;
     font-weight: bold;
 }
+
+.warning {
+    color: #aa0000;
+    font-weight: bold;
+}
 </style>
 """,
     unsafe_allow_html=True,
@@ -104,34 +118,52 @@ a {
 
 
 # ---------------------------------------------------------------------------
-# PAGE HEADER
+# PAGE
 # ---------------------------------------------------------------------------
 
 st.markdown(
-    f"""
+    """
 <div class="retro">
 
 <h1>Coin Flip Game</h1>
 
-<p style="text-align:center;">
-    <b>Welcome back, {player["username"]}!</b>
+<hr>
+
+<div class="error-box">
+
+<div class="error-code">404</div>
+
+<div class="error-title">
+Page Not Found!
+</div>
+
+<p>
+    <b>Oops! The page you requested could not be found.</b>
 </p>
 
-<p style="text-align:center;">
-    You are now logged in to the Coin Flip Game.
+<p>
+    The page may have been moved, deleted,
+    or perhaps it never existed in the first place.
 </p>
 
 <hr>
 
 <p>
-    <span class="new">NEW!</span>
-    Choose a game or browse our player list.
+    <span class="new">ERROR!</span>
+    Our server looked everywhere...
 </p>
 
-<h2>Main Menu</h2>
+<p>
+    Unfortunately, there was nothing here.
+</p>
+
+</div>
+
+<h2>What can you do?</h2>
 
 <p>
-    What would you like to do?
+    Please check the address you entered or return
+    to the Coin Flip Game homepage.
 </p>
 
 </div>
@@ -141,37 +173,10 @@ st.markdown(
 
 
 # ---------------------------------------------------------------------------
-# MENU
+# NAVIGATION
 # ---------------------------------------------------------------------------
 
-if st.button("List all players", use_container_width=True):
-    st.switch_page("pages/list_players.py")
-
-if st.button("Play Coin Flip", use_container_width=True):
-    st.switch_page("pages/play_coinflip.py")
-
-if st.button("Play Dice Game", use_container_width=True):
-    st.switch_page("pages/play_dice.py")
-
-
-# ---------------------------------------------------------------------------
-# LOG OUT
-# ---------------------------------------------------------------------------
-
-st.markdown(
-    """
-<hr>
-
-<p class="center">
-    <b>Finished playing?</b>
-</p>
-""",
-    unsafe_allow_html=True,
-)
-
-if st.button("Log out", type="primary", use_container_width=True):
-    logger.info("Log out")
-    del st.session_state["player"]
+if st.button("Back to homepage", use_container_width=True):
     st.switch_page("pages/home.py")
 
 
@@ -182,6 +187,12 @@ if st.button("Log out", type="primary", use_container_width=True):
 st.markdown(
     """
 <hr>
+
+<p class="center">
+    <span class="warning">
+        *** ERROR 404 ***
+    </span>
+</p>
 
 <p class="center small">
     <a href="/404">Guestbook</a>

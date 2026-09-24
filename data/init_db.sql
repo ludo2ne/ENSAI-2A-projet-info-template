@@ -20,3 +20,8 @@ CREATE TABLE game (
     id_winner    INTEGER REFERENCES player(id_player),
     detail       VARCHAR(100),
     timestamp    TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+
+CREATE TABLE site_stats (
+    id VARCHAR(100),
+    intvalue INTEGER NOT NULL DEFAULT 0
+);

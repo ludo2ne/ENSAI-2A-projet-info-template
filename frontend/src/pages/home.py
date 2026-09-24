@@ -1,11 +1,5 @@
 """
-Streamlit home page - Windows 98 Edition.
-
-Provides options to log in, sign up for a new account, or reset the database.
-
-Endpoints used:
-    POST /login
-    GET /reset_database
+Streamlit home page - 1990s Web Edition.
 """
 
 import streamlit as st
@@ -13,145 +7,275 @@ import streamlit as st
 from utils.api_client import api_client
 from utils.log_init import get_page_logger
 
+logger = get_page_logger("home")
+
 if "player" in st.session_state:
     st.switch_page("pages/player_menu.py")
 
-st.set_page_config(page_title="Coin flip game", page_icon="🪙", layout="centered")
+if "visitor_registered" not in st.session_state:
+    try:
+        response = api_client.post("/visitor")
+        if response and response.get("status_code") == 200:
+            st.session_state["visitor_count"] = response["data"]["visitor_count"]
 
-# --- WINDOWS 98 CSS ---
+        st.session_state["visitor_registered"] = True
+
+    except Exception as e:
+        logger.exception(f"Critical error during API call: {str(e)}")
+        st.error(f"Connection error: {str(e)}")
+
+
+st.set_page_config(
+    page_title="Coin Flip Game",
+    page_icon="🪙",
+    layout="centered",
+)
+
+# ---------------------------------------------------------------------------
+# 1990s WEB STYLE
+# ---------------------------------------------------------------------------
+
 st.markdown(
     """
 <style>
-    /* Fond de l'application */
-    .stApp {
-        background-color: #008080; /* Le célèbre vert-bleu de Windows 98 */
-    }
+.stApp {
+    background: #d8d6e5;
+    color: black;
+    font-family: "Times New Roman", serif;
+}
 
-    /* Simulation d'une fenêtre Windows 98 */
-    .win98-window {
-        background-color: #c0c0c0;
-        border: 2px solid;
-        border-color: #ffffff #808080 #808080 #ffffff;
-        padding: 10px;
-        margin-bottom: 20px;
-        box-shadow: 2px 2px 0px #000000;
-    }
+.block-container {
+    max-width: 760px;
+    padding-top: 25px;
+}
 
-    /* Barre de titre */
-    .win98-titlebar {
-        background: linear-gradient(90deg, #000080, #1084d0);
-        color: white;
-        padding: 3px 10px;
-        font-weight: bold;
-        font-family: 'Tahoma', sans-serif;
-        font-size: 14px;
-        margin-bottom: 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+.retro {
+    background: #eeeeee;
+    border: 1px solid #555;
+    padding: 15px 25px;
+    box-shadow: 3px 3px #888;
+}
 
-    /* Stylisation des inputs et boutons pour l'effet "Inset" */
-    .stTextInput input {
-        background-color: #ffffff !important;
-        border: 2px solid !important;
-        border-color: #808080 #ffffff #ffffff #808080 !important;
-        border-radius: 0px !important;
-        color: black !important;
-    }
+h1 {
+    font-family: "Times New Roman", serif !important;
+    text-align: center;
+    color: black !important;
+}
 
-    /* Boutons style Windows 98 */
-    .stButton button {
-        background-color: #c0c0c0 !important;
-        color: black !important;
-        border: 2px solid !important;
-        border-color: #ffffff #808080 #808080 #ffffff !important;
-        border-radius: 0px !important;
-        padding: 5px 20px !important;
-        font-family: 'Tahoma', sans-serif !important;
-        text-transform: none !important;
-        box-shadow: 1px 1px 0px #000000 !important;
-    }
+h2 {
+    font-size: 20px !important;
+    color: #0000ee !important;
+    text-decoration: underline;
+}
 
-    .stButton button:active {
-        border-color: #808080 #ffffff #ffffff #808080 !important;
-        box-shadow: none !important;
-    }
+a {
+    color: #0000ee;
+}
 
-    /* Suppression des marges inutiles de Streamlit */
-    [data-testid="stVerticalBlock"] > div:has(div.stTextInput) {
-        background-color: #c0c0c0;
-        padding: 20px;
-        border: 2px solid;
-        border-color: #ffffff #808080 #808080 #ffffff;
-    }
-    
-    h1 {
-        font-family: 'Tahoma', sans-serif;
-        color: black !important;
-        text-shadow: 1px 1px #ffffff;
-    }
+.stTextInput label {
+    color: black !important;
+    font-family: "Times New Roman", serif !important;
+}
+
+.stTextInput input {
+    border: 1px solid #555 !important;
+    border-radius: 0 !important;
+    background: white !important;
+    color: black !important;
+    font-family: "Times New Roman", serif !important;
+}
+
+.stButton button {
+    background: #d4d0c8 !important;
+    color: black !important;
+    border: 2px outset #fff !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    font-family: "Times New Roman", serif !important;
+    font-weight: bold !important;
+}
+
+.stButton button:active {
+    border-style: inset !important;
+}
+
+.stAlert {
+    border-radius: 0 !important;
+}
+
+.small {
+    font-size: 12px;
+}
+
+.center {
+    text-align: center;
+}
+
+.new {
+    color: red;
+    font-weight: bold;
+}
 </style>
 """,
     unsafe_allow_html=True,
 )
 
-# --- UI CONTENT ---
 
-# Titre principal style rétro
-st.markdown('<h1 style="text-align:center;">🪙 Coin Flip Game v1.0</h1>', unsafe_allow_html=True)
+# ---------------------------------------------------------------------------
+# PAGE HEADER
+# ---------------------------------------------------------------------------
 
-logger = get_page_logger("home")
-
-# Fenêtre de Login
 st.markdown(
     """
-    <div class="win98-window">
-        <div class="win98-titlebar">
-            <span>Login</span>
-        </div>
-    </div>
+<div class="retro">
+
+<h1>Welcome to Coin Flip Game!</h1>
+
+<p style="text-align:center;">
+    <b>One game. Two players. 50% chance of winning.</b>
+</p>
+
+<p style="text-align:center;">
+    Welcome to our online coin flipping service.
+</p>
+
+<hr>
+
+<p>
+    <span class="new">NEW!</span>
+    Our coin flip game is now online!
+</p>
+
+<p>
+    Play against other players and try your luck.
+    <a href="#">What's new?</a>
+</p>
+
+<hr>
+
+<h2>Member Login</h2>
+
+<p>
+    Please enter your username and password below.
+</p>
+
+</div>
 """,
     unsafe_allow_html=True,
 )
 
-# On utilise un container pour grouper les inputs dans la "fenêtre"
-with st.container():
-    username = st.text_input("Username", placeholder="Enter username")
-    password = st.text_input("Password", type="password", placeholder="Enter password")
 
-    if st.button("Log in", use_container_width=True):
-        logger.info(f"Attempting login for user: {username}")
+# ---------------------------------------------------------------------------
+# LOGIN
+# ---------------------------------------------------------------------------
 
-        try:
-            response = api_client.post("/login", json={"username": username, "password": password})
+username = st.text_input(
+    "Username",
+    placeholder="your username",
+)
 
-            if response:
-                status_code = response.get("status_code")
-                data = response.get("data")
+password = st.text_input(
+    "Password",
+    type="password",
+    placeholder="your password",
+)
 
-                if status_code == 200:
-                    logger.info(f"User {username} successfully logged in.")
-                    player = data
-                    st.session_state["player"] = player
-                    st.session_state["access_token"] = player["access_token"]
-                    st.success(f"Welcome {player['username']} ! 🎉")
-                    st.switch_page("pages/player_menu.py")
-                elif status_code == 401:
-                    logger.warning(f"Login failed: 401 Unauthorized for user {username}.")
-                    st.error("Invalid credentials")
-                else:
-                    logger.error(f"Login failed: Status {status_code}, Data: {data}")
-                    st.error("Server error, see logs.")
+if st.button("Log in", use_container_width=True):
+    logger.info(f"Attempting login for user: {username}")
+
+    try:
+        response = api_client.post(
+            "/login",
+            json={
+                "username": username,
+                "password": password,
+            },
+        )
+
+        if response:
+            status_code = response.get("status_code")
+            data = response.get("data")
+
+            if status_code == 200:
+                logger.info(f"User {username} successfully logged in.")
+
+                player = data
+                st.session_state["player"] = player
+                st.session_state["access_token"] = player["access_token"]
+
+                st.success(f"Welcome {player['username']}!")
+                st.switch_page("pages/player_menu.py")
+
+            elif status_code == 401:
+                logger.warning(f"Login failed: 401 Unauthorized for user {username}.")
+                st.error("Invalid username or password.")
+
             else:
-                logger.error("API returned None or empty response")
-                st.error("No response from server.")
+                logger.error(f"Login failed: Status {status_code}, Data: {data}")
+                st.error("Server error. Please try again later.")
 
-        except Exception as e:
-            logger.exception(f"Critical error during API call: {str(e)}")
-            st.error(f"Connection error: {str(e)}")
+        else:
+            logger.error("API returned None or empty response")
+            st.error("No response from server.")
 
-st.write("---")
+    except Exception as e:
+        logger.exception(f"Critical error during API call: {str(e)}")
+        st.error(f"Connection error: {str(e)}")
 
-if st.button("Sign Up", use_container_width=True):
+
+# ---------------------------------------------------------------------------
+# SIGN UP
+# ---------------------------------------------------------------------------
+
+st.markdown(
+    """
+<div class="retro">
+
+<hr>
+
+<h2>New Users</h2>
+
+<p>
+    Don't have an account yet?
+</p>
+
+</div>
+""",
+    unsafe_allow_html=True,
+)
+
+if st.button("Create a new account", use_container_width=True):
     st.switch_page("pages/create_player.py")
+
+
+# ---------------------------------------------------------------------------
+# OLD WEB GIMMICKS
+# ---------------------------------------------------------------------------
+
+
+visitor_count = st.session_state.get("visitor_count")
+
+st.markdown(
+    f"""
+<hr>
+
+<p class="center">
+    You are visitor #{visitor_count}
+</p>
+
+<p class="center small">
+    <a href="/404">Guestbook</a>
+    &nbsp; | &nbsp;
+    <a href="/404">About this site</a>
+    &nbsp; | &nbsp;
+    <a href="/404">What's new?</a>
+</p>
+
+<p class="center small">
+    Best viewed with Netscape Navigator 3.0
+    <br>
+    Last updated: September 24, 1996
+</p>
+""",
+    unsafe_allow_html=True,
+)

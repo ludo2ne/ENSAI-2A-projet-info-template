@@ -4,87 +4,225 @@ import streamlit as st
 from utils.api_client import api_client
 from utils.log_init import get_page_logger
 
-st.set_page_config(page_title="Player Stats", page_icon="📊")
+logger = get_page_logger("player_stats")
 
-# --- WINDOWS 98 CSS ---
+st.set_page_config(
+    page_title="Coin Flip Game - Player Stats",
+    page_icon="🪙",
+    layout="centered",
+)
+
+# ---------------------------------------------------------------------------
+# 1990s WEB STYLE
+# ---------------------------------------------------------------------------
+
 st.markdown(
     """
 <style>
-    .stApp { background-color: #008080; }
-    .win98-window {
-        background-color: #c0c0c0;
-        border: 2px solid;
-        border-color: #ffffff #808080 #808080 #ffffff;
-        padding: 15px;
-        margin-bottom: 20px;
-    }
-    .win98-titlebar {
-        background: linear-gradient(90deg, #000080, #1084d0);
-        color: white;
-        padding: 3px 10px;
-        font-family: 'Tahoma', sans-serif;
-        font-weight: bold;
-        margin-bottom: 15px;
-    }
-    h1 { font-family: 'Tahoma', sans-serif; color: white; text-shadow: 2px 2px #000000; }
-    h3 { font-family: 'Tahoma', sans-serif; color: black; margin-top: 0; }
-    
-    /* Style pour le dataframe (aspect gris/blanc classique) */
-    [data-testid="stDataFrame"] {
-        border: 2px solid #808080;
-    }
+.stApp {
+    background: #d8d6e5;
+    color: black;
+    font-family: "Times New Roman", serif;
+}
+
+.block-container {
+    max-width: 760px;
+    padding-top: 25px;
+}
+
+.retro {
+    background: #eeeeee;
+    border: 1px solid #555;
+    padding: 15px 25px;
+    box-shadow: 3px 3px #888;
+}
+
+h1 {
+    font-family: "Times New Roman", serif !important;
+    text-align: center;
+    color: black !important;
+}
+
+h2 {
+    font-size: 20px !important;
+    color: #0000ee !important;
+    text-decoration: underline;
+}
+
+a {
+    color: #0000ee;
+}
+
+.stButton button {
+    background: #d4d0c8 !important;
+    color: black !important;
+    border: 2px outset #fff !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    font-family: "Times New Roman", serif !important;
+    font-weight: bold !important;
+}
+
+.stButton button:active {
+    border-style: inset !important;
+}
+
+.stAlert {
+    border-radius: 0 !important;
+}
+
+.small {
+    font-size: 12px;
+}
+
+.center {
+    text-align: center;
+}
+
+.new {
+    color: red;
+    font-weight: bold;
+}
+
+[data-testid="stDataFrame"] {
+    border: 1px solid #555;
+    background: white;
+}
+
+[data-testid="stDataFrame"] * {
+    font-family: "Times New Roman", serif !important;
+}
 </style>
 """,
     unsafe_allow_html=True,
 )
 
-st.title("📊 Player Statistics")
-logger = get_page_logger("player_stats")
+
+# ---------------------------------------------------------------------------
+# PAGE HEADER
+# ---------------------------------------------------------------------------
+
+st.markdown(
+    """
+<div class="retro">
+
+<h1>Player Stats</h1>
+
+<p style="text-align:center;">
+    <b>Coin Flip Game - Player Information</b>
+</p>
+
+<p>
+    <span class="new">NEW!</span>
+    View player information and game history.
+</p>
+
+</div>
+""",
+    unsafe_allow_html=True,
+)
+
+
+# ---------------------------------------------------------------------------
+# PLAYER ID
+# ---------------------------------------------------------------------------
+
 query_params = st.query_params
 player_id = query_params.get("id_player")
+
+logger.info(f"Player {player_id} stats")
+
 
 if player_id is not None:
     try:
         player_id = int(player_id)
+
         player_res = api_client.get(f"/player/{player_id}")
 
         if player_res["status_code"] == 200:
             player = player_res["data"]
 
-            # --- SECTION PROFIL ---
+            logger.info(f"Successfully retrieved profile for: {player['username']}")
+
+            # ----------------------------------------------------------------
+            # PROFILE
+            # ----------------------------------------------------------------
+
             st.markdown(
-                '<div class="win98-window"><div class="win98-titlebar">Profile_View</div>',
+                f"""
+<div class="retro">
+
+<h2>Player Profile</h2>
+
+<p style="text-align:center;">
+    <b>👤 {player["username"]}</b>
+</p>
+
+<hr>
+
+""",
                 unsafe_allow_html=True,
             )
-            st.subheader(f"👤 {player['username']}")
 
             col1, col2 = st.columns(2)
+
             with col1:
                 st.metric("Elo Rating", player["elo"])
+
             with col2:
                 st.write(f"**Email:** {player['email']}")
                 st.write(f"**Pokemon Fan:** {'Yes' if player['pokemon_fan'] else 'No'}")
-            st.markdown("</div>", unsafe_allow_html=True)
+                st.checkbox(
+                    "Pokemon Fan",
+                    value=player["pokemon_fan"],
+                    disabled=True,
+                )
 
-            # --- SECTION HISTORIQUE ---
             st.markdown(
-                '<div class="win98-window"><div class="win98-titlebar">Match_History.log</div>',
+                """
+</div>
+""",
                 unsafe_allow_html=True,
             )
-            st.subheader("Game History")
+
+            # ----------------------------------------------------------------
+            # GAMES PLAYED
+            # ----------------------------------------------------------------
+
+            st.markdown(
+                """
+<div class="retro">
+
+<h2>Game History</h2>
+
+<p>
+    Games played by this player:
+</p>
+
+""",
+                unsafe_allow_html=True,
+            )
+
+            logger.info(f"Fetching match history for player: {player['username']}")
 
             games_res = api_client.get(f"/game?id_player={player_id}")
 
             if games_res["status_code"] == 200:
                 games_list = games_res["data"]
+
+                logger.info(f"Found {len(games_list)} games for player {player_id}")
+
                 if not games_list:
                     st.info("No games played yet.")
+
                 else:
                     rows_for_df = []
+
                     for g in games_list:
                         opponent = (
                             g["player2"] if g["player1"]["id_player"] == player_id else g["player1"]
                         )
+
                         match g["winner"]:
                             case None:
                                 result = "Draw"
@@ -92,22 +230,72 @@ if player_id is not None:
                                 result = "Win"
                             case _:
                                 result = "Loss"
-                        rows_for_df.append({
+
+                        row = {
                             "Mode": g["game_mode"],
-                            "Opponent": f"{opponent['username']} ({opponent['elo']})",
+                            "Opponent": (f"{opponent['username']} ({opponent['elo']})"),
                             "Result": result,
                             "Date": g["timestamp"],
-                        })
+                        }
+
+                        rows_for_df.append(row)
+
                     df = pd.DataFrame(rows_for_df)
-                    st.dataframe(df, use_container_width=True, hide_index=True)
+
+                    st.dataframe(
+                        df,
+                        use_container_width=True,
+                        hide_index=True,
+                    )
+
             else:
+                logger.error(f"Failed to fetch games. Status: {games_res['status_code']}")
                 st.error("Could not fetch games history.")
-            st.markdown("</div>", unsafe_allow_html=True)
+
+            st.markdown(
+                """
+</div>
+""",
+                unsafe_allow_html=True,
+            )
 
         else:
-            st.error("Player not found.")
+            logger.warning(f"Player not found. Status: {player_res['status_code']}")
+            st.error(f"Player not found (Status: {player_res['status_code']})")
+
+    except ValueError:
+        logger.error(f"Invalid ID format: {player_id}")
+        st.error("Invalid Player ID format in URL.")
 
     except Exception as e:
+        logger.exception(f"Unexpected error: {e}")
         st.error(f"An error occurred: {e}")
+
 else:
-    st.warning("No player selected.")
+    st.warning("No player selected. Please go back to the player list.")
+
+
+# ---------------------------------------------------------------------------
+# OLD WEB GIMMICKS
+# ---------------------------------------------------------------------------
+
+st.markdown(
+    """
+<hr>
+
+<p class="center small">
+    <a href="/404">Guestbook</a>
+    &nbsp; | &nbsp;
+    <a href="/404">About this site</a>
+    &nbsp; | &nbsp;
+    <a href="/404">What's new?</a>
+</p>
+
+<p class="center small">
+    Best viewed with Netscape Navigator 3.0
+    <br>
+    Last updated: September 24, 1996
+</p>
+""",
+    unsafe_allow_html=True,
+)

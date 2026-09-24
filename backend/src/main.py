@@ -71,6 +71,29 @@ async def reset_database():
     return {"message": f"Database re-initialization - {'SUCCESS' if success else 'FAILURE'}"}
 
 
+from dao.db_connection import DBConnection
+
+
+@app.post("/visitor", tags=["Misc"])
+def register_visitor():
+    """really ugly, not to be copied"""
+    with DBConnection().connection as connection:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                """
+                UPDATE site_stats
+                SET intvalue = intvalue + 1
+                WHERE id = 'visitor_count'
+                RETURNING intvalue
+                """
+            )
+
+            visitor_count = cursor.fetchone()["intvalue"]
+            connection.commit()
+
+    return {"visitor_count": visitor_count}
+
+
 # Run the FastAPI application
 if __name__ == "__main__":
     import os

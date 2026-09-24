@@ -1,3 +1,12 @@
+"""
+Streamlit page for player account registration.
+
+Allows users to create a new player profile with username, password, Elo, email, etc.
+
+Endpoint used:
+    POST /player
+"""
+
 import os
 
 import streamlit as st
@@ -5,87 +14,248 @@ import streamlit as st
 from utils.api_client import api_client
 from utils.log_init import get_page_logger
 
-st.set_page_config(page_title="Registration", page_icon="📝")
+logger = get_page_logger("create_player")
 
-# --- WINDOWS 98 CSS ---
+st.set_page_config(
+    page_title="Coin Flip Game - New Player",
+    page_icon="🪙",
+    layout="centered",
+)
+
+# ---------------------------------------------------------------------------
+# 1990s WEB STYLE
+# ---------------------------------------------------------------------------
+
 st.markdown(
     """
 <style>
-    .stApp { background-color: #008080; }
-    .win98-window {
-        background-color: #c0c0c0;
-        border: 2px solid;
-        border-color: #ffffff #808080 #808080 #ffffff;
-        padding: 20px;
-    }
-    .win98-titlebar {
-        background: linear-gradient(90deg, #000080, #1084d0);
-        color: white;
-        padding: 3px 10px;
-        font-family: 'Tahoma', sans-serif;
-        font-weight: bold;
-        margin-bottom: 20px;
-    }
-    /* Inset effect for inputs */
-    .stTextInput input, .stNumberInput input, .stSelectbox div {
-        background-color: white !important;
-        border: 2px solid !important;
-        border-color: #808080 #ffffff #ffffff #808080 !important;
-        border-radius: 0px !important;
-    }
-    .stButton button {
-        background-color: #c0c0c0 !important;
-        border: 2px solid !important;
-        border-color: #ffffff #808080 #808080 #ffffff !important;
-        border-radius: 0px !important;
-        font-family: 'Tahoma', sans-serif !important;
-        box-shadow: 1px 1px 0px #000000 !important;
-    }
+.stApp {
+    background: #d8d6e5;
+    color: black;
+    font-family: "Times New Roman", serif;
+}
+
+.block-container {
+    max-width: 760px;
+    padding-top: 25px;
+}
+
+.retro {
+    background: #eeeeee;
+    border: 1px solid #555;
+    padding: 15px 25px;
+    box-shadow: 3px 3px #888;
+}
+
+h1 {
+    font-family: "Times New Roman", serif !important;
+    text-align: center;
+    color: black !important;
+}
+
+h2 {
+    font-size: 20px !important;
+    color: #0000ee !important;
+    text-decoration: underline;
+}
+
+a {
+    color: #0000ee;
+}
+
+.stTextInput label,
+.stNumberInput label,
+.stCheckbox label {
+    color: black !important;
+    font-family: "Times New Roman", serif !important;
+}
+
+.stTextInput input,
+.stNumberInput input {
+    border: 1px solid #555 !important;
+    border-radius: 0 !important;
+    background: white !important;
+    color: black !important;
+    font-family: "Times New Roman", serif !important;
+}
+
+.stButton button {
+    background: #d4d0c8 !important;
+    color: black !important;
+    border: 2px outset #fff !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    font-family: "Times New Roman", serif !important;
+    font-weight: bold !important;
+}
+
+.stButton button:active {
+    border-style: inset !important;
+}
+
+.stAlert {
+    border-radius: 0 !important;
+}
+
+.small {
+    font-size: 12px;
+}
+
+.center {
+    text-align: center;
+}
+
+.new {
+    color: red;
+    font-weight: bold;
+}
 </style>
 """,
     unsafe_allow_html=True,
 )
 
-st.title("User Registration")
-logger = get_page_logger("create_player")
+
+# ---------------------------------------------------------------------------
+# PAGE HEADER
+# ---------------------------------------------------------------------------
 
 st.markdown(
-    '<div class="win98-window"><div class="win98-titlebar">Setup Wizard - New Account</div>',
+    """
+<div class="retro">
+
+<h1>Create a Player Account</h1>
+
+<p style="text-align:center;">
+    <b>Welcome to the Coin Flip Game!</b>
+</p>
+
+<p style="text-align:center;">
+    Create your player account and start playing online.
+</p>
+
+<hr>
+
+<p>
+    <span class="new">NEW!</span>
+    Registration is quick and easy.
+</p>
+
+<h2>New Player Registration</h2>
+
+<p>
+    Please fill in the information below to create your account.
+</p>
+
+</div>
+""",
     unsafe_allow_html=True,
 )
 
-username = st.text_input("Username", max_chars=30)
-password = st.text_input("Password", type="password")
 
-password_min_length = int(os.environ.get("PASSWORD_MIN_LENGTH", 6))
+# ---------------------------------------------------------------------------
+# REGISTRATION FORM
+# ---------------------------------------------------------------------------
+
+username = st.text_input(
+    "Username",
+    max_chars=30,
+)
+
+password = st.text_input(
+    "Password (e.g. 123456)",
+    type="password",
+)
+
+password_min_length = int(os.getenv("PASSWORD_MIN_LENGTH", 12))
 is_pwd_long_enough = len(password) >= password_min_length
-st.write("✅" if is_pwd_long_enough else "❌", f"At least {password_min_length} characters")
 
-elo = st.number_input("Elo", min_value=1000, max_value=3000)
-email = st.text_input("Email")
+st.write(
+    "✅" if is_pwd_long_enough else "❌",
+    f"At least {password_min_length} characters",
+)
+
+elo = st.number_input(
+    "Elo",
+    min_value=1000,
+    max_value=3000,
+)
+
+email = st.text_input("Email (e.g. mamy.zinzin@club-internet.fr)")
+
 pokemon_fan = st.checkbox("Pokemons fan?")
 
-if st.button(
-    "Create Account", use_container_width=True, disabled=not username or not is_pwd_long_enough
-):
-    logger.info("Create a player")
-    player = {
-        "username": username,
-        "password": password,
-        "elo": elo,
-        "email": email,
-        "pokemon_fan": pokemon_fan,
-    }
 
-    response = api_client.post("/player/", json=player)
+# ---------------------------------------------------------------------------
+# CREATE ACCOUNT
+# ---------------------------------------------------------------------------
 
-    if response:
-        if response["status_code"] == 200:
-            st.success(f"Player {username} successfully created! 🎉")
-        else:
-            st.error(f"Error: {response['data']}")
+with st.container(horizontal_alignment="center"):
+    if st.button(
+        "Create",
+        width=150,
+        disabled=not username or not is_pwd_long_enough,
+    ):
+        logger.info("Create a player")
 
-st.markdown("</div>", unsafe_allow_html=True)
+        player = {
+            "username": username,
+            "password": password,
+            "elo": elo,
+            "email": email,
+            "pokemon_fan": pokemon_fan,
+        }
 
-if st.button("Back to homepage"):
+        response = api_client.post("/player/", json=player)
+
+        if response:
+            if response["status_code"] == 200:
+                st.success(f"Player {username} successfully created! 🎉")
+                logger.info("Player created successfully")
+            else:
+                st.error(f"Error: {response['data']}")
+                logger.info("Error while creating player")
+
+
+# ---------------------------------------------------------------------------
+# NAVIGATION
+# ---------------------------------------------------------------------------
+
+st.markdown(
+    """
+<hr>
+
+<p class="center">
+    Already have an account?
+</p>
+""",
+    unsafe_allow_html=True,
+)
+
+if st.button("Back to homepage", type="primary"):
     st.switch_page("pages/home.py")
+
+
+# ---------------------------------------------------------------------------
+# OLD WEB GIMMICKS
+# ---------------------------------------------------------------------------
+
+st.markdown(
+    """
+<hr>
+
+<p class="center small">
+    <a href="/404">Guestbook</a>
+    &nbsp; | &nbsp;
+    <a href="/404">About this site</a>
+    &nbsp; | &nbsp;
+    <a href="/404">What's new?</a>
+</p>
+
+<p class="center small">
+    Best viewed with Netscape Navigator 3.0
+    <br>
+    Last updated: September 24, 1996
+</p>
+""",
+    unsafe_allow_html=True,
+)
