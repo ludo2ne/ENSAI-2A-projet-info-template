@@ -84,13 +84,48 @@ a {
     font-weight: bold;
 }
 
-[data-testid="stDataFrame"] {
-    border: 1px solid #555;
-    background: white;
+/* Retro HTML table */
+
+.retro-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 2px;
+    background: #808080;
+    color: black;
+    font-family: "Times New Roman", serif;
+    font-size: 14px;
 }
 
-[data-testid="stDataFrame"] * {
-    font-family: "Times New Roman", serif !important;
+.retro-table th {
+    background: #d4d0c8;
+    color: black;
+    font-weight: bold;
+    padding: 5px 8px;
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    border-right: 2px solid #404040;
+    border-bottom: 2px solid #404040;
+}
+
+.retro-table td {
+    background: white;
+    color: black;
+    padding: 5px 8px;
+    border: 1px solid #808080;
+}
+
+.retro-table tr:nth-child(even) td {
+    background: #eeeeee;
+}
+
+.retro-table a {
+    color: #0000ee;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.retro-table a:visited {
+    color: #800080;
 }
 </style>
 """,
@@ -242,10 +277,13 @@ if player_id is not None:
 
                     df = pd.DataFrame(rows_for_df)
 
-                    st.dataframe(
-                        df,
-                        use_container_width=True,
-                        hide_index=True,
+                    st.markdown(
+                        df.to_html(
+                            index=False,
+                            classes="retro-table",
+                            escape=True,
+                        ),
+                        unsafe_allow_html=True,
                     )
 
             else:
