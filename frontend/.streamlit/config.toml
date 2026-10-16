@@ -1,6 +1,10 @@
 [server]
 port = 8000
 
+[client]
+showSidebarNavigation = false
+toolbarMode = "minimal"
+
 [theme]
 textColor = "#1a1a1a"
 font = "Calibri"
@@ -19,6 +23,3 @@ yellowBackgroundColor = "#f7bd53"
 
 dataframeBorderColor = "#976a09"
 dataframeHeaderBackgroundColor = "#eea73d"
-
-[client]
-showSidebarNavigation = false

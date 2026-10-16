@@ -50,13 +50,15 @@ class ResetDatabase(metaclass=Singleton):
             logger.error(f"Erreur de chemin : impossible de trouver le fichier {e.filename}")
             raise
 
+        connection = DBConnection().connection
         try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(create_schema)
-                    cursor.execute(init_db_as_string)
-                    cursor.execute(pop_db_as_string)
+            with connection.cursor() as cursor:
+                cursor.execute(create_schema)
+                cursor.execute(init_db_as_string)
+                cursor.execute(pop_db_as_string)
+            connection.commit()
         except Exception as e:
+            connection.rollback()
             logger.info(e)
             raise
 

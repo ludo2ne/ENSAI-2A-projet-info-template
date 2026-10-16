@@ -148,7 +148,7 @@ st.markdown(
 
 <p>
     Play against other players and try your luck.
-    <a href="#">What's new?</a>
+    <a href="/404">What's new?</a>
 </p>
 
 <hr>

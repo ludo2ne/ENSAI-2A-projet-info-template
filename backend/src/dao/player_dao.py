@@ -18,24 +18,26 @@ class PlayerDao(metaclass=Singleton):
             True if creation is successful, False otherwise
         """
         res = None
+        connection = DBConnection().connection
 
         try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "INSERT INTO player(username, password, elo, email, pokemon_fan) VALUES "
-                        "(%(username)s, %(password)s, %(elo)s, %(email)s, %(pokemon_fan)s) "
-                        "RETURNING id_player;",
-                        {
-                            "username": player.username,
-                            "password": player.password,
-                            "elo": player.elo,
-                            "email": player.email,
-                            "pokemon_fan": player.pokemon_fan,
-                        },
-                    )
-                    res = cursor.fetchone()
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "INSERT INTO player(username, password, elo, email, pokemon_fan) VALUES "
+                    "(%(username)s, %(password)s, %(elo)s, %(email)s, %(pokemon_fan)s) "
+                    "RETURNING id_player;",
+                    {
+                        "username": player.username,
+                        "password": player.password,
+                        "elo": player.elo,
+                        "email": player.email,
+                        "pokemon_fan": player.pokemon_fan,
+                    },
+                )
+                res = cursor.fetchone()
+            connection.commit()
         except Exception as e:
+            connection.rollback()
             logger.error(e)
             raise
 
@@ -54,16 +56,17 @@ class PlayerDao(metaclass=Singleton):
         Returns:
             Player matching the given id
         """
+        res = None
+        connection = DBConnection().connection
         try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "SELECT *                            "
-                        "  FROM player                       "
-                        " WHERE id_player = %(id_player)s;   ",
-                        {"id_player": id_player},
-                    )
-                    res = cursor.fetchone()
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT *                            "
+                    "  FROM player                       "
+                    " WHERE id_player = %(id_player)s;   ",
+                    {"id_player": id_player},
+                )
+                res = cursor.fetchone()
         except Exception as e:
             logger.error(e)
             raise
@@ -87,16 +90,16 @@ class PlayerDao(metaclass=Singleton):
         Returns:
             list[Player] sorted by username
         """
-
+        res = None
+        connection = DBConnection().connection
         try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "SELECT *                                "
-                        "  FROM player                           "
-                        " ORDER BY username;                     "
-                    )
-                    res = cursor.fetchall()
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT *                                "
+                    "  FROM player                           "
+                    " ORDER BY username;                     "
+                )
+                res = cursor.fetchall()
         except Exception as e:
             logger.error(e)
             raise
@@ -113,7 +116,6 @@ class PlayerDao(metaclass=Singleton):
                     email=row["email"],
                     pokemon_fan=row["pokemon_fan"],
                 )
-
                 players_list.append(player)
 
         return players_list
@@ -127,31 +129,33 @@ class PlayerDao(metaclass=Singleton):
             True if update is successful, False otherwise
         """
         nb_affected_rows = 0
+        connection = DBConnection().connection
 
         try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "UPDATE player                                                  "
-                        "   SET username = %(username)s,                                "
-                        "       password = COALESCE(%(password)s, password),            "
-                        "       elo = %(elo)s,                                          "
-                        "       email = %(email)s,                                      "
-                        "       pokemon_fan = %(pokemon_fan)s,                          "
-                        "       access_token = COALESCE(%(access_token)s, access_token) "
-                        " WHERE id_player = %(id_player)s;                              ",
-                        {
-                            "username": player.username,
-                            "password": player.password,
-                            "elo": player.elo,
-                            "email": player.email,
-                            "pokemon_fan": player.pokemon_fan,
-                            "access_token": player.access_token,
-                            "id_player": player.id_player,
-                        },
-                    )
-                    nb_affected_rows = cursor.rowcount
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "UPDATE player                                                  "
+                    "   SET username = %(username)s,                                "
+                    "       password = COALESCE(%(password)s, password),            "
+                    "       elo = %(elo)s,                                          "
+                    "       email = %(email)s,                                      "
+                    "       pokemon_fan = %(pokemon_fan)s,                          "
+                    "       access_token = COALESCE(%(access_token)s, access_token) "
+                    " WHERE id_player = %(id_player)s;                              ",
+                    {
+                        "username": player.username,
+                        "password": player.password,
+                        "elo": player.elo,
+                        "email": player.email,
+                        "pokemon_fan": player.pokemon_fan,
+                        "access_token": player.access_token,
+                        "id_player": player.id_player,
+                    },
+                )
+                nb_affected_rows = cursor.rowcount
+            connection.commit()
         except Exception as e:
+            connection.rollback()
             logger.error(e)
             raise
 
@@ -165,16 +169,19 @@ class PlayerDao(metaclass=Singleton):
         Returns:
             True if the player was successfully deleted, False otherwise
         """
+        res = 0
+        connection = DBConnection().connection
         try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "DELETE FROM player                               "
-                        " WHERE id_player = %(id_player)s                 ",
-                        {"id_player": player.id_player},
-                    )
-                    res = cursor.rowcount
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "DELETE FROM player                               "
+                    " WHERE id_player = %(id_player)s                 ",
+                    {"id_player": player.id_player},
+                )
+                res = cursor.rowcount
+            connection.commit()
         except Exception as e:
+            connection.rollback()
             logger.error(e)
             raise
 
@@ -190,17 +197,17 @@ class PlayerDao(metaclass=Singleton):
             Player or None
         """
         res = None
+        connection = DBConnection().connection
         try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "SELECT *                               "
-                        "  FROM player                          "
-                        " WHERE username = %(username)s         "
-                        "   AND password = %(password)s;        ",
-                        {"username": username, "password": password},
-                    )
-                    res = cursor.fetchone()
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT *                               "
+                    "  FROM player                          "
+                    " WHERE username = %(username)s         "
+                    "   AND password = %(password)s;        ",
+                    {"username": username, "password": password},
+                )
+                res = cursor.fetchone()
         except Exception as e:
             logger.error(e)
             raise
@@ -232,16 +239,16 @@ class PlayerDao(metaclass=Singleton):
             return None
 
         res = None
+        connection = DBConnection().connection
         try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "SELECT *                                "
-                        "  FROM player                           "
-                        " WHERE access_token = %(token)s;        ",
-                        {"token": access_token},
-                    )
-                    res = cursor.fetchone()
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT *                                "
+                    "  FROM player                           "
+                    " WHERE access_token = %(token)s;        ",
+                    {"token": access_token},
+                )
+                res = cursor.fetchone()
         except Exception as e:
             logger.error(f"Error finding player by token: {e}")
             raise

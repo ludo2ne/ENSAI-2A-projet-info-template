@@ -20,23 +20,25 @@ class GameDao(metaclass=Singleton):
             bool: True if insertion is successful, False otherwise.
         """
         res = None
+        connection = DBConnection().connection
         try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "INSERT INTO game (id_player1, id_player2, game_mode, id_winner, detail) "
-                        "VALUES (%(id_p1)s, %(id_p2)s, %(mode)s, %(id_w)s, %(detail)s) "
-                        "RETURNING id_game;",
-                        {
-                            "id_p1": game.player1.id_player,
-                            "id_p2": game.player2.id_player,
-                            "mode": game.game_mode,
-                            "id_w": game.winner.id_player if game.winner else None,
-                            "detail": game.description,
-                        },
-                    )
-                    res = cursor.fetchone()
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "INSERT INTO game (id_player1, id_player2, game_mode, id_winner, detail) "
+                    "VALUES (%(id_p1)s, %(id_p2)s, %(mode)s, %(id_w)s, %(detail)s) "
+                    "RETURNING id_game;",
+                    {
+                        "id_p1": game.player1.id_player,
+                        "id_p2": game.player2.id_player,
+                        "mode": game.game_mode,
+                        "id_w": game.winner.id_player if game.winner else None,
+                        "detail": game.description,
+                    },
+                )
+                res = cursor.fetchone()
+            connection.commit()
         except Exception as e:
+            connection.rollback()
             logger.error(f"Error creating game: {e}")
             raise
 
@@ -57,19 +59,19 @@ class GameDao(metaclass=Singleton):
             Game: The game object if found, otherwise None.
         """
         res = None
+        connection = DBConnection().connection
 
         try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        """
-                        SELECT *
-                          FROM game
-                         WHERE id_game = %(id_game)s;
-                        """,
-                        {"id_game": id_game},
-                    )
-                    res = cursor.fetchone()
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    SELECT *
+                      FROM game
+                     WHERE id_game = %(id_game)s;
+                    """,
+                    {"id_game": id_game},
+                )
+                res = cursor.fetchone()
         except Exception as e:
             logger.error(f"Error finding game {id_game}: {e}")
             raise
@@ -104,20 +106,20 @@ class GameDao(metaclass=Singleton):
             list[Game]: A list of Game objects.
         """
         rows = []
+        connection = DBConnection().connection
 
         try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        """
-                        SELECT *
-                          FROM game
-                         WHERE id_player1 = %(id_p)s OR id_player2 = %(id_p)s
-                         ORDER BY timestamp DESC;
-                        """,
-                        {"id_p": id_player},
-                    )
-                    rows = cursor.fetchall()
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    SELECT *
+                      FROM game
+                     WHERE id_player1 = %(id_p)s OR id_player2 = %(id_p)s
+                     ORDER BY timestamp DESC;
+                    """,
+                    {"id_p": id_player},
+                )
+                rows = cursor.fetchall()
         except Exception as e:
             logger.error(f"Error finding games for player {id_player}: {e}")
             raise
